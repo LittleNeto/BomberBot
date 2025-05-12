@@ -5,6 +5,9 @@ package principal;
  * @author Mateu
  */
 
+import entidade.Jogador;
+import tile.TileManager;
+
 import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.Color;
@@ -14,24 +17,22 @@ import java.awt.Graphics2D;
 public class GamePanel extends JPanel implements Runnable{
     //configurações da tela
     final int tileSizeOriginal = 32; //tamanho padrão de cada "bloco" da tela
-    final int escala = 2; //reescala a tela para que 32X32 não fique tão pequeno
+    final int escala = 3; //reescala a tela para que 32X32 não fique tão pequeno
     
-    final int tileSize = tileSizeOriginal * escala; //tile de 64X64
-    final int maxScreenCol = 20;
-    final int maxScreenLin = 15;
-    final int screenWidth = tileSize * maxScreenCol; //1280 pixels de largura
-    final int screenHeight = tileSize * maxScreenLin; //960 pixels de altura
+    public final int tileSize = tileSizeOriginal * escala; //tile de 64X64
+    public final int maxScreenCol = 17;
+    public final int maxScreenLin = 10;
+    public final int screenWidth = tileSize * maxScreenCol; //1280 pixels de largura
+    public final int screenHeight = tileSize * maxScreenLin; //960 pixels de altura
     
     //FPS
     int fps = 60;
     
+    TileManager tileM = new TileManager(this);
+    
     ManipuladorTeclado keyH = new ManipuladorTeclado();
     Thread gameThread; //implementado para ajudar a atualizar a tela durante o decorrer do jogo
-    
-    //configurando as posições do jogador (MODIFICA DEPOIS PARA POO)
-    int playerX = 100;
-    int playerY = 100;
-    int playerVelocidade = 4;
+    Jogador jogador = new Jogador(this, keyH); //cria uma instância jogador dentro da Tela do jogo
     
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight)); //define a dimensão da tela
@@ -82,26 +83,16 @@ public class GamePanel extends JPanel implements Runnable{
     }
     
     public void update() {
-        if (keyH.cimaPress == true) {
-            playerY -= playerVelocidade; //através da velocidade determinamos quantos pixels o player se move
-        } else if (keyH.baixoPress == true) {
-            playerY += playerVelocidade;
-        } else if (keyH.esqPress == true) {
-            playerX -= playerVelocidade;
-        } else if (keyH.dirPress == true) {
-            playerX += playerVelocidade;
-        }
+        jogador.update();
     }
     
     public void paintComponent(Graphics g) { //está sobrescrevendo um método que já existe em java
         
         super.paintComponent(g);
-        
         Graphics2D g2 = (Graphics2D)g; //tem mais funções que o Graphics
         
-        g2.setColor(Color.white);
-        
-        g2.fillRect(playerX, playerY, tileSize, tileSize);  //TESTE
+        tileM.desenhar(g2); //vem antes para que o cenário seja desenhado antes do personagem
+        jogador.desenhar(g2);
         
         g2.dispose(); //libera memória do que não está sendo mais usado
     }
