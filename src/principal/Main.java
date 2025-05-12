@@ -2,7 +2,7 @@ package principal;
 
 /**
  *
- * @author Mateus
+ * @author Mateu
  */
 
 import javax.swing.JFrame;
