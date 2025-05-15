@@ -49,7 +49,7 @@ public class GeradorMapas {
             for (int i = 0; i < numLinhas; i++) {
                 for (int j = 0; j < numColunas; j++) {
                     writer.write(Integer.toString(mapa[i][j]));
-                    if (i != numColunas - 1) writer.write(" "); //dá espaçamento entre os elementos da linha
+                    if (j != numColunas - 1) writer.write(" "); //dá espaçamento entre os elementos da linha
                 }
                 if (i != numLinhas - 1) writer.write("\n"); //para que os elementos não fiquem em uma única linha
             }
