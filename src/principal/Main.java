@@ -2,7 +2,7 @@ package principal;
 
 /**
  *
- * @author Mateu
+ * @author Mateus
  */
 
 import javax.swing.JFrame;
@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 public class Main {
 
     public static void main(String[] args) {
+        GeradorMapas.gerarMapa();
         JFrame janela = new JFrame();
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         janela.setResizable(false); //para que não seja possível modificar o tamanho da janela

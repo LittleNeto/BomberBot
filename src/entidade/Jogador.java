@@ -10,7 +10,7 @@ import principal.ManipuladorTeclado;
 
 /**
  *
- * @author Mateu
+ * @author Mateus
  */
 public class Jogador extends Personagem{
      GamePanel gp;

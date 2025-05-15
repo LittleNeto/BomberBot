@@ -2,7 +2,7 @@ package principal;
 
 /**
  *
- * @author Mateu
+ * @author Mateus
  */
 
 import entidade.Jogador;
