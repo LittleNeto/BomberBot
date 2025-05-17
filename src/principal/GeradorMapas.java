@@ -17,7 +17,7 @@ public class GeradorMapas {
         
         for (int i = 0; i < numLinhas; i++) {
             for (int j = 0; j< numColunas; j++) {
-                if (i == 0 || i == numLinhas - 1 || j == 0 || j == numColunas - 1) {
+                if (i % (numLinhas - 1) == 0 || j % (numColunas - 1) == 0) {
                     mapa[i][j] = 1;
                 } else if ((i % 2 == 0) && (j % 2 == 0)) {
                     mapa[i][j] = 1;
