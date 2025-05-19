@@ -2,10 +2,8 @@ package principal;
 
 public class GeradorMapas {
 
-	private static final int numLinhas = 10;
-	private static final int numColunas = 17;
 	
-	public static int[][] gerarMapa() {
+	public static int[][] gerarMapa(int numLinhas, int numColunas) {
 		
 		int[][] mapa = new int[numLinhas][numColunas];
         
