@@ -21,7 +21,7 @@ public class TileManager {
 		this.gp = gp;
 		
 		tile = new Tile[10]; //lista dos tipos diferentes de blocos que terão no jogo
-		mapTileNum = new int[gp.maxScreenLin][gp.maxScreenCol]; //matriz que vai guardar os tipos de blocos do mapa
+		mapTileNum = new int[gp.maxMundoLin][gp.maxMundoCol]; //matriz que vai guardar os tipos de blocos do mapa
 		
 		getImagemTile();
 		carregarMapa();
@@ -47,32 +47,39 @@ public class TileManager {
 	}
 	
 	public void carregarMapa() {
-		mapTileNum = GeradorMapas.gerarMapa();
+		mapTileNum = GeradorMapas.gerarMapa(gp.maxMundoLin, gp.maxMundoCol);
 	}
 	
 	public void desenhar(Graphics2D g2) {
 		
 		//CRIAÇÃO DE MAPA (ADAPTAR PARA POO)
-		int col = 0;
-		int lin = 0;
-		int x = 0;
-		int y = 0;
-		
-		while (col < gp.maxScreenCol && lin < gp.maxScreenLin) {
+		int mundoCol = 0;
+		int mundoLin = 0;
+
+		while (mundoCol < gp.maxMundoCol && mundoLin < gp.maxMundoLin) {
 			
-			int tileNum = mapTileNum[lin][col];
+			int tileNum = mapTileNum[mundoLin][mundoCol];
 			
-			g2.drawImage(tile[tileNum].imagem, x, y, gp.tileSize, gp.tileSize, null);
-			col++;
-			x += gp.tileSize;
+			int mundoX = mundoLin * gp.tileSize;
+			int mundoY = mundoCol * gp.tileSize;
+			int telaX = mundoX - gp.jogador.mundoX + gp.jogador.telaX;
+			int telaY = mundoY - gp.jogador.mundoY + gp.jogador.telaY;
 			
-			if (col == gp.maxScreenCol) {
-				col = 0;
-				x = 0;
-				lin++;
-				y += gp.tileSize;
+			if(mundoX + gp.tileSize> gp.jogador.mundoX - gp.jogador.telaX && mundoX - gp.tileSize< gp.jogador.mundoX + gp.jogador.telaX &&
+					mundoY + gp.tileSize> gp.jogador.mundoY - gp.jogador.telaY && mundoY - gp.tileSize < gp.jogador.mundoY + gp.jogador.telaY) {
+				
+				g2.drawImage(tile[tileNum].imagem, telaX, telaY, gp.tileSize, gp.tileSize, null);
+
+			} //para só desenhar a parte dela que está na visão do jogador ao invés de desenhar tudo de uma vez
+
+			mundoCol++;
+			
+			if (mundoCol == gp.maxMundoCol) {				
+				mundoCol = 0;
+				mundoLin++;
 			}
 		}
 
 	}
 }
+
