@@ -15,18 +15,24 @@ import principal.ManipuladorTeclado;
 public class Jogador extends Personagem{
      GamePanel gp;
      ManipuladorTeclado keyH;
+     public final int telaX;
+     public final int telaY;
+
      
      public Jogador(GamePanel gp, ManipuladorTeclado keyH) {
          this.gp = gp;
          this.keyH = keyH;
+         
+         telaX = gp.screenWidth / 2 - (gp.tileSize / 2); //para o jogador aparecer na metade da tela
+         telaY = gp.screenHeight / 2 - (gp.tileSize / 2);
          
          setDefaultValues();
          getImagemJogador();
      }
      
      public void setDefaultValues() {
-         x = 100;
-         y = 100;
+         mundoX = gp.tileSize * 1; //posição do jogador no começo do jogo
+         mundoY = gp.tileSize * 1;
          velocidade = 3;
          direcao = "baixo"; //a string será usada em um switch para determinar a imagem correspondente
      }
@@ -55,16 +61,16 @@ public class Jogador extends Personagem{
     		
             if (keyH.cimaPress == true) {
             	direcao = "cima";
-                y -= velocidade; //através da velocidade determinamos quantos pixels o player se move
+            	mundoY -= velocidade; //através da velocidade determinamos quantos pixels o player se move
             } else if (keyH.baixoPress == true) {
             	direcao = "baixo";
-                y += velocidade;
+            	mundoY += velocidade;
             } else if (keyH.esqPress == true) {
             	direcao = "esquerda";
-                x -= velocidade;
+            	mundoX -= velocidade;
             } else if (keyH.dirPress == true) {
             	direcao = "direita";
-                x += velocidade;
+            	mundoX += velocidade;
             }
             
             spriteCount++; //lógica para que a img do jogador mude à cada 10 frames
@@ -121,7 +127,7 @@ public class Jogador extends Personagem{
     		 break;			  
     	 }
     	 
-    	 g2.drawImage(imagem, x, y, gp.tileSize, gp.tileSize, null);
+    	 g2.drawImage(imagem, telaX, telaY, gp.tileSize, gp.tileSize, null);
     	 
      }
 }
