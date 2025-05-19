@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
 
 import principal.GamePanel;
+import principal.GeradorMapas;
 
 public class TileManager {
 	GamePanel gp;
@@ -20,12 +21,10 @@ public class TileManager {
 		this.gp = gp;
 		
 		tile = new Tile[10]; //lista dos tipos diferentes de blocos que terão no jogo
-		mapTileNum = new int[gp.maxScreenCol][gp.maxScreenLin]; //matriz que vai guardar os tipos de blocos do mapa
-		//a lógica de gerar o mapa vai ser através de um arquivo .txt
-		//SUGESTÃO: CRIAR UM MÉTODO QUE GERE MAPAS ALEATORIAMENTE A PARTIR DE UM .TXT COM REGRAS PRÉ-ESTABELECIDAS
+		mapTileNum = new int[gp.maxScreenLin][gp.maxScreenCol]; //matriz que vai guardar os tipos de blocos do mapa
 		
 		getImagemTile();
-		carregarMapa("/mapas/mapa01.txt");
+		carregarMapa();
 	}
 	
 	public void getImagemTile() {
@@ -47,38 +46,8 @@ public class TileManager {
 		
 	}
 	
-	public void carregarMapa(String filePath) {
-		try {
-			
-			InputStream is = getClass().getResourceAsStream(filePath); //importa o txt
-			BufferedReader br = new BufferedReader(new InputStreamReader(is)); //lê o txt
-			
-			int col = 0;
-			int lin = 0;
-			
-			while(col < gp.maxScreenCol && lin < gp.maxScreenLin) { //para ler o txt
-				String linha = br.readLine(); //lê a linha
-				
-				while (col < gp.maxScreenCol) {
-					
-					String numeros[] = linha.split(" "); //cria uma lista com os números separando com o " " (espaço)
-					
-					int num = Integer.parseInt(numeros[col]);//usando 'col' como um index
-					
-					mapTileNum[col][lin] = num;
-					col++;
-				}
-				if (col == gp.maxScreenCol) {
-					col = 0;
-					lin++;
-				}
-				
-			}
-			br.close();
-			
-		} catch (IOException e) {
-			
-		}
+	public void carregarMapa() {
+		mapTileNum = GeradorMapas.gerarMapa();
 	}
 	
 	public void desenhar(Graphics2D g2) {
@@ -91,7 +60,7 @@ public class TileManager {
 		
 		while (col < gp.maxScreenCol && lin < gp.maxScreenLin) {
 			
-			int tileNum = mapTileNum[col][lin];
+			int tileNum = mapTileNum[lin][col];
 			
 			g2.drawImage(tile[tileNum].imagem, x, y, gp.tileSize, gp.tileSize, null);
 			col++;
