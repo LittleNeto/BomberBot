@@ -15,6 +15,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 public class GamePanel extends JPanel implements Runnable{
+	
     //configurações da tela
     final int tileSizeOriginal = 32; //tamanho padrão de cada "bloco" da tela
     final int escala = 3; //reescala a tela para que 32X32 não fique tão pequeno
@@ -25,6 +26,12 @@ public class GamePanel extends JPanel implements Runnable{
     public final int screenWidth = tileSize * maxScreenCol; //1280 pixels de largura
     public final int screenHeight = tileSize * maxScreenLin; //960 pixels de altura
     
+    //configurações do mundo
+    public final int maxMundoCol = 13; //ESTÁ INVERTIDO, CONSERTAR DEPOIS
+    public final int maxMundoLin = 31; //ESTÁ INVERTIDO, CONSERTAR DEPOIS
+    public final int mundoWidth = tileSize * maxMundoCol;
+    public final int mundoHeigth = tileSize * maxMundoLin;
+    
     //FPS
     int fps = 60;
     
@@ -32,7 +39,7 @@ public class GamePanel extends JPanel implements Runnable{
     
     ManipuladorTeclado keyH = new ManipuladorTeclado();
     Thread gameThread; //implementado para ajudar a atualizar a tela durante o decorrer do jogo
-    Jogador jogador = new Jogador(this, keyH); //cria uma instância jogador dentro da Tela do jogo
+    public Jogador jogador = new Jogador(this, keyH); //cria uma instância jogador dentro da Tela do jogo
     
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight)); //define a dimensão da tela
