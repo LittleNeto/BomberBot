@@ -1,10 +1,7 @@
 package tile;
 
 import java.awt.Graphics2D;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import javax.imageio.ImageIO;
 
@@ -47,39 +44,37 @@ public class TileManager {
 	}
 	
 	public void carregarMapa() {
-		mapTileNum = GeradorMapas.gerarMapa(gp.maxMundoLin, gp.maxMundoCol);
+		mapTileNum = GeradorMapas.gerarMapa(10, 31);
 	}
 	
 	public void desenhar(Graphics2D g2) {
-		
-		//CRIAÇÃO DE MAPA (ADAPTAR PARA POO)
-		int mundoCol = 0;
-		int mundoLin = 0;
+	    for (int lin = 0; lin < gp.maxMundoLin; lin++) {
+	        for (int col = 0; col < gp.maxMundoCol; col++) {
+	            int tileNum = mapTileNum[lin][col];
 
-		while (mundoCol < gp.maxMundoCol && mundoLin < gp.maxMundoLin) {
-			
-			int tileNum = mapTileNum[mundoLin][mundoCol];
-			
-			int mundoX = mundoLin * gp.tileSize;
-			int mundoY = mundoCol * gp.tileSize;
-			int telaX = mundoX - gp.jogador.mundoX + gp.jogador.telaX;
-			int telaY = mundoY - gp.jogador.mundoY + gp.jogador.telaY;
-			
-			if(mundoX + gp.tileSize> gp.jogador.mundoX - gp.jogador.telaX && mundoX - gp.tileSize< gp.jogador.mundoX + gp.jogador.telaX &&
-					mundoY + gp.tileSize> gp.jogador.mundoY - gp.jogador.telaY && mundoY - gp.tileSize < gp.jogador.mundoY + gp.jogador.telaY) {
-				
-				g2.drawImage(tile[tileNum].imagem, telaX, telaY, gp.tileSize, gp.tileSize, null);
+	            int mundoX = col * gp.tileSize;
+	            int mundoY = lin * gp.tileSize;
 
-			} //para só desenhar a parte dela que está na visão do jogador ao invés de desenhar tudo de uma vez
+	            int telaX = mundoX - gp.jogador.mundoX + gp.jogador.telaX;
 
-			mundoCol++;
-			
-			if (mundoCol == gp.maxMundoCol) {				
-				mundoCol = 0;
-				mundoLin++;
-			}
-		}
+	            // ajusta a lógica para que a tela para de se mexer perto da borda do início
+	            if (gp.jogador.mundoX < gp.jogador.telaX) {
+	                telaX = mundoX;
+	            }
 
+	            // a mesma lógica mas para a margem do final 
+	            int margemDireita = gp.tileSize * gp.maxMundoCol - gp.screenWidth + gp.jogador.telaX;
+	            if (gp.jogador.mundoX > margemDireita) {
+	                telaX = mundoX - (gp.tileSize * gp.maxMundoCol - gp.screenWidth);
+	            }
+
+	            // Desenha apenas se o tile estiver visível na tela
+	            if (telaX + gp.tileSize > 0 && telaX < gp.screenWidth) {
+	                g2.drawImage(tile[tileNum].imagem, telaX, mundoY, gp.tileSize, gp.tileSize, null);
+	            }
+	        }
+	    }
 	}
-}
 
+
+}
