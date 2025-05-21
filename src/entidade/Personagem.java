@@ -5,9 +5,9 @@ import java.awt.image.BufferedImage;
 /**
  *
  * @author Mateus
- */
+ */ 
 public class Personagem {
-    public int mundoX, mundoY;
+    public int x, mundoX, y;
     public int velocidade;
     
     public BufferedImage cima1, cima2, baixo1, baixo2, esq1, esq2, dir1, dir2;
