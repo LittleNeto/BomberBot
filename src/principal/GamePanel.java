@@ -15,22 +15,21 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 public class GamePanel extends JPanel implements Runnable{
-	
     //configurações da tela
     final int tileSizeOriginal = 32; //tamanho padrão de cada "bloco" da tela
     final int escala = 3; //reescala a tela para que 32X32 não fique tão pequeno
     
     public final int tileSize = tileSizeOriginal * escala; //tile de 64X64
+    
     public final int maxScreenCol = 17;
     public final int maxScreenLin = 10;
     public final int screenWidth = tileSize * maxScreenCol; //1280 pixels de largura
     public final int screenHeight = tileSize * maxScreenLin; //960 pixels de altura
     
-    //configurações do mundo
-    public final int maxMundoCol = 13; //ESTÁ INVERTIDO, CONSERTAR DEPOIS
-    public final int maxMundoLin = 31; //ESTÁ INVERTIDO, CONSERTAR DEPOIS
-    public final int mundoWidth = tileSize * maxMundoCol;
-    public final int mundoHeigth = tileSize * maxMundoLin;
+    public final int maxMundoCol = 31; // exemplo: mapa de 50 colunas
+    public final int maxMundoLin = 10;
+    public final int mundoWidth = tileSize * maxMundoCol; //1280 pixels de largura
+    public final int mundoHeight = tileSize * maxMundoLin; //960 pixels de altura
     
     //FPS
     int fps = 60;
