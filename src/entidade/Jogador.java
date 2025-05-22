@@ -1,6 +1,7 @@
 package entidade;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -22,6 +23,13 @@ public class Jogador extends Personagem{
          this.keyH = keyH;
          
          telaX = gp.screenWidth / 2 - (gp.tileSize / 2);
+         
+         areaSolida = new Rectangle();
+         areaSolida.x = 16;
+         areaSolida.y = 32;
+         areaSolida.width = 64;
+         areaSolida.height = 64;
+         
          
          setDefaultValues();
          getImagemJogador();
@@ -59,18 +67,38 @@ public class Jogador extends Personagem{
     		
             if (keyH.cimaPress == true) {
             	direcao = "cima";
-                y -= velocidade; //através da velocidade determinamos quantos pixels o player se move
             } else if (keyH.baixoPress == true) {
             	direcao = "baixo";
-                y += velocidade;
             } else if (keyH.esqPress == true) {
             	direcao = "esquerda";
-                x -= velocidade;
-                mundoX -= velocidade;
             } else if (keyH.dirPress == true) {
             	direcao = "direita";
-                x += velocidade;
-            	mundoX += velocidade;
+            }
+            
+            //CHECA A COLISÃO DO TILE
+            colisaoLig = false;
+            gp.cCheca.checaTile(this);
+            
+            //SE A COLISÃO FRO FALSA, O JOGADOR PODE SE MOVER
+            if (colisaoLig == false) { //para que o player só possa se mover quando o bloco não é sólido
+            	
+            	switch(direcao) {
+            	case "cima":
+                    y -= velocidade; //através da velocidade determinamos quantos pixels o player se move
+            		break;
+            	case "baixo":
+                    y += velocidade;
+            		break;
+            	case "esquerda":
+                    x -= velocidade;
+                    mundoX -= velocidade;
+            		break;
+            	case "direita":
+                    x += velocidade;
+                	mundoX += velocidade;
+            		break;
+            	}
+            	
             }
             
             spriteCount++; //lógica para que a img do jogador mude à cada 10 frames
