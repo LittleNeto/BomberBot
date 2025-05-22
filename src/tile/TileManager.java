@@ -10,8 +10,8 @@ import principal.GeradorMapas;
 
 public class TileManager {
 	GamePanel gp;
-	Tile[] tile;
-	int mapTileNum[][];
+	public Tile[] tile;
+	public int mapTileNum[][];
 	
 	public TileManager(GamePanel gp) {
 		
@@ -33,9 +33,11 @@ public class TileManager {
 			
 			tile[1] = new Tile();
 			tile[1].imagem = ImageIO.read(getClass().getResourceAsStream("/tiles/parede_alfa.png"));
+			tile[1].colisao = true;
 			
 			tile[2] = new Tile();
 			tile[2].imagem = ImageIO.read(getClass().getResourceAsStream("/tiles/lixo_alfa.png"));
+			tile[2].colisao = true;
 			
 		} catch(IOException e) {
 			e.printStackTrace();
