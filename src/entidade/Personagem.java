@@ -1,5 +1,6 @@
 package entidade;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 /**
@@ -15,4 +16,7 @@ public class Personagem {
     
     public int spriteCount = 0;
     public int spriteNum = 1;
+    
+    public Rectangle areaSolida; //para definir a colisão do personagem
+    public boolean colisaoLig = false;
 }
