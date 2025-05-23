@@ -16,7 +16,7 @@ public class GeradorMapas {
                 } else if (i * j == 1 || i * j == 2) {
                     mapa[i][j] = 0;
                 } else {
-                    mapa[i][j] = Math.random() > 0.7f ? 2 : 0;
+                    mapa[i][j] = Math.random() > 0.6f ? 2 : 0;
                 }
             }    
         }
