@@ -94,39 +94,42 @@ public class Jogador extends Personagem {
             	
             }
             
-            this.setSpriteCount(this.getSpriteCount() + 1); //lógica para que a img do jogador mude à cada 10 frames
-            if(this.getSpriteCount() == 20) {
-            	if(this.getSpriteCount() == 1) {
-            		this.setSpriteCount(2);
-            	} else if (this.getSpriteCount() == 2) {
-            		this.setSpriteCount(1);
-            	}
-            	this.setSpriteCount(0);
+            this.setSpriteCount(this.getSpriteCount() + 1); //lógica para que a imagem do jogador mude a cada 15 frames
+
+            if (this.getSpriteCount() > 15) {
+                if (this.getSpriteNum() == 1) {
+                    this.setSpriteNum(2);
+                } else {
+                    this.setSpriteNum(1);
+                }
+                this.setSpriteCount(0);
             }
+
     		
     	}
     	
      }
      public void desenhar(Graphics2D g2) {
-    	    BufferedImage imagem = null;
+	    BufferedImage imagem = null;
 
-    	    switch (this.getDirecao()) {
-    	        case "cima": imagem = (this.getSpriteCount() == 1) ? this.getCima1() : this.getCima2(); break;
-    	        case "baixo": imagem = (this.getSpriteCount() == 1) ? this.getBaixo1() : this.getBaixo2(); break;
-    	        case "esquerda": imagem = (this.getSpriteCount() == 1) ? this.getEsq1() : this.getEsq2(); break;
-    	        case "direita": imagem = (this.getSpriteCount() == 1) ? this.getDir1() : this.getDir2(); break;
-    	    }
+	    switch (this.getDirecao()) {
+	    	case "cima": imagem = (this.getSpriteNum() == 1) ? this.getCima1() : this.getCima2(); break;
+	    	case "baixo": imagem = (this.getSpriteNum() == 1) ? this.getBaixo1() : this.getBaixo2(); break;
+	    	case "esquerda": imagem = (this.getSpriteNum() == 1) ? this.getEsq1() : this.getEsq2(); break;
+	    	case "direita": imagem = (this.getSpriteNum() == 1) ? this.getDir1() : this.getDir2(); break;
+	    }
 
-    	    int drawX = this.getGp().getJogador().getTelaX();
 
-    	    // Bordas do mapa
-    	    if (this.getMundoX() < this.getTelaX()) {
-    	        drawX = this.getMundoX(); // início do mapa
-    	    } else if (this.getMundoX() > this.getGp().getTileSize() * this.getGp().getMaxMundoCol() - (this.getGp().getScreenWidth() - this.getTelaX())) {
-    	        drawX = this.getMundoX() - (this.getGp().getTileSize() * this.getGp().getMaxMundoCol() - this.getGp().getScreenWidth()); // final do mapa
-    	    }
+	    int drawX = this.getGp().getJogador().getTelaX();
 
-    	    g2.drawImage(imagem, drawX, this.getY(), this.getGp().getTileSize(), this.getGp().getTileSize(), null);
+	    // Bordas do mapa
+	    if (this.getMundoX() < this.getTelaX()) {
+	        drawX = this.getMundoX(); // início do mapa
+	    } else if (this.getMundoX() > this.getGp().getTileSize() * this.getGp().getMaxMundoCol() - (this.getGp().getScreenWidth() - this.getTelaX())) {
+	        drawX = this.getMundoX() - (this.getGp().getTileSize() * this.getGp().getMaxMundoCol() - this.getGp().getScreenWidth()); // final do mapa
+	    }
+
+	    g2.drawImage(imagem, drawX, this.getY(), this.getGp().getTileSize(), this.getGp().getTileSize(), null);
 	}
 
      //setters
