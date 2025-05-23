@@ -14,57 +14,57 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-public class GamePanel extends JPanel implements Runnable{
+public class GamePanel extends JPanel implements Runnable {
     //configurações da tela
-    final int tileSizeOriginal = 32; //tamanho padrão de cada "bloco" da tela
-    final int escala = 3; //reescala a tela para que 32X32 não fique tão pequeno
+    private final int tileSizeOriginal = 32; //tamanho padrão de cada "bloco" da tela
+    private final int escala = 3; //reescala a tela para que 32X32 não fique tão pequeno
     
-    public final int tileSize = tileSizeOriginal * escala; //tile de 96X96
+    private final int tileSize = this.getTileSizeOriginal() * this.getEscala(); //tile de 96X96
     
-    public final int maxScreenCol = 17;
-    public final int maxScreenLin = 10;
-    public final int screenWidth = tileSize * maxScreenCol; //1632 pixels de largura
-    public final int screenHeight = tileSize * maxScreenLin; //960 pixels de altura
+    private final int maxScreenCol = 17;
+    private final int maxScreenLin = 10;
+    private final int screenWidth = this.getTileSize() * this.getMaxScreenCol(); //1632 pixels de largura
+    private final int screenHeight = this.getTileSize() * this.getMaxScreenLin(); //960 pixels de altura
     
-    public final int maxMundoCol = 31; // exemplo: mapa de 50 colunas
-    public final int maxMundoLin = 10;
-    public final int mundoWidth = tileSize * maxMundoCol; //2976 pixels de largura
-    public final int mundoHeight = tileSize * maxMundoLin; //960 pixels de altura
+    private final int maxMundoCol = 31; // exemplo: mapa de 50 colunas
+    private final int maxMundoLin = 10;
+    private final int mundoWidth = this.getTileSize() * this.getMaxMundoCol(); //2976 pixels de largura
+    private final int mundoHeight = this.getTileSize() * this.getMaxMundoLin(); //960 pixels de altura
     
     //FPS
-    int fps = 60;
+    private int fps = 60;
     
-    TileManager tileM = new TileManager(this);
+    private TileManager tileM = new TileManager(this);
     
-    ManipuladorTeclado keyH = new ManipuladorTeclado();
-    Thread gameThread; //implementado para ajudar a atualizar a tela durante o decorrer do jogo
-    public ColisaoChecador cCheca = new ColisaoChecador(this);
-    public Jogador jogador = new Jogador(this, keyH); //cria uma instância jogador dentro da Tela do jogo
+    private ManipuladorTeclado keyH = new ManipuladorTeclado();
+    private Thread gameThread; //implementado para ajudar a atualizar a tela durante o decorrer do jogo
+    private ColisaoChecador cCheca = new ColisaoChecador(this);
+    private Jogador jogador = new Jogador(this, this.getKeyH()); //cria uma instância jogador dentro da Tela do jogo
     
     public GamePanel() {
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight)); //define a dimensão da tela
+        this.setPreferredSize(new Dimension(this.getScreenWidth(), this.getScreenHeight())); //define a dimensão da tela
         this.setBackground(Color.black);
         this.setDoubleBuffered(true); //melhora a renderização do jogo
-        this.addKeyListener(keyH); //o gamePanel vai reconhecer o input das teclas
+        this.addKeyListener(this.getKeyH()); //o gamePanel vai reconhecer o input das teclas
         this.setFocusable(true);
     }
 
     public void StartGameThread() {
-        gameThread = new Thread(this);
-        gameThread.start(); //chama o método run
+        this.setGameThread(new Thread(this));
+        this.getGameThread().start(); //chama o método run
     }
 
     @Override
     public void run() { //game loop
         
-        double intervaloDesenho = 1000000000 / fps;
+        double intervaloDesenho = 1000000000 / this.getFps();
         double delta = 0;
         long tempoAntes = System.nanoTime();
         long tempoAtual;
         long timer = 0;
         int drawCount = 0;
         
-        while (gameThread != null) {
+        while (this.getGameThread() != null) {
             
             tempoAtual = System.nanoTime();
             
@@ -90,7 +90,7 @@ public class GamePanel extends JPanel implements Runnable{
     }
     
     public void update() {
-        jogador.update();
+        this.getJogador().update();
     }
     
     public void paintComponent(Graphics g) { //está sobrescrevendo um método que já existe em java
@@ -98,9 +98,104 @@ public class GamePanel extends JPanel implements Runnable{
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g; //tem mais funções que o Graphics
         
-        tileM.desenhar(g2); //vem antes para que o cenário seja desenhado antes do personagem
-        jogador.desenhar(g2);
+        this.getTileM().desenhar(g2); //vem antes para que o cenário seja desenhado antes do personagem
+        this.getJogador().desenhar(g2);
         
         g2.dispose(); //libera memória do que não está sendo mais usado
     }
+
+    //setters
+	public void setFps(int fps) {
+		this.fps = fps;
+	}
+
+	public void setTileM(TileManager tileM) {
+		this.tileM = tileM;
+	}
+
+	public void setKeyH(ManipuladorTeclado keyH) {
+		this.keyH = keyH;
+	}
+
+	public void setGameThread(Thread gameThread) {
+		this.gameThread = gameThread;
+	}
+
+	public void setcCheca(ColisaoChecador cCheca) {
+		this.cCheca = cCheca;
+	}
+
+	public void setJogador(Jogador jogador) {
+		this.jogador = jogador;
+	}
+
+	//getters
+	public int getFps() {
+		return fps;
+	}
+	
+	public TileManager getTileM() {
+		return tileM;
+	}
+	
+	public ManipuladorTeclado getKeyH() {
+		return keyH;
+	}
+	
+	public Thread getGameThread() {
+		return gameThread;
+	}
+	
+	public ColisaoChecador getcCheca() {
+		return cCheca;
+	}
+	
+	public Jogador getJogador() {
+		return jogador;
+	}
+	
+	public int getTileSizeOriginal() {
+		return tileSizeOriginal;
+	}
+
+	public int getEscala() {
+		return escala;
+	}
+
+	public int getTileSize() {
+		return tileSize;
+	}
+
+	public int getMaxScreenCol() {
+		return maxScreenCol;
+	}
+
+	public int getMaxScreenLin() {
+		return maxScreenLin;
+	}
+
+	public int getScreenWidth() {
+		return screenWidth;
+	}
+
+	public int getScreenHeight() {
+		return screenHeight;
+	}
+
+	public int getMaxMundoCol() {
+		return maxMundoCol;
+	}
+
+	public int getMaxMundoLin() {
+		return maxMundoLin;
+	}
+
+	public int getMundoWidth() {
+		return mundoWidth;
+	}
+
+	public int getMundoHeight() {
+		return mundoHeight;
+	}
+    
 }

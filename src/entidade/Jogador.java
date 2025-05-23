@@ -1,7 +1,6 @@
 package entidade;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -12,48 +11,42 @@ import principal.ManipuladorTeclado;
  *
  * @author Mateus
  */
-public class Jogador extends Personagem{
-     GamePanel gp;
-     ManipuladorTeclado keyH;
+public class Jogador extends Personagem {
+     private GamePanel gp;
+     private ManipuladorTeclado keyH;
      
-     public final int telaX;
+     private final int telaX;
      
      public Jogador(GamePanel gp, ManipuladorTeclado keyH) {
+    	 super(16, 32, 64, 64);
          this.gp = gp;
          this.keyH = keyH;
          
-         telaX = gp.screenWidth / 2 - (gp.tileSize / 2);
+         telaX = this.gp.getScreenWidth() / 2 - (this.gp.getTileSize() / 2);
          
-         areaSolida = new Rectangle();
-         areaSolida.x = 16;
-         areaSolida.y = 32;
-         areaSolida.width = 64;
-         areaSolida.height = 64;
-         
-         
-         setDefaultValues();
-         getImagemJogador();
+         this.setDefaultValues();
+         this.getImagemJogador();
      }
      
      public void setDefaultValues() {
-         x = gp.tileSize * 1;
-         mundoX = gp.tileSize * 1;
-         y = gp.tileSize * 1;
-         velocidade = 3;
-         direcao = "baixo"; //a string será usada em um switch para determinar a imagem correspondente
+    	 this.setX(this.getGp().getTileSize());
+         this.setMundoX(this.getGp().getTileSize());
+         this.setY(this.getGp().getTileSize());
+         this.setVelocidade(3);
+         this.setDirecao("baixo"); //a string será usada em um switch para determinar a imagem correspondente
      }
      public void getImagemJogador() {
     	 
     	 try {
     		 
-    		 cima1 = ImageIO.read(getClass().getResourceAsStream("/jogador/player_cima_1.png")); //pega cada png da pasta de sprites
-    		 cima2 = ImageIO.read(getClass().getResourceAsStream("/jogador/player_cima_2.png")); 
-    		 baixo1 = ImageIO.read(getClass().getResourceAsStream("/jogador/player_baixo_1.png")); 
-    		 baixo2 = ImageIO.read(getClass().getResourceAsStream("/jogador/player_baixo_2.png")); 
-    		 esq1 = ImageIO.read(getClass().getResourceAsStream("/jogador/player_esquerda_1.png")); 
-    		 esq2 = ImageIO.read(getClass().getResourceAsStream("/jogador/player_esquerda_2.png")); 
-    		 dir1 = ImageIO.read(getClass().getResourceAsStream("/jogador/player_direita_1.png")); 
-    		 dir2 = ImageIO.read(getClass().getResourceAsStream("/jogador/player_direita_2.png")); 
+    		 this.setCima1(ImageIO.read(getClass().getResourceAsStream("/jogador/player_cima_1.png"))); //pega cada png da pasta de sprites
+    		 this.setCima2(ImageIO.read(getClass().getResourceAsStream("/jogador/player_cima_2.png"))); 
+    		 this.setBaixo1(ImageIO.read(getClass().getResourceAsStream("/jogador/player_baixo_1.png"))); 
+    		 this.setBaixo2(ImageIO.read(getClass().getResourceAsStream("/jogador/player_baixo_2.png"))); 
+    		 this.setEsq1(ImageIO.read(getClass().getResourceAsStream("/jogador/player_esquerda_1.png"))); 
+    		 this.setEsq2(ImageIO.read(getClass().getResourceAsStream("/jogador/player_esquerda_2.png"))); 
+    		 this.setDir1(ImageIO.read(getClass().getResourceAsStream("/jogador/player_direita_1.png"))); 
+    		 this.setDir2(ImageIO.read(getClass().getResourceAsStream("/jogador/player_direita_2.png"))); 
 
     	 } catch (IOException e) {
     		 e.printStackTrace();
@@ -61,54 +54,54 @@ public class Jogador extends Personagem{
      }
      
      public void update() { //o método update é chamado 60 vezes por segundo
-    	if(keyH.baixoPress == true || keyH.cimaPress == true || keyH.dirPress == true || keyH.esqPress == true) { 
+    	if(this.getKeyH().getBaixoPress() || this.getKeyH().getCimaPress() || this.getKeyH().getDirPress() || this.getKeyH().getEsqPress()) { 
     		//a lógica está dentro desse if para que o spriteCount só aumente quando uma das teclas está sendo pressionada
     		//assim o personagem só se move quando está andando
     		
-            if (keyH.cimaPress == true) {
-            	direcao = "cima";
-            } else if (keyH.baixoPress == true) {
-            	direcao = "baixo";
-            } else if (keyH.esqPress == true) {
-            	direcao = "esquerda";
-            } else if (keyH.dirPress == true) {
-            	direcao = "direita";
+            if (this.getKeyH().getCimaPress()) {
+            	setDirecao("cima");
+            } else if (this.getKeyH().getBaixoPress()) {
+            	this.setDirecao("baixo");
+            } else if (this.getKeyH().getEsqPress()) {
+            	this.setDirecao("esquerda");
+            } else if (this.getKeyH().getDirPress()) {
+            	this.setDirecao("direita");
             }
             
             //CHECA A COLISÃO DO TILE
-            colisaoLig = false;
-            gp.cCheca.checaTile(this);
+            this.setColisaoLig(false);
+            this.getGp().getcCheca().checaTile(this);
             
             //SE A COLISÃO FRO FALSA, O JOGADOR PODE SE MOVER
-            if (colisaoLig == false) { //para que o player só possa se mover quando o bloco não é sólido
+            if (!this.getColisaoLig()) { //para que o player só possa se mover quando o bloco não é sólido
             	
-            	switch(direcao) {
+            	switch (this.getDirecao()) {
             	case "cima":
-                    y -= velocidade; //através da velocidade determinamos quantos pixels o player se move
+            		this.setY(this.getY() - this.getVelocidade()); //através da velocidade determinamos quantos pixels o player se move
             		break;
             	case "baixo":
-                    y += velocidade;
+            		this.setY(this.getY() + this.getVelocidade());
             		break;
             	case "esquerda":
-                    x -= velocidade;
-                    mundoX -= velocidade;
+            		this.setX(this.getX() - this.getVelocidade());
+            		this.setMundoX(this.getMundoX() - this.getVelocidade());
             		break;
             	case "direita":
-                    x += velocidade;
-                	mundoX += velocidade;
+            		this.setX(this.getX() + this.getVelocidade());
+            		this.setMundoX(this.getMundoX() + this.getVelocidade());
             		break;
             	}
             	
             }
             
-            spriteCount++; //lógica para que a img do jogador mude à cada 10 frames
-            if(spriteCount == 20) {
-            	if(spriteNum == 1) {
-            		spriteNum = 2;
-            	} else if (spriteNum == 2) {
-            		spriteNum = 1;
+            this.setSpriteCount(this.getSpriteCount() + 1); //lógica para que a img do jogador mude à cada 10 frames
+            if(this.getSpriteCount() == 20) {
+            	if(this.getSpriteCount() == 1) {
+            		this.setSpriteCount(2);
+            	} else if (this.getSpriteCount() == 2) {
+            		this.setSpriteCount(1);
             	}
-            	spriteCount = 0;
+            	this.setSpriteCount(0);
             }
     		
     	}
@@ -117,24 +110,45 @@ public class Jogador extends Personagem{
      public void desenhar(Graphics2D g2) {
     	    BufferedImage imagem = null;
 
-    	    switch (direcao) {
-    	        case "cima": imagem = (spriteNum == 1) ? cima1 : cima2; break;
-    	        case "baixo": imagem = (spriteNum == 1) ? baixo1 : baixo2; break;
-    	        case "esquerda": imagem = (spriteNum == 1) ? esq1 : esq2; break;
-    	        case "direita": imagem = (spriteNum == 1) ? dir1 : dir2; break;
+    	    switch (this.getDirecao()) {
+    	        case "cima": imagem = (this.getSpriteCount() == 1) ? this.getCima1() : this.getCima2(); break;
+    	        case "baixo": imagem = (this.getSpriteCount() == 1) ? this.getBaixo1() : this.getBaixo2(); break;
+    	        case "esquerda": imagem = (this.getSpriteCount() == 1) ? this.getEsq1() : this.getEsq2(); break;
+    	        case "direita": imagem = (this.getSpriteCount() == 1) ? this.getDir1() : this.getDir2(); break;
     	    }
 
-    	    int drawX = gp.jogador.telaX;
+    	    int drawX = this.getGp().getJogador().getTelaX();
 
     	    // Bordas do mapa
-    	    if (mundoX < telaX) {
-    	        drawX = mundoX; // início do mapa
-    	    } else if (mundoX > gp.tileSize * gp.maxMundoCol - (gp.screenWidth - telaX)) {
-    	        drawX = mundoX - (gp.tileSize * gp.maxMundoCol - gp.screenWidth); // final do mapa
+    	    if (this.getMundoX() < this.getTelaX()) {
+    	        drawX = this.getMundoX(); // início do mapa
+    	    } else if (this.getMundoX() > this.getGp().getTileSize() * this.getGp().getMaxMundoCol() - (this.getGp().getScreenWidth() - this.getTelaX())) {
+    	        drawX = this.getMundoX() - (this.getGp().getTileSize() * this.getGp().getMaxMundoCol() - this.getGp().getScreenWidth()); // final do mapa
     	    }
 
-    	    g2.drawImage(imagem, drawX, y, gp.tileSize, gp.tileSize, null);
+    	    g2.drawImage(imagem, drawX, this.getY(), this.getGp().getTileSize(), this.getGp().getTileSize(), null);
 	}
 
+     //setters
+	public void setGp(GamePanel gp) {
+		this.gp = gp;
+	}
+
+	public void setKeyH(ManipuladorTeclado keyH) {
+		this.keyH = keyH;
+	}
+     
+     //getters
+	public GamePanel getGp() {
+		return gp;
+	}
+	
+	public ManipuladorTeclado getKeyH() {
+		return keyH;
+	}
+	
+	public int getTelaX() {
+		return telaX;
+	}
 
 }

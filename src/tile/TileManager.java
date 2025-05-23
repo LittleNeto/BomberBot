@@ -9,16 +9,16 @@ import principal.GamePanel;
 import principal.GeradorMapas;
 
 public class TileManager {
-	GamePanel gp;
-	public Tile[] tile;
-	public int mapTileNum[][];
+	private GamePanel gp;
+	private Tile[] tile;
+	private int mapTileNum[][];
 	
 	public TileManager(GamePanel gp) {
 		
 		this.gp = gp;
 		
-		tile = new Tile[10]; //lista dos tipos diferentes de blocos que terão no jogo
-		mapTileNum = new int[gp.maxMundoLin][gp.maxMundoCol]; //matriz que vai guardar os tipos de blocos do mapa
+		this.tile = new Tile[10]; //lista dos tipos diferentes de blocos que terão no jogo
+		this.mapTileNum = new int[gp.getMaxMundoLin()][gp.getMaxMundoCol()]; //matriz que vai guardar os tipos de blocos do mapa
 		
 		getImagemTile();
 		carregarMapa();
@@ -28,16 +28,16 @@ public class TileManager {
 		
 		try {
 			
-			tile[0] = new Tile();
-			tile[0].imagem = ImageIO.read(getClass().getResourceAsStream("/tiles/terra_alfa.png"));
+			this.getTile()[0] = new Tile();
+			this.getTile()[0].setImagem(ImageIO.read(getClass().getResourceAsStream("/tiles/terra_alfa.png")));
 			
-			tile[1] = new Tile();
-			tile[1].imagem = ImageIO.read(getClass().getResourceAsStream("/tiles/parede_alfa.png"));
-			tile[1].colisao = true;
+			this.getTile()[1] = new Tile();
+			this.getTile()[1].setImagem(ImageIO.read(getClass().getResourceAsStream("/tiles/parede_alfa.png")));
+			this.getTile()[1].setColisao(true);
 			
-			tile[2] = new Tile();
-			tile[2].imagem = ImageIO.read(getClass().getResourceAsStream("/tiles/lixo_alfa.png"));
-			tile[2].colisao = true;
+			this.getTile()[2] = new Tile();
+			this.getTile()[2].setImagem(ImageIO.read(getClass().getResourceAsStream("/tiles/lixo_alfa.png")));
+			this.getTile()[2].setColisao(true);
 			
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -46,37 +46,62 @@ public class TileManager {
 	}
 	
 	public void carregarMapa() {
-		mapTileNum = GeradorMapas.gerarMapa(10, 31);
+		this.setMapTileNum(GeradorMapas.gerarMapa(10, 31));
 	}
 	
 	public void desenhar(Graphics2D g2) {
-	    for (int lin = 0; lin < gp.maxMundoLin; lin++) {
-	        for (int col = 0; col < gp.maxMundoCol; col++) {
-	            int tileNum = mapTileNum[lin][col];
+	    for (int lin = 0; lin < this.getGp().getMaxMundoLin(); lin++) {
+	        for (int col = 0; col < this.getGp().getMaxMundoCol(); col++) {
+	            int tileNum = this.getMapTileNum()[lin][col];
 
-	            int mundoX = col * gp.tileSize;
-	            int mundoY = lin * gp.tileSize;
+	            int mundoX = col * this.getGp().getTileSize();
+	            int mundoY = lin * this.getGp().getTileSize();
 
-	            int telaX = mundoX - gp.jogador.mundoX + gp.jogador.telaX;
+	            int telaX = mundoX - this.getGp().getJogador().getMundoX() + this.getGp().getJogador().getTelaX();
 
 	            // ajusta a lógica para que a tela para de se mexer perto da borda do início
-	            if (gp.jogador.mundoX < gp.jogador.telaX) {
+	            if (this.getGp().getJogador().getMundoX() < this.getGp().getJogador().getTelaX()) {
 	                telaX = mundoX;
 	            }
 
 	            // a mesma lógica mas para a margem do final 
-	            int margemDireita = gp.tileSize * gp.maxMundoCol - gp.screenWidth + gp.jogador.telaX;
-	            if (gp.jogador.mundoX > margemDireita) {
-	                telaX = mundoX - (gp.tileSize * gp.maxMundoCol - gp.screenWidth);
+	            int margemDireita = this.getGp().getTileSize() * this.getGp().getMaxMundoCol() - this.getGp().getScreenWidth() + this.getGp().getJogador().getTelaX();
+	            if (this.getGp().getJogador().getMundoX() > margemDireita) {
+	                telaX = mundoX - (this.getGp().getTileSize() * this.getGp().getMaxMundoCol() - this.getGp().getScreenWidth());
 	            }
 
 	            // Desenha apenas se o tile estiver visível na tela
-	            if (telaX + gp.tileSize > 0 && telaX < gp.screenWidth) {
-	                g2.drawImage(tile[tileNum].imagem, telaX, mundoY, gp.tileSize, gp.tileSize, null);
+	            if (telaX + this.getGp().getTileSize() > 0 && telaX < this.getGp().getScreenWidth()) {
+	                g2.drawImage(this.getTile()[tileNum].getImagem(), telaX, mundoY, this.getGp().getTileSize(), this.getGp().getTileSize(), null);
 	            }
 	        }
 	    }
 	}
 
+	//setters
+	public void setGp(GamePanel gp) {
+		this.gp = gp;
+	}
+
+	public void setTile(Tile[] tile) {
+		this.tile = tile;
+	}
+
+	public void setMapTileNum(int[][] mapTileNum) {
+		this.mapTileNum = mapTileNum;
+	}
+	
+	//getters
+	public GamePanel getGp() {
+		return gp;
+	}
+	
+	public Tile[] getTile() {
+		return tile;
+	}
+	
+	public int[][] getMapTileNum() {
+		return mapTileNum;
+	}
 
 }

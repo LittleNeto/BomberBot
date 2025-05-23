@@ -11,7 +11,7 @@ import java.awt.event.KeyListener;
 public class ManipuladorTeclado implements KeyListener { 
 //implementa uma interface para "ler" as teclas pressionadas
     
-    public boolean cimaPress, baixoPress, esqPress, dirPress;
+    private boolean cimaPress, baixoPress, esqPress, dirPress;
     
     @Override
     public void keyTyped(KeyEvent e) {
@@ -22,16 +22,16 @@ public class ManipuladorTeclado implements KeyListener {
         int code = e.getKeyCode(); //retorna o int associado ao código da tecla
         
         if (code == KeyEvent.VK_W) { //caso a tecla W seja pressionada
-            cimaPress = true;
+        	this.setCimaPress(true);
         }
         if (code == KeyEvent.VK_A) { //caso a tecla W seja pressionada
-            esqPress = true;
+        	this.setEsqPress(true);
         }
         if (code == KeyEvent.VK_S) { //caso a tecla W seja pressionada
-            baixoPress = true;
+        	this.setBaixoPress(true);
         }
         if (code == KeyEvent.VK_D) { //caso a tecla W seja pressionada
-            dirPress = true;
+        	this.setDirPress(true);
         }
     }
 
@@ -40,17 +40,51 @@ public class ManipuladorTeclado implements KeyListener {
         int code = e.getKeyCode(); //retorna o int associado ao código da tecla
         
         if (code == KeyEvent.VK_W) { //caso a tecla W seja pressionada
-            cimaPress = false;
+        	this.setCimaPress(false);
         }
         if (code == KeyEvent.VK_A) { //caso a tecla W seja pressionada
-            esqPress = false;
+        	this.setEsqPress(false);
         }
         if (code == KeyEvent.VK_S) { //caso a tecla W seja pressionada
-            baixoPress = false;
+        	this.setBaixoPress(false);
         }
         if (code == KeyEvent.VK_D) { //caso a tecla W seja pressionada
-            dirPress = false;
+        	this.setDirPress(false);
         }
     }
-    
+
+    //setters
+	public void setCimaPress(boolean cimaPress) {
+		this.cimaPress = cimaPress;
+	}
+
+	public void setBaixoPress(boolean baixoPress) {
+		this.baixoPress = baixoPress;
+	}
+
+	public void setEsqPress(boolean esqPress) {
+		this.esqPress = esqPress;
+	}
+
+	public void setDirPress(boolean dirPress) {
+		this.dirPress = dirPress;
+	}
+	
+	//getters
+	public boolean getCimaPress() {
+		return cimaPress;
+	}
+	
+	public boolean getBaixoPress() {
+		return baixoPress;
+	}
+	
+	public boolean getEsqPress() {
+		return esqPress;
+	}
+	
+	public boolean getDirPress() {
+		return dirPress;
+	}
+	
 }
