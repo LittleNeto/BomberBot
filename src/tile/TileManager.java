@@ -6,12 +6,14 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import principal.GamePanel;
-import principal.GeradorMapas;
+
+import recursos.Mapa;
 
 public class TileManager {
 	private GamePanel gp;
 	private Tile[] tile;
 	private int mapTileNum[][];
+	private Mapa mapa;
 	
 	public TileManager(GamePanel gp) {
 		
@@ -20,8 +22,10 @@ public class TileManager {
 		this.tile = new Tile[10]; //lista dos tipos diferentes de blocos que terão no jogo
 		this.mapTileNum = new int[gp.getMaxMundoLin()][gp.getMaxMundoCol()]; //matriz que vai guardar os tipos de blocos do mapa
 		
-		getImagemTile();
-		carregarMapa();
+		this.mapa = new Mapa();
+		
+		this.getImagemTile();
+		this.carregarMapa();
 	}
 	
 	public void getImagemTile() {
@@ -46,7 +50,7 @@ public class TileManager {
 	}
 	
 	public void carregarMapa() {
-		this.setMapTileNum(GeradorMapas.gerarMapa(10, 31));
+		this.setMapTileNum(mapa.getGrade());
 	}
 	
 	public void desenhar(Graphics2D g2) {
