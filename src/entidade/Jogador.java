@@ -132,7 +132,7 @@ public class Jogador extends Personagem {
 	    g2.drawImage(imagem, drawX, this.getY(), this.getGp().getTileSize(), this.getGp().getTileSize(), null);
 	}
 
-     //setters
+    //setters
 	public void setGp(GamePanel gp) {
 		this.gp = gp;
 	}
@@ -141,7 +141,7 @@ public class Jogador extends Personagem {
 		this.keyH = keyH;
 	}
      
-     //getters
+    //getters
 	public GamePanel getGp() {
 		return gp;
 	}
