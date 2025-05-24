@@ -16,7 +16,7 @@ public class Bomba {
 	
 	public void explodir(Mapa mapa, List<Bomba> bombas) {
 		if (this.getX() >= 0 && this.getX() < 10 && this.getY() >= 0 && this.getY() < 31) {
-            mapa.[this.getX()][this.getY()] = 3; // O centro da explosão pega fogo
+            mapa.grade[this.getX()][this.getY()] = 3; // O centro da explosão pega fogo
 
             // Explode para cima
             for (int i = 1; i <= this.getAlcance() && mapa.grade[this.getX() - i][this.getY()] != 1; i++) {
