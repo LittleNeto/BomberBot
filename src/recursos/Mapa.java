@@ -54,5 +54,11 @@ public class Mapa {
 			this.bombas.add(bomba);
 		}
 	}
+
+        public int[][] getGrade() {
+            return grade;
+        }
+        
+        
 	
 }
