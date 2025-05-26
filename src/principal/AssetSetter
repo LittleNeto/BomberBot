@@ -1,0 +1,25 @@
+package principal;
+
+import inimigo.BotFacil;
+/**
+ * 
+ * @author usuario
+ */
+
+public class AssetSetter {
+    GamePanel gp;
+    
+    public AssetSetter(GamePanel gp) {
+        this.gp = gp;
+    }
+    
+    public void setObject() {
+        
+    }
+    public void setBot() {
+        gp.monstros[0] = new BotFacil(gp);
+        gp.monstros[0].setMundoX(gp.getTileSize() * 21);
+        gp.monstros[0].setY(gp.getTileSize() * 21);
+    }
+        
+}
