@@ -1,13 +1,18 @@
 package entidade;
 
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import principal.GamePanel;
 
 /**
  *
  * @author Mateus
  */ 
 public abstract class Personagem {
+    
+    GamePanel gp;
+    
     protected int x, mundoX, y;
     protected int velocidade;
     
@@ -20,12 +25,15 @@ public abstract class Personagem {
     protected Rectangle areaSolida; //para definir a colisão do personagem
     protected boolean colisaoLig = false;
     
-    public Personagem(int x, int y, int width, int height) {
-    	areaSolida = new Rectangle();
-        areaSolida.x = x;
-        areaSolida.y = y;
-        areaSolida.width = width;
-        areaSolida.height = height;
+    protected int vidaMax;
+    protected int vida;
+    
+    public Personagem(GamePanel gp) {
+        this.gp = gp;
+    }
+    
+    public void desenhar(Graphics2D g2, ) {
+        
     }
 
     //setters
