@@ -24,6 +24,7 @@ public class Main {
         janela.setLocationRelativeTo(null); //coloca a janela no centro da tela
         janela.setVisible(true);
         
+        gamePanel.setupGame();
         gamePanel.StartGameThread();
         
     }
