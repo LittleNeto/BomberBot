@@ -1,0 +1,40 @@
+package inimigo;
+
+import entidade.Personagem;
+import java.awt.Rectangle;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import principal.GamePanel;
+
+public class BotFacil extends Personagem{
+    public BotFacil(GamePanel gp) {
+        super(gp);
+        velocidade = 3;
+        direcao = "baixo"; 
+        areaSolida = new Rectangle();
+        areaSolida.x = 16;
+        areaSolida.y = 32;
+        areaSolida.width = 64;
+        areaSolida.height = 64;
+        vidaMax = 3;
+        vida = vidaMax;
+        
+        getImagem();
+    }
+    public void getImagem() {
+        try {
+
+               this.setCima1(ImageIO.read(getClass().getResourceAsStream("/inimigos/botA_cima_1.png"))); //pega cada png da pasta de sprites
+               this.setCima2(ImageIO.read(getClass().getResourceAsStream("/inimigos/botA_cima_2.png"))); 
+               this.setBaixo1(ImageIO.read(getClass().getResourceAsStream("/inimigos/botA_baixo_1.png"))); 
+               this.setBaixo2(ImageIO.read(getClass().getResourceAsStream("/inimigos/botA_baixo_2.png"))); 
+               this.setEsq1(ImageIO.read(getClass().getResourceAsStream("/inimigos/botA_esquerda_1.png"))); 
+               this.setEsq2(ImageIO.read(getClass().getResourceAsStream("/inimigos/botA_esquerda_2.png"))); 
+               this.setDir1(ImageIO.read(getClass().getResourceAsStream("/inimigos/botA_direita_1.png"))); 
+               this.setDir2(ImageIO.read(getClass().getResourceAsStream("/inimigos/botA_direita_2.png"))); 
+
+        } catch (IOException e) {
+               e.printStackTrace();
+        }
+    }
+}
