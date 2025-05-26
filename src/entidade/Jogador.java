@@ -1,6 +1,7 @@
 package entidade;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -12,14 +13,20 @@ import principal.ManipuladorTeclado;
  * @author Mateus
  */
 public class Jogador extends Personagem {
-     private GamePanel gp;
      private ManipuladorTeclado keyH;
      
      private final int telaX;
      
      public Jogador(GamePanel gp, ManipuladorTeclado keyH) {
-    	 super(16, 32, 64, 64);
-         this.gp = gp;
+    	 super(gp);
+         
+        areaSolida = new Rectangle();
+        areaSolida.x = 16;
+        areaSolida.y = 32;
+        areaSolida.width = 64;
+        areaSolida.height = 64;
+        vidaMax = 3;
+        vida = vidaMax;
          this.keyH = keyH;
          
          telaX = this.gp.getScreenWidth() / 2 - (this.gp.getTileSize() / 2);
