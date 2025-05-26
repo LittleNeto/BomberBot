@@ -6,6 +6,7 @@ package principal;
  */
 
 import entidade.Jogador;
+import entidade.Personagem;
 import tile.TileManager;
 
 import javax.swing.JPanel;
@@ -39,7 +40,9 @@ public class GamePanel extends JPanel implements Runnable {
     private ManipuladorTeclado keyH = new ManipuladorTeclado();
     private Thread gameThread; //implementado para ajudar a atualizar a tela durante o decorrer do jogo
     private ColisaoChecador cCheca = new ColisaoChecador(this);
+    public AssetSetter aSetter = new AssetSetter(this);
     private Jogador jogador = new Jogador(this, this.getKeyH()); //cria uma instância jogador dentro da Tela do jogo
+    public Personagem[] monstros = new Personagem[10];
     
     public GamePanel() {
         this.setPreferredSize(new Dimension(this.getScreenWidth(), this.getScreenHeight())); //define a dimensão da tela
@@ -47,6 +50,11 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true); //melhora a renderização do jogo
         this.addKeyListener(this.getKeyH()); //o gamePanel vai reconhecer o input das teclas
         this.setFocusable(true);
+    }
+    
+    public void setupGame() {
+        aSetter.setObject();
+        aSetter.setBot();
     }
 
     public void StartGameThread() {
@@ -99,6 +107,13 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D)g; //tem mais funções que o Graphics
         
         this.getTileM().desenhar(g2); //vem antes para que o cenário seja desenhado antes do personagem
+        
+        for(int i = 0; i < monstros.length; i++) {
+            if (monstros[i] != null) {
+                monstros[i].desenhar(g2, this);
+            }
+        }
+        
         this.getJogador().desenhar(g2);
         
         g2.dispose(); //libera memória do que não está sendo mais usado
