@@ -110,7 +110,7 @@ public class GamePanel extends JPanel implements Runnable {
         
         for(int i = 0; i < monstros.length; i++) {
             if (monstros[i] != null) {
-                monstros[i].desenhar(g2, this);
+                monstros[i].desenhar(g2);
             }
         }
         
