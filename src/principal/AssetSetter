@@ -18,8 +18,12 @@ public class AssetSetter {
     }
     public void setBot() {
         gp.monstros[0] = new BotFacil(gp);
-        gp.monstros[0].setMundoX(gp.getTileSize() * 21);
-        gp.monstros[0].setY(gp.getTileSize() * 21);
+        gp.monstros[0].setMundoX(gp.getTileSize() * 5);
+        gp.monstros[0].setMundoY(gp.getTileSize() * 2);
+        
+        gp.monstros[1] = new BotFacil(gp);
+        gp.monstros[1].setMundoX(gp.getTileSize() * 28);
+        gp.monstros[1].setMundoY(gp.getTileSize() * 7);
     }
         
 }
