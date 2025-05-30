@@ -15,8 +15,8 @@ public class ColisaoChecador {
 
 	    int personagemEsqMundoX = personagem.getMundoX() + personagem.getAreaSolida().x;
 	    int personagemDirMundoX = personagem.getMundoX() + personagem.getAreaSolida().x + personagem.getAreaSolida().width;
-	    int personagemTopoMundoY = personagem.getY() + personagem.getAreaSolida().y;
-	    int personagemFundoMundoY = personagem.getY() + personagem.getAreaSolida().y + personagem.getAreaSolida().height;
+	    int personagemTopoMundoY = personagem.getMundoY() + personagem.getAreaSolida().y;
+	    int personagemFundoMundoY = personagem.getMundoY() + personagem.getAreaSolida().y + personagem.getAreaSolida().height;
 
 	    int personagemEsqCol = personagemEsqMundoX / this.getGp().getTileSize();
 	    int personagemDirCol = personagemDirMundoX / this.getGp().getTileSize();
