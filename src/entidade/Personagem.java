@@ -9,22 +9,28 @@ public abstract class Personagem {
 
     GamePanel gp;
 
+    //COORDENADAS DO PERSONAGEM NO MAPA
     protected int mundoX, mundoY;
-    protected int velocidade;
 
+    //IMAGENS E POSIÇÃO QUE O PERSONAGEM APARECE NO MAPA
     protected BufferedImage cima1, cima2, baixo1, baixo2, esq1, esq2, dir1, dir2;
     protected String direcao;
-
+    
+    //LÓGICA DOS SPRITES
     protected int spriteCount = 0;
     protected int spriteNum = 1;
-
+    
+    //COLISÃO DO PERSONAGEM
     protected Rectangle areaSolida = new Rectangle(0, 0, 64, 64);
     public int areaSolidaDefaultX, areaSolidaDefaultY;
     protected boolean colisaoLig = false;
 
+    //STATUS DO PERSONAGEM
     protected int vidaMax;
     protected int vida;
+    protected int velocidade;
     
+    //usado para ajudar na lógica de movimento dos Bots
     public int actionLockCounter = 0;
 
     public Personagem(GamePanel gp) {
