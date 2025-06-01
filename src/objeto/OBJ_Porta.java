@@ -11,10 +11,10 @@ public class OBJ_Porta extends SuperObjeto{
 		try {
 			imagem = ImageIO.read(getClass().getResourceAsStream("/objetos/porta.png"));
 		} catch(IOException e) {
-			
+			e.printStackTrace();
 		}
 		
-		colisao = true;
+		colisao = false; //podemos passar "por cima" da porta
 	}
 	
 }
