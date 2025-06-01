@@ -16,7 +16,10 @@ public class Jogador extends Personagem {
     public Jogador(GamePanel gp, ManipuladorTeclado keyH) {
         super(gp);
 
-        areaSolida = new java.awt.Rectangle(16, 32, 64, 64);
+        areaSolida = new java.awt.Rectangle(16, 32, 64, 64); //x, y, width, height - RESPECTIVAMENTE
+        areaSolidaDefaultX = areaSolida.x;
+        areaSolidaDefaultY = areaSolida.y;
+        
         vidaMax = 3;
         vida = vidaMax;
 
@@ -30,9 +33,8 @@ public class Jogador extends Personagem {
     }
 
     public void setDefaultValues() {
-        setX(gp.getTileSize());
-        setMundoX(gp.getTileSize());
-        setMundoY(gp.getTileSize());
+        setMundoX(gp.getTileSize()); //define as coordenadas x e y que o jogador aparece na tela, a velocidade e a direção padrão
+        setMundoY(gp.getTileSize() * 2);
         setVelocidade(3);
         setDirecao("baixo");
     }
@@ -63,9 +65,19 @@ public class Jogador extends Personagem {
             } else if (keyH.getDirPress()) {
                 setDirecao("direita");
             }
-
+            
+            
+            //checa a colisão com o tile
             setColisaoLig(false);
             gp.getcCheca().checaTile(this);
+            
+            //checa a colisão com o objeto
+            int objetoIndex = gp.getcCheca().checaObjeto(this, true);
+//            pegarObjeto(objetoIndex);
+            
+            //checa a colisão com o Bot
+            int botIndex = gp.getcCheca().checaEntidade(this, gp.monstros);
+            interageBot(botIndex);
 
             if (!getColisaoLig()) {
                 switch (getDirecao()) {
@@ -91,6 +103,20 @@ public class Jogador extends Personagem {
                 setSpriteCount(0);
             }
         }
+    }
+    
+//    public void pegarObjeto(int i) { //a lógica pode ser usada para os powerups, já que após pegar ele some da tela
+//    	
+//    	if(i != 999) { //pode ser qualquer número, desde que não apareça no array de objetos
+//    		gp.obj[i] = null; //deleta o objeto
+//    	}
+//    	
+//    }
+    
+    public void interageBot(int i) {
+    	if (i != 999) {
+    		System.out.println("Enconstou no Bot!");
+    	}
     }
 
     public void desenhar(Graphics2D g2) {
