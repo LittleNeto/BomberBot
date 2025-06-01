@@ -9,7 +9,7 @@ public abstract class Personagem {
 
     GamePanel gp;
 
-    protected int x, mundoX, mundoY;
+    protected int mundoX, mundoY;
     protected int velocidade;
 
     protected BufferedImage cima1, cima2, baixo1, baixo2, esq1, esq2, dir1, dir2;
@@ -18,16 +18,54 @@ public abstract class Personagem {
     protected int spriteCount = 0;
     protected int spriteNum = 1;
 
-    protected Rectangle areaSolida; // para colisão
+    protected Rectangle areaSolida = new Rectangle(0, 0, 64, 64);
+    public int areaSolidaDefaultX, areaSolidaDefaultY;
     protected boolean colisaoLig = false;
 
     protected int vidaMax;
     protected int vida;
+    
+    public int actionLockCounter = 0;
 
     public Personagem(GamePanel gp) {
         this.gp = gp;
     }
+    
+    public void setAction() {
+    	
+    }
+    public void update() {
+    	setAction();
+    	
+    	colisaoLig = false;
+    	gp.getcCheca().checaTile(this);
+    	gp.getcCheca().checaObjeto(this, false);
+    	gp.getcCheca().checaJogador(this);
+    	
+        if (!getColisaoLig()) {
+            switch (getDirecao()) {
+                case "cima":
+                    setMundoY(getMundoY() - getVelocidade());
+                    break;
+                case "baixo":
+                    setMundoY(getMundoY() + getVelocidade());
+                    break;
+                case "esquerda":
+                    setMundoX(getMundoX() - getVelocidade());
+                    break;
+                case "direita":
+                    setMundoX(getMundoX() + getVelocidade());
+                    break;
+            }
+        }
 
+        // Controle do sprite para animação
+        setSpriteCount(getSpriteCount() + 1);
+        if (getSpriteCount() > 15) {
+            setSpriteNum(getSpriteNum() == 1 ? 2 : 1);
+            setSpriteCount(0);
+        }
+    }
     public void desenhar(Graphics2D g2) {
         BufferedImage imagem = null;
 
@@ -85,10 +123,6 @@ public abstract class Personagem {
 
 
     // Setters
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public void setMundoX(int mundoX) {
         this.mundoX = mundoX;
     }
@@ -154,10 +188,6 @@ public abstract class Personagem {
     }
 
     // Getters
-    public int getX() {
-        return this.x;
-    }
-
     public int getMundoX() {
         return this.mundoX;
     }
