@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import principal.GamePanel;
 
 public class SuperObjeto {
-	public BufferedImage imagem;
+	public BufferedImage imagem, imagem1, imagem2;
 	public String nome;
 	public boolean colisao = false;
 	public int mundoX, mundoY;
