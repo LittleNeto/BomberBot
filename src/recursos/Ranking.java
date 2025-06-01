@@ -22,6 +22,7 @@ public class Ranking implements Comparable<Ranking>{
 		this.tempo = tempo;
 	}
 	
+	// Método pra puxar a linha do .txt
 	public static Ranking puxaLinha(String linha) {
         String[] partes = linha.split(" - ");
         LocalDateTime dataHora = LocalDateTime.parse(partes[0], FORMATTER);
@@ -30,14 +31,22 @@ public class Ranking implements Comparable<Ranking>{
         return new Ranking(dataHora, nome, tempo);
     }
 	
+	// junta os dados em uma String na forma que vai ser inserido no .txt
 	public String formataLinha() {
-		return dataHora.format(FORMATTER) + "-" + jogador + "-" + tempo;
+		return dataHora.format(FORMATTER) + " - " + jogador + " - " + tempo;
 	}
 	
 	public int getTempo(){
 		return tempo;
 	}
-		
+	
+	public LocalDateTime getDataHora() {
+		return dataHora;
+	}
+
+	public String getJogador() {
+		return jogador;
+	}
 	
 	@Override
 	public int compareTo(Ranking outro) {
