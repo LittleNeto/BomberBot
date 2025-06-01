@@ -20,7 +20,7 @@ public class AssetSetter {
     	
     	gp.obj[1] = new OBJ_Porta();
     	gp.obj[1].mundoX = gp.getTileSize() * 2;
-    	gp.obj[1].mundoY = gp.getTileSize() * 2;
+    	gp.obj[1].mundoY = gp.getTileSize() * 1;
     }
     public void setBot() {
         gp.monstros[0] = new BotFacil(gp);
