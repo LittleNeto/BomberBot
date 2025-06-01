@@ -124,10 +124,15 @@ public class ColisaoChecador {
 	                    break;
 	            }
 
-	            if (personagem.getAreaSolida().intersects(gp.obj[i].areaSolida)) {
-	                System.out.println("Colisão com objeto na direção: " + personagem.getDirecao());
+	            if (personagem.getAreaSolida().intersects(gp.obj[i].areaSolida) ) {
+//	                System.out.println("Colisão com objeto na direção: " + personagem.getDirecao());
 	                index = i; // opcional — caso queira saber qual objeto colidiu
 	            }
+	            if (jogador == true && personagem.getAreaSolida().intersects(gp.obj[i].areaSolida) ) {
+	                System.out.println("Colisão com objeto na direção: " + personagem.getDirecao());
+	                index = i; // opcional — caso queira saber qual objeto colidiu
+	            }	            
+	            
 
 	            // Restaura as posições originais
 	            personagem.getAreaSolida().x = personagemAreaX;
@@ -160,28 +165,28 @@ public class ColisaoChecador {
 				case "cima":
 					personagem.getAreaSolida().y -= personagem.getVelocidade();
 					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
-						personagem.setColisaoLig(true);
+//						personagem.setColisaoLig(true);
 						index = i;
 					}
 					break;
 				case "baixo":
 					personagem.getAreaSolida().y += personagem.getVelocidade();
 					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
-						personagem.setColisaoLig(true);
+//						personagem.setColisaoLig(true);
 						index = i;
 					}
 					break;
 				case "esquerda":
 					personagem.getAreaSolida().x -= personagem.getVelocidade();
 					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
-						personagem.setColisaoLig(true);
+//						personagem.setColisaoLig(true);
 						index = i;
 					}
 					break;
 				case "direita":
 					personagem.getAreaSolida().x += personagem.getVelocidade();
 					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
-						personagem.setColisaoLig(true);
+//						personagem.setColisaoLig(true);
 						index = i;
 					}
 					break;
@@ -207,25 +212,29 @@ public class ColisaoChecador {
 		case "cima":
 			personagem.getAreaSolida().y -= personagem.getVelocidade();
 			if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
-				personagem.setColisaoLig(true);
+				System.out.println("Encostou no jogador CIMA");
+//				personagem.setColisaoLig(true);
 			}
 			break;
 		case "baixo":
 			personagem.getAreaSolida().y += personagem.getVelocidade();
 			if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
-				personagem.setColisaoLig(true);
+//				personagem.setColisaoLig(true);
+				System.out.println("Encostou no jogador BAIXO");
 			}
 			break;
 		case "esquerda":
 			personagem.getAreaSolida().x -= personagem.getVelocidade();
 			if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
-				personagem.setColisaoLig(true);
+//				personagem.setColisaoLig(true);
+				System.out.println("Encostou no jogador ESQ");
 			}
 			break;
 		case "direita":
 			personagem.getAreaSolida().x += personagem.getVelocidade();
 			if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
-				personagem.setColisaoLig(true);
+//				personagem.setColisaoLig(true);
+				System.out.println("Encostou no jogador DIR");
 			}
 			break;
 		}
