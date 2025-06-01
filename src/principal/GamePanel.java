@@ -7,6 +7,7 @@ package principal;
 
 import entidade.Jogador;
 import entidade.Personagem;
+import objeto.SuperObjeto;
 import tile.TileManager;
 
 import javax.swing.JPanel;
@@ -32,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     private final int mundoWidth = this.getTileSize() * this.getMaxMundoCol(); //2976 pixels de largura
     private final int mundoHeight = this.getTileSize() * this.getMaxMundoLin(); //960 pixels de altura
     
+    
     //FPS
     private int fps = 60;
     
@@ -42,7 +44,10 @@ public class GamePanel extends JPanel implements Runnable {
     private ColisaoChecador cCheca = new ColisaoChecador(this);
     public AssetSetter aSetter = new AssetSetter(this);
     private Jogador jogador = new Jogador(this, this.getKeyH()); //cria uma instância jogador dentro da Tela do jogo
+    public SuperObjeto[] obj = new SuperObjeto[10]; //não significa que só podem existir 10 objetos no jogo, mas que pode ter 10 objetos ao mesmo tempo
     public Personagem[] monstros = new Personagem[10];
+    
+
     
     public GamePanel() {
         this.setPreferredSize(new Dimension(this.getScreenWidth(), this.getScreenHeight())); //define a dimensão da tela
@@ -51,6 +56,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(this.getKeyH()); //o gamePanel vai reconhecer o input das teclas
         this.setFocusable(true);
     }
+    
+    
     
     public void setupGame() {
         aSetter.setObject();
@@ -90,7 +97,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
             
             if (timer >= 1000000000) {
-                System.out.println("Fps: " + drawCount);
+//                System.out.println("Fps: " + drawCount);
                 drawCount = 0;
                 timer = 0;
             }
@@ -99,6 +106,11 @@ public class GamePanel extends JPanel implements Runnable {
     
     public void update() {
         this.getJogador().update();
+        for (int i = 0; i < monstros.length; i++) {
+        	if (monstros[i] != null) {
+        		monstros[i].update();
+        	}
+        }
     }
     
     public void paintComponent(Graphics g) { //está sobrescrevendo um método que já existe em java
@@ -106,14 +118,27 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g; //tem mais funções que o Graphics
         
+        //TILE
         this.getTileM().desenhar(g2); //vem antes para que o cenário seja desenhado antes do personagem
         
+        //OBS: podemos separar a geração de tiles em dois, para que primeiro seja desenhado as paredes e a terra e por cima dos obejtos sejam desenhados o lixo
+        //ou também podemos desenhar o bloxo de lixo como um objeto, de forma que ele seja desenhado depois, mas seria mais trabalhoso provavelmente
+        
+        //OBJETOS
+        for (int i = 0; i < obj.length; i++) {
+        	if (obj[i] != null) {
+        		obj[i].desenhar(g2, this);
+        	}
+        }
+        
+        //BOTS
         for(int i = 0; i < monstros.length; i++) {
             if (monstros[i] != null) {
                 monstros[i].desenhar(g2);
             }
         }
         
+        //JOGADOR
         this.getJogador().desenhar(g2);
         
         g2.dispose(); //libera memória do que não está sendo mais usado
