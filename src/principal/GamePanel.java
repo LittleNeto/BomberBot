@@ -37,12 +37,15 @@ public class GamePanel extends JPanel implements Runnable {
     //FPS
     private int fps = 60;
     
+    //SISTEMA
     private TileManager tileM = new TileManager(this);
-    
     private ManipuladorTeclado keyH = new ManipuladorTeclado();
     private Thread gameThread; //implementado para ajudar a atualizar a tela durante o decorrer do jogo
     private ColisaoChecador cCheca = new ColisaoChecador(this);
     public AssetSetter aSetter = new AssetSetter(this);
+    public UI ui = new UI(this);
+    
+    //ENTIDADES E OBJETOS
     private Jogador jogador = new Jogador(this, this.getKeyH()); //cria uma instância jogador dentro da Tela do jogo
     public SuperObjeto[] obj = new SuperObjeto[10]; //não significa que só podem existir 10 objetos no jogo, mas que pode ter 10 objetos ao mesmo tempo
     public Personagem[] monstros = new Personagem[10];
@@ -140,6 +143,9 @@ public class GamePanel extends JPanel implements Runnable {
         
         //JOGADOR
         this.getJogador().desenhar(g2);
+        
+        //UI
+        ui.desenhar(g2);
         
         g2.dispose(); //libera memória do que não está sendo mais usado
     }
