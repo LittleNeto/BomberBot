@@ -55,6 +55,185 @@ public class ColisaoChecador {
 	        personagem.setColisaoLig(true);
 	    }
 	}
+	
+	public int checaObjeto(Personagem personagem, boolean jogador) {
+	    int index = 999;
+
+	    for (int i = 0; i < gp.obj.length; i++) {
+
+	        if (gp.obj[i] != null) {
+	            // Salva as posições originais das áreas sólidas
+	            int personagemAreaX = personagem.getAreaSolida().x;
+	            int personagemAreaY = personagem.getAreaSolida().y;
+
+	            int objetoAreaX = gp.obj[i].areaSolida.x;
+	            int objetoAreaY = gp.obj[i].areaSolida.y;
+
+	            // Ajusta para a posição no mundo
+	            personagem.getAreaSolida().x = personagem.getMundoX() + personagemAreaX;
+	            personagem.getAreaSolida().y = personagem.getMundoY() + personagemAreaY;
+
+	            gp.obj[i].areaSolida.x = gp.obj[i].mundoX + objetoAreaX;
+	            gp.obj[i].areaSolida.y = gp.obj[i].mundoY + objetoAreaY;
+
+	            // Simula o movimento para ver se colide
+	            switch (personagem.getDirecao()) {
+	                case "cima":
+	                    personagem.getAreaSolida().y -= personagem.getVelocidade();
+	                    if(personagem.getAreaSolida().intersects(gp.obj[i].areaSolida)) {
+	                    	if(gp.obj[i].colisao == true) {
+	                    		personagem.setColisaoLig(true);
+	                    	}
+	                    	if(jogador == true) {
+	                    		index = i;
+	                    	}
+	                    }
+	                    break;
+	                case "baixo":
+	                    personagem.getAreaSolida().y += personagem.getVelocidade();
+	                    if(personagem.getAreaSolida().intersects(gp.obj[i].areaSolida)) {
+	                    	if(gp.obj[i].colisao == true) {
+	                    		personagem.setColisaoLig(true);
+	                    	}
+	                    	if(jogador == true) {
+	                    		index = i;
+	                    	}
+	                    }
+	                    break;
+	                case "esquerda":
+	                    personagem.getAreaSolida().x -= personagem.getVelocidade();
+	                    if(personagem.getAreaSolida().intersects(gp.obj[i].areaSolida)) {
+	                    	if(gp.obj[i].colisao == true) {
+	                    		personagem.setColisaoLig(true);
+	                    	}
+	                    	if(jogador == true) {
+	                    		index = i;
+	                    	}
+	                    }
+	                    break;
+	                case "direita":
+	                    personagem.getAreaSolida().x += personagem.getVelocidade();
+	                    if(personagem.getAreaSolida().intersects(gp.obj[i].areaSolida)) {
+	                    	if(gp.obj[i].colisao == true) {
+	                    		personagem.setColisaoLig(true);
+	                    	}
+	                    	if(jogador == true) {
+	                    		index = i;
+	                    	}
+	                    }
+	                    break;
+	            }
+
+	            if (personagem.getAreaSolida().intersects(gp.obj[i].areaSolida)) {
+	                System.out.println("Colisão com objeto na direção: " + personagem.getDirecao());
+	                index = i; // opcional — caso queira saber qual objeto colidiu
+	            }
+
+	            // Restaura as posições originais
+	            personagem.getAreaSolida().x = personagemAreaX;
+	            personagem.getAreaSolida().y = personagemAreaY;
+
+	            gp.obj[i].areaSolida.x = objetoAreaX;
+	            gp.obj[i].areaSolida.y = objetoAreaY;
+	        }
+	    }
+
+	    return index;
+	}
+
+	
+	public int checaEntidade(Personagem personagem, Personagem[] target) {
+		
+		int index = 999;
+		
+		for (int i = 0; i < target.length; i++) {
+			
+			if (target[i] != null) {
+				
+				personagem.getAreaSolida().x = personagem.getMundoX() + personagem.getAreaSolida().x;
+				personagem.getAreaSolida().y = personagem.getMundoY() + personagem.getAreaSolida().y;
+				
+				target[i].getAreaSolida().x = target[i].getMundoX() + target[i].getAreaSolida().x;
+				target[i].getAreaSolida().y = target[i].getMundoY() + target[i].getAreaSolida().y;
+				
+				switch(personagem.getDirecao()) {
+				case "cima":
+					personagem.getAreaSolida().y -= personagem.getVelocidade();
+					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
+						personagem.setColisaoLig(true);
+						index = i;
+					}
+					break;
+				case "baixo":
+					personagem.getAreaSolida().y += personagem.getVelocidade();
+					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
+						personagem.setColisaoLig(true);
+						index = i;
+					}
+					break;
+				case "esquerda":
+					personagem.getAreaSolida().x -= personagem.getVelocidade();
+					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
+						personagem.setColisaoLig(true);
+						index = i;
+					}
+					break;
+				case "direita":
+					personagem.getAreaSolida().x += personagem.getVelocidade();
+					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
+						personagem.setColisaoLig(true);
+						index = i;
+					}
+					break;
+				}
+				personagem.getAreaSolida().x = personagem.areaSolidaDefaultX;
+				personagem.getAreaSolida().y = personagem.areaSolidaDefaultY;				
+				target[i].getAreaSolida().x = target[i].areaSolidaDefaultX;
+				target[i].getAreaSolida().y = target[i].areaSolidaDefaultY;
+			}
+
+		}
+		return index;
+	}
+	
+	public void checaJogador(Personagem personagem) {
+		personagem.getAreaSolida().x = personagem.getMundoX() + personagem.getAreaSolida().x;
+		personagem.getAreaSolida().y = personagem.getMundoY() + personagem.getAreaSolida().y;
+		
+		gp.getJogador().getAreaSolida().x = gp.getJogador().getMundoX() + gp.getJogador().getAreaSolida().x;
+		gp.getJogador().getAreaSolida().y = gp.getJogador().getMundoY() + gp.getJogador().getAreaSolida().y;
+		
+		switch(personagem.getDirecao()) {
+		case "cima":
+			personagem.getAreaSolida().y -= personagem.getVelocidade();
+			if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
+				personagem.setColisaoLig(true);
+			}
+			break;
+		case "baixo":
+			personagem.getAreaSolida().y += personagem.getVelocidade();
+			if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
+				personagem.setColisaoLig(true);
+			}
+			break;
+		case "esquerda":
+			personagem.getAreaSolida().x -= personagem.getVelocidade();
+			if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
+				personagem.setColisaoLig(true);
+			}
+			break;
+		case "direita":
+			personagem.getAreaSolida().x += personagem.getVelocidade();
+			if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
+				personagem.setColisaoLig(true);
+			}
+			break;
+		}
+		personagem.getAreaSolida().x = personagem.areaSolidaDefaultX;
+		personagem.getAreaSolida().y = personagem.areaSolidaDefaultY;				
+		gp.getJogador().getAreaSolida().x = gp.getJogador().areaSolidaDefaultX;
+		gp.getJogador().getAreaSolida().y = gp.getJogador().areaSolidaDefaultY;
+	}
 
 	//setters
 	public void setGp(GamePanel gp) {
