@@ -12,6 +12,7 @@ public class Jogador extends Personagem {
 
     private final int telaX;
     private final int telaY;
+    int botsMortos; //SERÁ USADO PARA PASSAR DE CADA FASE
 
     public Jogador(GamePanel gp, ManipuladorTeclado keyH) {
         super(gp);
@@ -19,9 +20,6 @@ public class Jogador extends Personagem {
         areaSolida = new java.awt.Rectangle(16, 32, 64, 64); //x, y, width, height - RESPECTIVAMENTE
         areaSolidaDefaultX = areaSolida.x;
         areaSolidaDefaultY = areaSolida.y;
-        
-        vidaMax = 3;
-        vida = vidaMax;
 
         this.keyH = keyH;
 
@@ -37,6 +35,12 @@ public class Jogador extends Personagem {
         setMundoY(gp.getTileSize() * 2);
         setVelocidade(3);
         setDirecao("baixo");
+        
+        //STATUS DO PLAYER
+        vidaMax = 3;
+        vida = vidaMax;
+        botsMortos = 0; 
+        
     }
 
     public void carregarImagens() {
@@ -73,7 +77,7 @@ public class Jogador extends Personagem {
             
             //checa a colisão com o objeto
             int objetoIndex = gp.getcCheca().checaObjeto(this, true);
-//            pegarObjeto(objetoIndex);
+            pegarObjeto(objetoIndex);  //SERÁ USADA PARA PEGAR BOMBAS, E PARA PASSAR DE FASE
             
             //checa a colisão com o Bot
             int botIndex = gp.getcCheca().checaEntidade(this, gp.monstros);
@@ -105,17 +109,29 @@ public class Jogador extends Personagem {
         }
     }
     
-//    public void pegarObjeto(int i) { //a lógica pode ser usada para os powerups, já que após pegar ele some da tela
-//    	
-//    	if(i != 999) { //pode ser qualquer número, desde que não apareça no array de objetos
-//    		gp.obj[i] = null; //deleta o objeto
-//    	}
-//    	
-//    }
+    //pegarObjeto poderia ser deixado apenas para Bombas e poderes, e criaríamos outro método parecido específico para a Porta
+    public void pegarObjeto(int i) { //a lógica pode ser usada para os powerups, já que após pegar ele some da tela
+    	
+    	if(i != 999) { //pode ser qualquer número, desde que não apareça no array de objetos
+    		
+    		String nomeObjeto = gp.obj[i].nome;
+    		
+    		switch(nomeObjeto) {
+    		case "Porta": //TESTE
+//    			if(botsMortos > 10) {
+//    				gp.ui.jogoAcabado = true;
+//    			}
+    			break;
+    		}
+    	}
+    	
+    }
     
     public void interageBot(int i) {
     	if (i != 999) {
-    		System.out.println("Enconstou no Bot!");
+//    		gp.ui.mostrarMensagem("Você encostou no bot");
+//    		this.botsMortos++; //TESTE
+    		
     	}
     }
 
@@ -173,4 +189,5 @@ public class Jogador extends Personagem {
     public int getTelaY() {
         return telaY;
     }
+    
 }
