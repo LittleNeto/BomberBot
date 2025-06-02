@@ -11,8 +11,14 @@ import java.awt.event.KeyListener;
 public class ManipuladorTeclado implements KeyListener { 
 //implementa uma interface para "ler" as teclas pressionadas
     
+	GamePanel gp;
     private boolean cimaPress, baixoPress, esqPress, dirPress;
+    //DEBUG
     boolean checkDrawTime = false;
+    
+    public ManipuladorTeclado(GamePanel gp) {
+    	this.gp = gp;
+    }
     
     @Override
     public void keyTyped(KeyEvent e) {
@@ -34,6 +40,13 @@ public class ManipuladorTeclado implements KeyListener {
         }
         if (code == KeyEvent.VK_D) { //caso a tecla W seja pressionada
         	this.setDirPress(true);
+        }
+        if (code == KeyEvent.VK_P) { //caso a tecla P seja pressionada
+        	if(gp.gameState == gp.playState) {
+        		gp.gameState = gp.pauseState;
+        	} else if (gp.gameState == gp.pauseState) {
+        		gp.gameState = gp.playState;
+        	}
         }
         
         //DEBUG
