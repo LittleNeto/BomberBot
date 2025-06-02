@@ -39,7 +39,7 @@ public class GamePanel extends JPanel implements Runnable {
     
     //SISTEMA
     private TileManager tileM = new TileManager(this);
-    private ManipuladorTeclado keyH = new ManipuladorTeclado();
+    private ManipuladorTeclado keyH = new ManipuladorTeclado(this);
     private Thread gameThread; //implementado para ajudar a atualizar a tela durante o decorrer do jogo
     private ColisaoChecador cCheca = new ColisaoChecador(this);
     public AssetSetter aSetter = new AssetSetter(this);
@@ -50,6 +50,10 @@ public class GamePanel extends JPanel implements Runnable {
     public SuperObjeto[] obj = new SuperObjeto[10]; //não significa que só podem existir 10 objetos no jogo, mas que pode ter 10 objetos ao mesmo tempo
     public Personagem[] monstros = new Personagem[10];
     
+    //GAME STATE
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
 
     
     public GamePanel() {
@@ -65,6 +69,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void setupGame() {
         aSetter.setObject();
         aSetter.setBot();
+        gameState = playState;
     }
 
     public void StartGameThread() {
@@ -108,12 +113,19 @@ public class GamePanel extends JPanel implements Runnable {
     }
     
     public void update() {
-        this.getJogador().update();
-        for (int i = 0; i < monstros.length; i++) {
-        	if (monstros[i] != null) {
-        		monstros[i].update();
-        	}
-        }
+    	
+    	if (gameState == playState) {
+            this.getJogador().update();
+            for (int i = 0; i < monstros.length; i++) {
+            	if (monstros[i] != null) {
+            		monstros[i].update();
+            	}
+            }	
+    	}
+    	if (gameState == pauseState) {
+    		//nada
+    	}
+    	
     }
     
     public void paintComponent(Graphics g) { //está sobrescrevendo um método que já existe em java
