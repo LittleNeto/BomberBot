@@ -12,6 +12,7 @@ public class ManipuladorTeclado implements KeyListener {
 //implementa uma interface para "ler" as teclas pressionadas
     
     private boolean cimaPress, baixoPress, esqPress, dirPress;
+    boolean checkDrawTime = false;
     
     @Override
     public void keyTyped(KeyEvent e) {
@@ -21,6 +22,7 @@ public class ManipuladorTeclado implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode(); //retorna o int associado ao código da tecla
         
+        //MOVIMENTOS
         if (code == KeyEvent.VK_W) { //caso a tecla W seja pressionada
         	this.setCimaPress(true);
         }
@@ -32,6 +34,15 @@ public class ManipuladorTeclado implements KeyListener {
         }
         if (code == KeyEvent.VK_D) { //caso a tecla W seja pressionada
         	this.setDirPress(true);
+        }
+        
+        //DEBUG
+        if (code == KeyEvent.VK_T) { //caso a tecla W seja pressionada
+        	if (checkDrawTime == false) {
+        		checkDrawTime = true;
+        	} else if (checkDrawTime == true) {
+        		checkDrawTime = false;
+        	}
         }
     }
 
