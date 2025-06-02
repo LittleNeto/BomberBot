@@ -4,12 +4,17 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import principal.GamePanel;
+
 public class OBJ_Porta extends SuperObjeto{
 	
-	public OBJ_Porta() {
+	GamePanel gp;
+	
+	public OBJ_Porta(GamePanel gp) {
 		nome = "Porta";
 		try {
 			imagem = ImageIO.read(getClass().getResourceAsStream("/objetos/porta.png"));
+			uTool.scaleImage(imagem, gp.getTileSize(), gp.getTileSize());
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
