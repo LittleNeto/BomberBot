@@ -18,7 +18,7 @@ public class AssetSetter {
     
     public void setObject() {
     	
-    	gp.obj[1] = new OBJ_Porta();
+    	gp.obj[1] = new OBJ_Porta(gp);
     	gp.obj[1].mundoX = gp.getTileSize() * 2;
     	gp.obj[1].mundoY = gp.getTileSize() * 1;
     }
