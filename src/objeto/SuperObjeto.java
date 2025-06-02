@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import principal.GamePanel;
+import principal.UtilityTool;
 
 public class SuperObjeto {
 	public BufferedImage imagem, imagem1, imagem2;
@@ -13,6 +14,7 @@ public class SuperObjeto {
 	public Rectangle areaSolida = new Rectangle(32, 32, 32, 32); //centraliza a 'hitbox' do objeto
 	public int areaSolidaDefaultX = 0;
 	public int areaSolidaDefaultY = 0;
+	UtilityTool uTool = new UtilityTool();
 	
 	public void desenhar(Graphics2D g2, GamePanel gp) {
 	    BufferedImage imagem = null;
