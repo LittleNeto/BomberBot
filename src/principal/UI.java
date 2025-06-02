@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 public class UI {
 	
 	GamePanel gp;
+	Graphics2D g2;
 	Font arial_40;
 	public boolean mensagemLig;
 	public String mensagem = "";
@@ -29,51 +30,31 @@ public class UI {
 	
 	public void desenhar(Graphics2D g2) {
 		
-		//podemos adaptar um pouco essa lógica para passar de fase
-		if(jogoAcabado == true) {
-			
-//			g2.setFont(arial_40);
-//			g2.setColor(Color.white);
-//			
-//			String texto;
-//			int textoLength;
-//			int x;
-//			int y;
-//			
-//			texto = "Você ganhou!";
-//			textoLength = (int) g2.getFontMetrics().getStringBounds(texto, g2).getWidth(); //retorna a largura do texto
-//			
-//			x = gp.getScreenWidth()/2 - textoLength/2;
-//			y = gp.getScreenHeight()/2 - gp.getTileSize() * 3;
-//			g2.drawString(texto, x, y);
-//			
-//			gp.setGameThread(null);
-			
-		} else {
-			g2.setFont(arial_40);
-			g2.setColor(Color.white);
-//			g2.drawString("VL = " + gp.getJogador().getVelocidade(), 50, 50);
-			
-			//TEMPO
-			tempoJogo -= (double) 1/60;
-			g2.drawString("TEMPO: " + dFormt.format(tempoJogo), gp.getTileSize() * 13, 50);
-			
-			//MENSAGEM
-//			if (mensagemLig == true) {
-//				g2.setFont(g2.getFont().deriveFont(30F));
-//				g2.drawString(mensagem, gp.getTileSize()/2, gp.getTileSize() * 5);
-//				
-//				mensagemCont++;
-//				
-//				if (mensagemCont > 120) { //60 fps, então seriam 2 segundos
-//					mensagemCont = 0;
-//					mensagemLig = false;
-//				}
-//			}
-		}
+		this.g2 = g2;
+		g2.setFont(arial_40);
+		g2.setColor(Color.white);
 		
-
+		if(gp.gameState == gp.playState) {
+			//
+		}
+		if(gp.gameState == gp.pauseState) {
+			desenharTelaPausa();
+		}
+	}
+	public void desenharTelaPausa() {
+		g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 100F));
+		String texto = "PAUSADO";
+		int x = getXparaTextoCentralizado(texto);
+		int y = gp.getScreenHeight()/2;
+		
+		g2.drawString(texto, x, y);
 	}
 	
+	public int getXparaTextoCentralizado(String texto) {
+		int length = (int)g2.getFontMetrics().getStringBounds(texto, g2).getWidth();
+		int x =  gp.getScreenWidth()/2 - length/2;
+		
+		return x;
+	}
 	
 }
