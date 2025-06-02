@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import principal.GamePanel;
-
+import principal.UtilityTool;
 import recursos.Mapa;
 
 public class TileManager {
@@ -30,23 +30,24 @@ public class TileManager {
 	
 	public void getImagemTile() {
 		
+		setup(0, "terra_alfa", false);
+		setup(1, "parede_alfa", true);
+		setup(2, "lixo_alfa", true);
+
+	}
+	
+	public void setup(int index, String imagePath, boolean colisao) {
+		UtilityTool uTool = new UtilityTool();
 		try {
 			
-			this.getTile()[0] = new Tile();
-			this.getTile()[0].setImagem(ImageIO.read(getClass().getResourceAsStream("/tiles/terra_alfa.png")));
-			
-			this.getTile()[1] = new Tile();
-			this.getTile()[1].setImagem(ImageIO.read(getClass().getResourceAsStream("/tiles/parede_alfa.png")));
-			this.getTile()[1].setColisao(true);
-			
-			this.getTile()[2] = new Tile();
-			this.getTile()[2].setImagem(ImageIO.read(getClass().getResourceAsStream("/tiles/lixo_alfa.png")));
-			this.getTile()[2].setColisao(true);
+			tile[index] = new Tile();
+			tile[index].setImagem(ImageIO.read(getClass().getResourceAsStream("/tiles/"+ imagePath + ".png")));
+			tile[index].setImagem(uTool.scaleImage(tile[index].getImagem(), gp.getTileSize(), gp.getTileSize()));
+			tile[index].setColisao(colisao);
 			
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public void carregarMapa() {
@@ -76,7 +77,7 @@ public class TileManager {
 
 	            // Desenha apenas se o tile estiver visível na tela
 	            if (telaX + this.getGp().getTileSize() > 0 && telaX < this.getGp().getScreenWidth()) {
-	                g2.drawImage(this.getTile()[tileNum].getImagem(), telaX, mundoY, this.getGp().getTileSize(), this.getGp().getTileSize(), null);
+	                g2.drawImage(this.getTile()[tileNum].getImagem(), telaX, mundoY, null);
 	            }
 	        }
 	    }
