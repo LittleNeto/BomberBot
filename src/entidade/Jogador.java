@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import principal.GamePanel;
 import principal.ManipuladorTeclado;
+import principal.UtilityTool;
 
 public class Jogador extends Personagem {
     private ManipuladorTeclado keyH;
@@ -44,18 +45,31 @@ public class Jogador extends Personagem {
     }
 
     public void carregarImagens() {
-        try {
-            setCima1(ImageIO.read(getClass().getResourceAsStream("/jogador/player_cima_1.png")));
-            setCima2(ImageIO.read(getClass().getResourceAsStream("/jogador/player_cima_2.png")));
-            setBaixo1(ImageIO.read(getClass().getResourceAsStream("/jogador/player_baixo_1.png")));
-            setBaixo2(ImageIO.read(getClass().getResourceAsStream("/jogador/player_baixo_2.png")));
-            setEsq1(ImageIO.read(getClass().getResourceAsStream("/jogador/player_esquerda_1.png")));
-            setEsq2(ImageIO.read(getClass().getResourceAsStream("/jogador/player_esquerda_2.png")));
-            setDir1(ImageIO.read(getClass().getResourceAsStream("/jogador/player_direita_1.png")));
-            setDir2(ImageIO.read(getClass().getResourceAsStream("/jogador/player_direita_2.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
+        setCima1(setup("player_cima_1"));
+        setCima2(setup("player_cima_2"));
+        setBaixo1(setup("player_baixo_1"));
+        setBaixo2(setup("player_baixo_2"));
+        setEsq1(setup("player_esquerda_1"));
+        setEsq2(setup("player_esquerda_2"));
+        setDir1(setup("player_direita_1"));
+        setDir2(setup("player_direita_2"));
+        
+    }
+    
+    public BufferedImage setup(String imagemNome) {
+    	UtilityTool uTool = new UtilityTool();
+    	BufferedImage imagem = null;
+    	
+    	try {
+    		imagem = ImageIO.read(getClass().getResourceAsStream("/jogador/" + imagemNome + ".png"));
+    		imagem = uTool.scaleImage(imagem, gp.getTileSize(), gp.getTileSize());
+    		
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return imagem;
     }
 
     public void update() {
@@ -161,7 +175,7 @@ public class Jogador extends Personagem {
             drawY = getMundoY() - (gp.getTileSize() * gp.getMaxMundoLin() - gp.getScreenHeight());
         }
 
-        g2.drawImage(imagem, drawX, drawY, gp.getTileSize(), gp.getTileSize(), null);
+        g2.drawImage(imagem, drawX, drawY, null);
     }
 
     // Setters e getters
