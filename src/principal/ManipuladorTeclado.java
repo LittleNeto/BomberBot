@@ -28,19 +28,50 @@ public class ManipuladorTeclado implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode(); //retorna o int associado ao código da tecla
         
-        //MOVIMENTOS
-        if (code == KeyEvent.VK_W) { //caso a tecla W seja pressionada
-        	this.setCimaPress(true);
+        if (gp.gameState == gp.titleState) {
+            if (code == KeyEvent.VK_W) { //caso a tecla W seja pressionada
+            	gp.ui.numComando--;
+            	if (gp.ui.numComando < 0) {
+            		gp.ui.numComando = 2;
+            	}
+            }
+            if (code == KeyEvent.VK_S) { //caso a tecla W seja pressionada
+            	gp.ui.numComando++;
+            	if (gp.ui.numComando > 2) {
+            		gp.ui.numComando = 0;
+            	}
+            }
+            
+            if(code == KeyEvent.VK_ENTER) {
+        		if (gp.ui.numComando == 0){
+        			gp.gameState = gp.playState;
+        		}
+        		if (gp.ui.numComando == 1) {
+        			//IMPLEMENTAR O RANKING
+        		}
+        		if (gp.ui.numComando == 2) {
+        			System.exit(0);
+        		}
+            }
         }
-        if (code == KeyEvent.VK_A) { //caso a tecla W seja pressionada
-        	this.setEsqPress(true);
+        
+        if (gp.gameState == gp.playState) {
+            //MOVIMENTOS
+            if (code == KeyEvent.VK_W) { //caso a tecla W seja pressionada
+            	this.setCimaPress(true);
+            }
+            if (code == KeyEvent.VK_A) { //caso a tecla W seja pressionada
+            	this.setEsqPress(true);
+            }
+            if (code == KeyEvent.VK_S) { //caso a tecla W seja pressionada
+            	this.setBaixoPress(true);
+            }
+            if (code == KeyEvent.VK_D) { //caso a tecla W seja pressionada
+            	this.setDirPress(true);
+            }
         }
-        if (code == KeyEvent.VK_S) { //caso a tecla W seja pressionada
-        	this.setBaixoPress(true);
-        }
-        if (code == KeyEvent.VK_D) { //caso a tecla W seja pressionada
-        	this.setDirPress(true);
-        }
+        
+        
         if (code == KeyEvent.VK_P) { //caso a tecla P seja pressionada
         	if(gp.gameState == gp.playState) {
         		gp.gameState = gp.pauseState;
@@ -50,7 +81,7 @@ public class ManipuladorTeclado implements KeyListener {
         }
         
         //DEBUG
-        if (code == KeyEvent.VK_T) { //caso a tecla W seja pressionada
+        if (code == KeyEvent.VK_T) { //caso a tecla T seja pressionada
         	if (checkDrawTime == false) {
         		checkDrawTime = true;
         	} else if (checkDrawTime == true) {
