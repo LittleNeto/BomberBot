@@ -50,8 +50,10 @@ public class GamePanel extends JPanel implements Runnable {
     public SuperObjeto[] obj = new SuperObjeto[10]; //não significa que só podem existir 10 objetos no jogo, mas que pode ter 10 objetos ao mesmo tempo
     public Personagem[] monstros = new Personagem[10];
     
+    //Dá para fazer ENUM----------------------------------------------------------------------
     //GAME STATE
     public int gameState;
+    public final int titleState = 0;
     public final int playState = 1;
     public final int pauseState = 2;
 
@@ -69,7 +71,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void setupGame() {
         aSetter.setObject();
         aSetter.setBot();
-        gameState = playState;
+        gameState = titleState;
     }
 
     public void StartGameThread() {
@@ -137,33 +139,39 @@ public class GamePanel extends JPanel implements Runnable {
         long drawStart = 0;
         if(keyH.checkDrawTime == true) {
             drawStart = System.nanoTime();     	
-        }   
+        }  
         
-        //TILE
-        this.getTileM().desenhar(g2); //vem antes para que o cenário seja desenhado antes do personagem
-        
-        //OBS: podemos separar a geração de tiles em dois, para que primeiro seja desenhado as paredes e a terra e por cima dos obejtos sejam desenhados o lixo
-        //ou também podemos desenhar o bloxo de lixo como um objeto, de forma que ele seja desenhado depois, mas seria mais trabalhoso provavelmente
-        
-        //OBJETOS
-        for (int i = 0; i < obj.length; i++) {
-        	if (obj[i] != null) {
-        		obj[i].desenhar(g2, this);
-        	}
-        }
-        
-        //BOTS
-        for(int i = 0; i < monstros.length; i++) {
-            if (monstros[i] != null) {
-                monstros[i].desenhar(g2);
+        //TITLE State
+        if (gameState == titleState) {
+        	ui.desenhar(g2);
+        } else {
+            //TILE
+            this.getTileM().desenhar(g2); //vem antes para que o cenário seja desenhado antes do personagem
+            
+            //OBS: podemos separar a geração de tiles em dois, para que primeiro seja desenhado as paredes e a terra e por cima dos obejtos sejam desenhados o lixo
+            //ou também podemos desenhar o bloxo de lixo como um objeto, de forma que ele seja desenhado depois, mas seria mais trabalhoso provavelmente
+            
+            //OBJETOS
+            for (int i = 0; i < obj.length; i++) {
+            	if (obj[i] != null) {
+            		obj[i].desenhar(g2, this);
+            	}
             }
+            
+            //BOTS
+            for(int i = 0; i < monstros.length; i++) {
+                if (monstros[i] != null) {
+                    monstros[i].desenhar(g2);
+                }
+            }
+            
+            //JOGADOR
+            this.getJogador().desenhar(g2);
+            
+            //UI
+            ui.desenhar(g2);
         }
         
-        //JOGADOR
-        this.getJogador().desenhar(g2);
-        
-        //UI
-        ui.desenhar(g2);
         
         //DEBUG
         if (keyH.checkDrawTime == true) {
