@@ -42,7 +42,7 @@ public class GamePanel extends JPanel implements Runnable {
     private ManipuladorTeclado keyH = new ManipuladorTeclado(this);
     private Thread gameThread; //implementado para ajudar a atualizar a tela durante o decorrer do jogo
     private ColisaoChecador cCheca = new ColisaoChecador(this);
-    public AssetSetter aSetter = new AssetSetter(this);
+    public AssetSetter aSetter = new AssetSetter(this, this.getTileM().getMapa());
     public UI ui = new UI(this);
     
     //ENTIDADES E OBJETOS

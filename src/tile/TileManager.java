@@ -96,6 +96,10 @@ public class TileManager {
 		this.mapTileNum = mapTileNum;
 	}
 	
+	public void setMapa(Mapa mapa) {
+		this.mapa = mapa;
+	}
+	
 	//getters
 	public GamePanel getGp() {
 		return gp;
@@ -107,6 +111,10 @@ public class TileManager {
 	
 	public int[][] getMapTileNum() {
 		return mapTileNum;
+	}
+	
+	public Mapa getMapa() {
+		return this.mapa;
 	}
 
 }

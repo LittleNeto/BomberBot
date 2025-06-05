@@ -1,5 +1,10 @@
 package recursos;
 
+/**
+*
+* @author Neto
+*/
+
 import java.util.List;
 
 public class Bomba {
