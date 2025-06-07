@@ -18,7 +18,11 @@ public class BotFacil extends Personagem{
         areaSolida.y = 32;
         areaSolida.width = 64;
         areaSolida.height = 64;
-        vidaMax = 3;
+        
+        areaSolidaDefaultX = areaSolida.x;
+        areaSolidaDefaultY = areaSolida.y;
+        
+        vidaMax = 1;
         vida = vidaMax;
         
         getImagem();
