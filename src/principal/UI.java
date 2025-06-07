@@ -4,9 +4,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+
+import javax.imageio.ImageIO;
 
 public class UI {
 	
@@ -69,22 +72,19 @@ public class UI {
 		
 		//Nome do título
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 110F));
-		String texto = "BomberBot";
+		String texto = "";
 		int x = getXparaTextoCentralizado(texto);
 		int y = gp.getTileSize() * 2;
 		
-		g2.setColor(Color.black);
-		g2.drawString(texto, x + 7, y + 7);
-		
 		g2.setColor(Color.orange);
-		g2.drawString(texto, x, y);
+
 		
 		
 		//imagem
 		x = gp.getScreenWidth() / 2 - (gp.getTileSize() * 2) /2;
 		y += gp.getTileSize()  * 1;
 		
-		g2.drawImage(gp.getJogador().getBaixo1(), x, y, gp.getTileSize() * 2, gp.getTileSize() * 2, null);
+		g2.drawImage(setup("BomberBot_titulo"), (gp.getScreenWidth() - 1000) /2, y, null);
 		
 		//MENU
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 48F));
@@ -114,6 +114,19 @@ public class UI {
 		}
 		
 	}
+	
+    public BufferedImage setup(String imagemNome) {
+    	BufferedImage imagem = null;
+    	
+    	try {
+    		imagem = ImageIO.read(getClass().getResourceAsStream("/fontes/" + imagemNome + ".png"));
+    		
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return imagem;
+    }
 	
 	public void desenharTelaPausa() {
 		g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 100F));
