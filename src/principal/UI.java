@@ -50,16 +50,16 @@ public class UI {
 		g2.setColor(Color.white);
 		
 		//Title State
-		if(gp.gameState == gp.titleState) {
+		if(gp.gameState == GameState.TITULO) {
 			desenharTelaTitle();
 		}
 		
 		//Play state
-		if(gp.gameState == gp.playState) {
+		if(gp.gameState == GameState.PLAY) {
 			//
 		}
 		//Pause state
-		if(gp.gameState == gp.pauseState) {
+		if(gp.gameState == GameState.PAUSE) {
 			desenharTelaPausa();
 		}
 	}
