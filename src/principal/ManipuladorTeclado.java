@@ -28,7 +28,7 @@ public class ManipuladorTeclado implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode(); //retorna o int associado ao código da tecla
         
-        if (gp.gameState == gp.titleState) {
+        if (gp.gameState == GameState.TITULO) {
             if (code == KeyEvent.VK_W) { //caso a tecla W seja pressionada
             	gp.ui.numComando--;
             	if (gp.ui.numComando < 0) {
@@ -44,7 +44,7 @@ public class ManipuladorTeclado implements KeyListener {
             
             if(code == KeyEvent.VK_ENTER) {
         		if (gp.ui.numComando == 0){
-        			gp.gameState = gp.playState;
+        			gp.setGameState(GameState.PLAY);
         		}
         		if (gp.ui.numComando == 1) {
         			//IMPLEMENTAR O RANKING
@@ -55,7 +55,7 @@ public class ManipuladorTeclado implements KeyListener {
             }
         }
         
-        if (gp.gameState == gp.playState) {
+        if (gp.gameState == GameState.PLAY) {
             //MOVIMENTOS
             if (code == KeyEvent.VK_W) { //caso a tecla W seja pressionada
             	this.setCimaPress(true);
@@ -73,10 +73,10 @@ public class ManipuladorTeclado implements KeyListener {
         
         
         if (code == KeyEvent.VK_P) { //caso a tecla P seja pressionada
-        	if(gp.gameState == gp.playState) {
-        		gp.gameState = gp.pauseState;
-        	} else if (gp.gameState == gp.pauseState) {
-        		gp.gameState = gp.playState;
+        	if(gp.gameState == GameState.PLAY) {
+        		gp.setGameState(GameState.PAUSE);
+        	} else if (gp.gameState == GameState.PAUSE) {
+        		gp.setGameState(GameState.PLAY);
         	}
         }
         
