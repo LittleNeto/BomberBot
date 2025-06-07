@@ -30,8 +30,6 @@ public class GamePanel extends JPanel implements Runnable {
     
     private final int maxMundoCol = 31; // exemplo: mapa de 50 colunas
     private final int maxMundoLin = 10;
-    private final int mundoWidth = this.getTileSize() * this.getMaxMundoCol(); //2976 pixels de largura
-    private final int mundoHeight = this.getTileSize() * this.getMaxMundoLin(); //960 pixels de altura
     
     
     //FPS
@@ -40,6 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
     //SISTEMA
     private TileManager tileM = new TileManager(this);
     private ManipuladorTeclado keyH = new ManipuladorTeclado(this);
+    Sound sound = new Sound();
     private Thread gameThread; //implementado para ajudar a atualizar a tela durante o decorrer do jogo
     private ColisaoChecador cCheca = new ColisaoChecador(this);
     public AssetSetter aSetter = new AssetSetter(this, this.getTileM().getMapa());
@@ -49,13 +48,9 @@ public class GamePanel extends JPanel implements Runnable {
     private Jogador jogador = new Jogador(this, this.getKeyH()); //cria uma instância jogador dentro da Tela do jogo
     public SuperObjeto[] obj = new SuperObjeto[10]; //não significa que só podem existir 10 objetos no jogo, mas que pode ter 10 objetos ao mesmo tempo
     public Personagem[] monstros = new Personagem[10];
-    
-    //Dá para fazer ENUM----------------------------------------------------------------------
+
     //GAME STATE
-    public int gameState;
-    public final int titleState = 0;
-    public final int playState = 1;
-    public final int pauseState = 2;
+    public GameState gameState;
 
     
     public GamePanel() {
@@ -64,6 +59,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true); //melhora a renderização do jogo
         this.addKeyListener(this.getKeyH()); //o gamePanel vai reconhecer o input das teclas
         this.setFocusable(true);
+        setGameState(GameState.TITULO);
     }
     
     
@@ -71,7 +67,8 @@ public class GamePanel extends JPanel implements Runnable {
     public void setupGame() {
         aSetter.setObject();
         aSetter.setBot();
-        gameState = titleState;
+        setGameState(GameState.TITULO);
+
     }
 
     public void StartGameThread() {
@@ -116,7 +113,7 @@ public class GamePanel extends JPanel implements Runnable {
     
     public void update() {
     	
-    	if (gameState == playState) {
+    	if (gameState == GameState.PLAY) {
             this.getJogador().update();
             for (int i = 0; i < monstros.length; i++) {
             	if (monstros[i] != null) {
@@ -124,7 +121,7 @@ public class GamePanel extends JPanel implements Runnable {
             	}
             }	
     	}
-    	if (gameState == pauseState) {
+    	if (gameState == gameState.PAUSE) {
     		//nada
     	}
     	
@@ -142,7 +139,7 @@ public class GamePanel extends JPanel implements Runnable {
         }  
         
         //TITLE State
-        if (gameState == titleState) {
+        if (gameState == GameState.TITULO) {
         	ui.desenhar(g2);
         } else {
             //TILE
@@ -184,6 +181,46 @@ public class GamePanel extends JPanel implements Runnable {
         
         g2.dispose(); //libera memória do que não está sendo mais usado
     }
+    
+    public void tocarMusica(int i) {
+    	sound.setFile(i);
+    	sound.play();
+    	sound.loop(); //a msuica se repete após acabar
+    }
+    
+    public void pausarMusica() {
+    	sound.pausar();
+    }
+    
+    public void retomarMusica() {
+    	sound.retomar();
+    }
+    
+    public void tocarSom(int i) {
+    	sound.setFile(i);
+    	sound.play();
+    }
+    
+    public void setGameState(GameState novoEstado) {
+        //se estiver indo do play para o pause, pausa
+        if (this.gameState == GameState.PLAY && novoEstado == GameState.PAUSE) {
+            pausarMusica();
+        }
+        //Se voltar do Ppause para o play retoma a música de onde ela parou
+        else if (this.gameState == GameState.PAUSE && novoEstado == GameState.PLAY) {
+            retomarMusica();
+        }
+        //se mudar para um outro estado com outra musica
+        else if (novoEstado.getMusicaIndex() != -1 && novoEstado != this.gameState) {
+            sound.parar();
+            tocarMusica(novoEstado.getMusicaIndex());
+        }
+
+        this.gameState = novoEstado;
+    }
+
+
+
 
     //setters
 	public void setFps(int fps) {
@@ -271,12 +308,4 @@ public class GamePanel extends JPanel implements Runnable {
 		return maxMundoLin;
 	}
 
-	public int getMundoWidth() {
-		return mundoWidth;
-	}
-
-	public int getMundoHeight() {
-		return mundoHeight;
-	}
-    
 }
