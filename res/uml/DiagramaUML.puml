@@ -1,0 +1,367 @@
+@startuml
+
+class OBJ_Vida [[java:objeto.OBJ_Vida]] {
+	+OBJ_Vida()
+}
+class SuperObjeto {
+}
+SuperObjeto <|-- OBJ_Vida
+class UI [[java:principal.UI]] {
+	~g2: Graphics2D
+	~retroGame: Font
+	+mensagemLig: boolean
+	+mensagem: String
+	~mensagemCont: int
+	+jogoAcabado: boolean
+	+numComando: int
+	~tempoJogo: double
+	~dFormt: DecimalFormat
+	+UI(gp: GamePanel)
+	+mostrarMensagem(texto: String): void
+	+desenhar(g2: Graphics2D): void
+	+desenharTelaTitle(): void
+	+desenharTelaPausa(): void
+	+getXparaTextoCentralizado(texto: String): int
+}
+class GamePanel {
+}
+UI --> "1" GamePanel : gp
+class BotFacil [[java:inimigo.BotFacil]] {
+	+BotFacil(gp: GamePanel)
+	+getImagem(): void
+	+setAction(): void
+}
+class Personagem {
+}
+Personagem <|-- BotFacil
+class UtilityTool [[java:principal.UtilityTool]] {
+	+scaleImage(original: BufferedImage, width: int, height: int): BufferedImage
+}
+class AssetSetter [[java:principal.AssetSetter]] {
+	+AssetSetter(gp: GamePanel, mapa: Mapa)
+	+setObject(): void
+	+setBot(): void
+}
+class GamePanel {
+}
+AssetSetter --> "1" GamePanel : gp
+class Mapa {
+}
+AssetSetter --> "1" Mapa : mapa
+class Tile [[java:tile.Tile]] {
+	-imagem: BufferedImage
+	-colisao: boolean
+	+setImagem(imagem: BufferedImage): void
+	+setColisao(colisao: boolean): void
+	+getImagem(): BufferedImage
+	+getColisao(): boolean
+}
+class Jogador [[java:entidade.Jogador]] {
+	-telaX: int
+	-telaY: int
+	~botsMortos: int
+	+Jogador(gp: GamePanel, keyH: ManipuladorTeclado)
+	+setDefaultValues(): void
+	+carregarImagens(): void
+	+setup(imagemNome: String): BufferedImage
+	+update(): void
+	+pegarObjeto(i: int): void
+	+interageBot(i: int): void
+	+desenhar(g2: Graphics2D): void
+	+setGp(gp: GamePanel): void
+	+setKeyH(keyH: ManipuladorTeclado): void
+	+getTelaX(): int
+	+getTelaY(): int
+}
+class ManipuladorTeclado {
+}
+Jogador --> "1" ManipuladorTeclado : keyH
+class GamePanel {
+}
+Jogador --> "1" GamePanel : getGp()
+class ManipuladorTeclado {
+}
+Jogador --> "1" ManipuladorTeclado : getKeyH()
+class Personagem {
+}
+Personagem <|-- Jogador
+abstract class Personagem [[java:entidade.Personagem]] {
+	#mundoX: int
+	#mundoY: int
+	#cima1: BufferedImage
+	#cima2: BufferedImage
+	#baixo1: BufferedImage
+	#baixo2: BufferedImage
+	#esq1: BufferedImage
+	#esq2: BufferedImage
+	#dir1: BufferedImage
+	#dir2: BufferedImage
+	#direcao: String
+	#spriteCount: int
+	#spriteNum: int
+	#areaSolida: Rectangle
+	+areaSolidaDefaultX: int
+	+areaSolidaDefaultY: int
+	#colisaoLig: boolean
+	#vidaMax: int
+	#vida: int
+	#velocidade: int
+	+actionLockCounter: int
+	+Personagem(gp: GamePanel)
+	+setAction(): void
+	+update(): void
+	+desenhar(g2: Graphics2D): void
+	+setMundoX(mundoX: int): void
+	+setMundoY(mundoY: int): void
+	+setVelocidade(velocidade: int): void
+	+setCima1(cima1: BufferedImage): void
+	+setCima2(cima2: BufferedImage): void
+	+setBaixo1(baixo1: BufferedImage): void
+	+setBaixo2(baixo2: BufferedImage): void
+	+setEsq1(esq1: BufferedImage): void
+	+setEsq2(esq2: BufferedImage): void
+	+setDir1(dir1: BufferedImage): void
+	+setDir2(dir2: BufferedImage): void
+	+setDirecao(direcao: String): void
+	+setSpriteCount(spriteCount: int): void
+	+setSpriteNum(spriteNum: int): void
+	+setAreaSolida(areaSolida: Rectangle): void
+	+setColisaoLig(colisaoLig: boolean): void
+	+getMundoX(): int
+	+getMundoY(): int
+	+getVelocidade(): int
+	+getCima1(): BufferedImage
+	+getCima2(): BufferedImage
+	+getBaixo1(): BufferedImage
+	+getBaixo2(): BufferedImage
+	+getEsq1(): BufferedImage
+	+getEsq2(): BufferedImage
+	+getDir1(): BufferedImage
+	+getDir2(): BufferedImage
+	+getDirecao(): String
+	+getSpriteCount(): int
+	+getSpriteNum(): int
+	+getAreaSolida(): Rectangle
+	+getColisaoLig(): boolean
+}
+class GamePanel {
+}
+Personagem --> "1" GamePanel : gp
+class ColisaoChecador [[java:principal.ColisaoChecador]] {
+	+ColisaoChecador(gp: GamePanel)
+	+checaTile(personagem: Personagem): void
+	+checaObjeto(personagem: Personagem, jogador: boolean): int
+	+checaEntidade(personagem: Personagem, target: Personagem[]): int
+	+checaJogador(personagem: Personagem): void
+	+setGp(gp: GamePanel): void
+}
+class GamePanel {
+}
+ColisaoChecador --> "1" GamePanel : gp
+class GamePanel {
+}
+ColisaoChecador --> "1" GamePanel : getGp()
+class Mapa [[java:recursos.Mapa]] {
+	+grade: int[][]
+	+posicaoInimigos: int[][]
+	+Mapa()
+	+{static} gerarMapa(grade: int[][]): int[][]
+	+escreveMapa(): void
+	+apagarFogo(): void
+	+adicionarBomba(bomba: Bomba): void
+	+adicionarPosicaoInimigos(posicaoInimigos: int[][]): int[][]
+	+setGrade(grade: int[][]): void
+	+setBombas(bombas: List<Bomba>): void
+	+getGrade(): int[][]
+}
+class Bomba {
+}
+Mapa --> "*" Bomba : bombas
+class Bomba {
+}
+Mapa --> "*" Bomba : getBombas()
+class SuperObjeto [[java:objeto.SuperObjeto]] {
+	+imagem: BufferedImage
+	+imagem1: BufferedImage
+	+imagem2: BufferedImage
+	+nome: String
+	+colisao: boolean
+	+mundoX: int
+	+mundoY: int
+	+areaSolida: Rectangle
+	+areaSolidaDefaultX: int
+	+areaSolidaDefaultY: int
+	+desenhar(g2: Graphics2D, gp: GamePanel): void
+}
+class UtilityTool {
+}
+SuperObjeto --> "1" UtilityTool : uTool
+class Main [[java:principal.Main]] {
+	+{static} main(args: String[]): void
+}
+class TileManager [[java:tile.TileManager]] {
+	-mapTileNum: int[][]
+	+TileManager(gp: GamePanel)
+	+getImagemTile(): void
+	+setup(index: int, imagePath: String, colisao: boolean): void
+	+carregarMapa(): void
+	+desenhar(g2: Graphics2D): void
+	+setGp(gp: GamePanel): void
+	+setTile(tile: Tile[]): void
+	+setMapTileNum(mapTileNum: int[][]): void
+	+setMapa(mapa: Mapa): void
+	+getMapTileNum(): int[][]
+}
+class GamePanel {
+}
+TileManager --> "1" GamePanel : gp
+class Tile {
+}
+TileManager --> "*" Tile : tile
+class Mapa {
+}
+TileManager --> "1" Mapa : mapa
+class GamePanel {
+}
+TileManager --> "1" GamePanel : getGp()
+class Tile {
+}
+TileManager --> "*" Tile : getTile()
+class Mapa {
+}
+TileManager --> "1" Mapa : getMapa()
+class Bomba [[java:recursos.Bomba]] {
+	-x: int
+	-y: int
+	-alcance: int
+	+Bomba(x: int, y: int)
+	+explodir(mapa: Mapa, bombas: List<Bomba>): void
+	+setX(x: int): void
+	+setY(y: int): void
+	+setAlcance(alcance: int): void
+	+getX(): int
+	+getY(): int
+	+getAlcance(): int
+}
+class ManipuladorTeclado [[java:principal.ManipuladorTeclado]] {
+	-cimaPress: boolean
+	-baixoPress: boolean
+	-esqPress: boolean
+	-dirPress: boolean
+	~checkDrawTime: boolean
+	+ManipuladorTeclado(gp: GamePanel)
+	+keyTyped(e: KeyEvent): void
+	+keyPressed(e: KeyEvent): void
+	+keyReleased(e: KeyEvent): void
+	+setCimaPress(cimaPress: boolean): void
+	+setBaixoPress(baixoPress: boolean): void
+	+setEsqPress(esqPress: boolean): void
+	+setDirPress(dirPress: boolean): void
+	+getCimaPress(): boolean
+	+getBaixoPress(): boolean
+	+getEsqPress(): boolean
+	+getDirPress(): boolean
+}
+class GamePanel {
+}
+ManipuladorTeclado --> "1" GamePanel : gp
+interface KeyListener {
+}
+KeyListener <|.. ManipuladorTeclado
+class OBJ_Porta [[java:objeto.OBJ_Porta]] {
+	+OBJ_Porta(gp: GamePanel)
+}
+class GamePanel {
+}
+OBJ_Porta --> "1" GamePanel : gp
+class SuperObjeto {
+}
+SuperObjeto <|-- OBJ_Porta
+class GamePanel [[java:principal.GamePanel]] {
+	-tileSizeOriginal: int
+	-escala: int
+	-tileSize: int
+	-maxScreenCol: int
+	-maxScreenLin: int
+	-screenWidth: int
+	-screenHeight: int
+	-maxMundoCol: int
+	-maxMundoLin: int
+	-mundoWidth: int
+	-mundoHeight: int
+	-fps: int
+	-gameThread: Thread
+	+gameState: int
+	+titleState: int
+	+playState: int
+	+pauseState: int
+	+GamePanel()
+	+setupGame(): void
+	+StartGameThread(): void
+	+run(): void
+	+update(): void
+	+paintComponent(g: Graphics): void
+	+setFps(fps: int): void
+	+setTileM(tileM: TileManager): void
+	+setKeyH(keyH: ManipuladorTeclado): void
+	+setGameThread(gameThread: Thread): void
+	+setcCheca(cCheca: ColisaoChecador): void
+	+setJogador(jogador: Jogador): void
+	+getFps(): int
+	+getGameThread(): Thread
+	+getTileSizeOriginal(): int
+	+getEscala(): int
+	+getTileSize(): int
+	+getMaxScreenCol(): int
+	+getMaxScreenLin(): int
+	+getScreenWidth(): int
+	+getScreenHeight(): int
+	+getMaxMundoCol(): int
+	+getMaxMundoLin(): int
+	+getMundoWidth(): int
+	+getMundoHeight(): int
+}
+class TileManager {
+}
+GamePanel --> "1" TileManager : tileM
+class ManipuladorTeclado {
+}
+GamePanel --> "1" ManipuladorTeclado : keyH
+class ColisaoChecador {
+}
+GamePanel --> "1" ColisaoChecador : cCheca
+class AssetSetter {
+}
+GamePanel --> "1" AssetSetter : aSetter
+class UI {
+}
+GamePanel --> "1" UI : ui
+class Jogador {
+}
+GamePanel --> "1" Jogador : jogador
+class SuperObjeto {
+}
+GamePanel --> "*" SuperObjeto : obj
+class Personagem {
+}
+GamePanel --> "*" Personagem : monstros
+class TileManager {
+}
+GamePanel --> "1" TileManager : getTileM()
+class ManipuladorTeclado {
+}
+GamePanel --> "1" ManipuladorTeclado : getKeyH()
+class ColisaoChecador {
+}
+GamePanel --> "1" ColisaoChecador : getcCheca()
+class Jogador {
+}
+GamePanel --> "1" Jogador : getJogador()
+class JPanel {
+}
+JPanel <|-- GamePanel
+interface Runnable {
+}
+Runnable <|.. GamePanel
+
+@enduml
