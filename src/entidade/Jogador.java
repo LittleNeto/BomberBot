@@ -8,6 +8,7 @@ import principal.GamePanel;
 import principal.ManipuladorTeclado;
 import principal.UtilityTool;
 
+
 public class Jogador extends Personagem {
     private ManipuladorTeclado keyH;
 
