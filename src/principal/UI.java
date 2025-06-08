@@ -11,11 +11,15 @@ import java.text.DecimalFormat;
 
 import javax.imageio.ImageIO;
 
+import objeto.OBJ_Vida;
+import objeto.SuperObjeto;
+
 public class UI {
 	
 	GamePanel gp;
 	Graphics2D g2;
 	Font retroGame;
+	BufferedImage vida_cheia, vida_media, vida_baixa, vida_vazia;
 	public boolean mensagemLig;
 	public String mensagem = "";
 	int mensagemCont;
@@ -36,6 +40,14 @@ public class UI {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		//CRIANDO O OBJETO
+		SuperObjeto vida = new OBJ_Vida(gp);
+		vida_cheia = vida.imagem;
+		vida_media = vida.imagem1;
+		vida_baixa = vida.imagem2;
+		vida_vazia = vida.imagem3;
+		
 	}
 	
 	public void mostrarMensagem(String texto) {
@@ -56,13 +68,44 @@ public class UI {
 		
 		//Play state
 		if(gp.gameState == GameState.PLAY) {
-			//
+			desenharVidaJogador();
 		}
 		//Pause state
 		if(gp.gameState == GameState.PAUSE) {
+			desenharVidaJogador();
 			desenharTelaPausa();
 		}
 	}
+	
+	public void desenharVidaJogador() {
+
+	    int x = gp.getTileSize() / 2;
+	    int y = -10;
+
+	    int vida = gp.getJogador().getVida(); // 0, 1, 2 ou 3
+
+	    BufferedImage img;
+
+	    switch (vida) {
+	        case 3:
+	            img = vida_cheia;
+	            break;
+	        case 2:
+	            img = vida_media;
+	            break;
+	        case 1:
+	            img = vida_baixa;
+	            break;
+	        default:
+	            img = vida_vazia;
+	            break;
+	    }
+
+	    g2.drawImage(img, x, y, null);
+	}
+
+
+
 	
 	public void desenharTelaTitle() {
 		
@@ -145,3 +188,4 @@ public class UI {
 	}
 	
 }
+
