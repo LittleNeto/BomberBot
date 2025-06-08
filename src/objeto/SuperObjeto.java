@@ -7,7 +7,7 @@ import principal.GamePanel;
 import principal.UtilityTool;
 
 public class SuperObjeto {
-	public BufferedImage imagem, imagem1, imagem2;
+	public BufferedImage imagem, imagem1, imagem2, imagem3;
 	public String nome;
 	public boolean colisao = false;
 	public int mundoX, mundoY;
