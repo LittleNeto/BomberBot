@@ -21,7 +21,7 @@ public abstract class Personagem {
     protected int spriteNum = 1;
     
     //COLISÃO DO PERSONAGEM
-    protected Rectangle areaSolida = new Rectangle(0, 0, 64, 64);
+    protected Rectangle areaSolida = new Rectangle(16, 32, 64, 64);
     public int areaSolidaDefaultX, areaSolidaDefaultY;
     protected boolean colisaoLig = false;
 
@@ -129,6 +129,10 @@ public abstract class Personagem {
 
 
     // Setters
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
+    
     public void setMundoX(int mundoX) {
         this.mundoX = mundoX;
     }
@@ -194,6 +198,13 @@ public abstract class Personagem {
     }
 
     // Getters
+    public int getVidaMax() {
+        return this.vidaMax;
+    }
+    public int getVida() {
+        return this.vida;
+    }
+    
     public int getMundoX() {
         return this.mundoX;
     }
