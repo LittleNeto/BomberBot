@@ -12,8 +12,8 @@ Uma versão nova do jogo Bomberman, utilizando a linguagem de programação java
 - [ ] Bomba
 - [ ] Poder
 ## Colaboradores
-1. [José Araújo Agra Neto](LittleNeto
+1. [José Araújo Agra Neto](@LittleNeto)
 1. [Júlio Pedro da Silva](@julioP-dev)
-1. [Mateus Érik Nóbrega de Araújo](@mateuserikna)
+1. [Mateus Érik Nóbrega de Araújo](@mateuserikNA)
 ## Notas
 Projeto feito como trabalho final das disciplinas Linguagem de Programação 2 (lp2) e Laboratório de Programação 2 (labp2), ministradas pelo professor Janderson Aguiar no período de 2025.1
