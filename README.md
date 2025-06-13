@@ -1,16 +1,29 @@
 # Bomberbot
 Uma versão nova do jogo Bomberman, utilizando a linguagem de programação java
 ## Classes desenvolvidas
-- [ ] Jogo
-- [ ] Mapa
-- [ ] Bloco (classe abstrata)
-- [ ] BlocoFixo
-- [ ] BlocoQuebravel
-- [ ] Personagem (classe abstrata)
-- [ ] Jogador
-- [ ] Inimigo
+- [ ] AssetSetter
 - [ ] Bomba
-- [ ] Poder
+- [ ] BotAvancado
+- [ ] BotFacil
+- [ ] Bot_if (interface)
+- [ ] BotMedio
+- [ ] ColisaoChecador
+- [ ] GamePanel
+- [ ] GameState (Enum)
+- [ ] Jogador
+- [ ] ManipuladorTeclado
+- [ ] Mapa
+- [ ] OBJ_Porta
+- [ ] OBJ_ Vida
+- [ ] Personagem (classe abstrata)
+- [ ] Ranking
+- [ ] RankingManager
+- [ ] Sound
+- [ ] SuperObjeto
+- [ ] Tile
+- [ ] TileManager
+- [ ] UI
+- [ ] UtilityTool
 ## Colaboradores
 1. [José Araújo Agra Neto](@LittleNeto)
 1. [Júlio Pedro da Silva](@julioP-dev)
