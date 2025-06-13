@@ -25,8 +25,8 @@ Uma versão nova do jogo Bomberman, utilizando a linguagem de programação java
 - [ ] UI
 - [ ] UtilityTool
 ## Colaboradores
-1. [José Araújo Agra Neto](@LittleNeto)
-1. [Júlio Pedro da Silva](@julioP-dev)
-1. [Mateus Érik Nóbrega de Araújo](@mateuserikNA)
+1. [José Araújo Agra Neto](https://github.com/LittleNeto)
+1. [Júlio Pedro da Silva](https://github.com/julioP-dev)
+1. [Mateus Érik Nóbrega de Araújo](https://github.com/mateuserikNA)
 ## Notas
 Projeto feito como trabalho final das disciplinas Linguagem de Programação 2 (lp2) e Laboratório de Programação 2 (labp2), ministradas pelo professor Janderson Aguiar no período de 2025.1
