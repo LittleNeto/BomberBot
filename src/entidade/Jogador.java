@@ -191,7 +191,7 @@ public class Jogador extends Personagem {
     }
     
     public void interageBot(int i) {
-    	if (i != 999) {
+    	if (i != 999 && gp.monstros[i]!= null) {
     		if (invencivel == false) {
         		this.setVida(this.vida - 1);
         		invencivel = true;
@@ -201,12 +201,12 @@ public class Jogador extends Personagem {
     }
     
     public void explodirBot(int i) {
-    	if(i != 999) {
-    		gp.monstros[i].vida -= 1;
-    		if(gp.monstros[i].vida <= 0) {
-    			gp.monstros[i] = null;
-    		}
-    	}
+        if (i != 999 && gp.monstros[i] != null) {
+            gp.monstros[i].vida -= 1;
+            if (gp.monstros[i].vida <= 0) {
+                gp.monstros[i] = null;
+            }
+        }
     }
     
     public void verificaDanoPorExplosao() {
@@ -254,10 +254,13 @@ public class Jogador extends Personagem {
                     // Verifica se o bot está na zona da explosão
                     for (Rectangle zona : bomba.getZonasExplosao()) {
                         if (zona != null && botArea.intersects(zona)) {
-                            explodirBot(b);
-                            break; // Sai do loop das zonas para este bot
+                            if (gp.monstros[b] != null) { // evita explodir bot já removido
+                                explodirBot(b);
+                            }
+                            break; // interrompe verificação após primeira explosão
                         }
                     }
+
                 }
             }
         }

@@ -42,6 +42,7 @@ public class BotDificil extends BotPersonagem {
             this.setEsq2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_esquerda_2.png"))); 
             this.setDir1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_direita_1.png"))); 
             this.setDir2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_direita_2.png"))); 
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -89,4 +90,3 @@ public class BotDificil extends BotPersonagem {
 
     
 }
-
