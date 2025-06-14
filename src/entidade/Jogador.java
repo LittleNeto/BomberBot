@@ -1,3 +1,4 @@
+
 package entidade;
 
 import java.awt.AlphaComposite;
@@ -155,6 +156,7 @@ public class Jogador extends Personagem {
         
         verificaDanoPorExplosao();
         verificaDanoBotPorExplosao();
+        verificaExplosaoBlocosInterativos();
 
     }
     
@@ -242,6 +244,35 @@ public class Jogador extends Personagem {
                         if (zona != null && botArea.intersects(zona)) {
                             explodirBot(b);
                             break; // Sai do loop das zonas para este bot
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void verificaExplosaoBlocosInterativos() {
+        for (int b = 0; b < gp.iTiles.length; b++) {
+            if (gp.iTiles[b] == null) continue;
+
+            // Retângulo de colisão do bloco interativo
+            Rectangle blocoArea = new Rectangle(
+                gp.iTiles[b].getMundoX() + gp.iTiles[b].getAreaSolida().x,
+                gp.iTiles[b].getMundoY() + gp.iTiles[b].getAreaSolida().y,
+                gp.iTiles[b].getAreaSolida().width,
+                gp.iTiles[b].getAreaSolida().height
+            );
+
+            // Para cada bomba no mapa
+            for (int i = 0; i < gp.obj.length; i++) {
+                if (gp.obj[i] instanceof objeto.OBJ_Bomba bomba) {
+                    if (!bomba.isExplosaoAtiva()) continue;
+
+                    // Verifica se o bloco está na zona da explosão
+                    for (Rectangle zona : bomba.getZonasExplosao()) {
+                        if (zona != null && blocoArea.intersects(zona)) {
+                            gp.iTiles[b] = null; // Remove o bloco
+                            break; // Sai do loop das zonas para esse bloco
                         }
                     }
                 }
