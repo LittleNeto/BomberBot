@@ -272,7 +272,7 @@ public class GamePanel extends JPanel implements Runnable {
         tempoGameOver = 0;
 
         // 6. Recriar elementos como no início
-        aSetter = new AssetSetter(this, tileM.getMapa()); // garantir recriação do mapa e objetos
+        aSetter = new AssetSetter(this, tileM.getGMapa()); // garantir recriação do mapa e objetos
         aSetter.setObject();
         aSetter.setBot();
         aSetter.setBlocoInterativo();
