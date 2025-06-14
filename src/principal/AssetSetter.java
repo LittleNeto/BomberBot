@@ -1,6 +1,7 @@
 package principal;
 
 import inimigo.BotFacil;
+import inimigo.BotMedio;
 import objeto.OBJ_Porta;
 import recursos.Mapa;
 import tile_Interativo.BlocoLixo;

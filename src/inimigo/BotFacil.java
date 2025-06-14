@@ -1,14 +1,16 @@
 package inimigo;
 
-import entidade.Personagem;
+import entidade.BotPersonagem;
 import java.awt.Rectangle;
 import java.io.IOException;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
 import principal.GamePanel;
 
-public class BotFacil extends Personagem implements Bot_if{
+public class BotFacil extends BotPersonagem {
+	
+	
+	
     public BotFacil(GamePanel gp) {
         super(gp);
         velocidade = 3;
@@ -48,26 +50,36 @@ public class BotFacil extends Personagem implements Bot_if{
     
     public void setAction() {
     	
-    	actionLockCounter++;
-    	if (actionLockCounter == 120) { //estabelecer um intervalo para o bot mudar de direção, ele não muda por 120 frames (2 segundos aproximadamente)
-        	Random random = new Random();
-        	int i = random.nextInt(100) + 1; //pega um número aleatório de 0 à 99, o +1 impede que seja 0
-        	 //25% de chance de ir para qualquer direção
-        	if (i <= 25) {
-        		direcao = "cima";
-        	}
-        	if (i > 25 && i <= 50) {
-        		direcao = "baixo";
-        	}
-        	if (i > 50 && i <= 75) {
-        		direcao = "esquerda";
-        	}
-        	if (i > 75 && i <= 100) {
-        		direcao = "direita";
-        	}
-        	
-        	actionLockCounter = 0;
+    	switch(estadoAtual) {
+	    	case ANDANDO -> {
+	    		if(getColisaoLig()) {
+	    			estadoAtual = EstadoBot.COLIDIU;
+	    			contadorDeEspera = 0;
+	    		}
+	    	}
+	    	case COLIDIU ->{
+	    		contadorDeEspera++;
+	    		if(contadorDeEspera >= tempoDeEspera) {
+	    			estadoAtual = EstadoBot.ESPERANDO_NOVA_DIRECAO;
+	    		}
+	    	}
+	    	
+	    	case ESPERANDO_NOVA_DIRECAO ->{
+	    		direcao = escolherNovaDirecao();
+	    		estadoAtual = EstadoBot.ANDANDO;
+	    	}
     	}
     	
+    	actionLockCounter++;
+    	if (actionLockCounter >= 360 && estadoAtual == EstadoBot.ANDANDO) {
+            direcao = escolherNovaDirecao();
+            actionLockCounter = 0;
+        }
     }
+    
+
+    public void plantarBomba() {
+    	//bots de nivel facil não plantam bomba
+    }
+    
 }

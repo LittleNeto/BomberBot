@@ -8,7 +8,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import principal.GamePanel;
 
-public class BotAvancado extends Personagem implements Bot_if {
+public class BotAvancado extends Personagem {
 
 	public BotAvancado(GamePanel gp) {
         super(gp);
