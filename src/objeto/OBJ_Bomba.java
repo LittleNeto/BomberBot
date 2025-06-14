@@ -20,8 +20,13 @@ public class OBJ_Bomba extends SuperObjeto {
     private boolean explodiu = false;
     private boolean explosaoAtiva = false;
 
-    private long tempoColocada;
-    private long tempoExplosao;
+    // Contador de frames para controlar o tempo da bomba
+    private int contadorFramesDesdeColocada = 0;
+    // Quantos frames para explodir (5 segundos * fps)
+    private final int framesParaExplodir;
+
+    private int contadorFramesExplosao = 0;
+    private final int framesDuracaoExplosao; // duração da explosão em frames
 
     private BufferedImage imagemChama;
     private Rectangle[] zonasExplosao;
@@ -30,7 +35,9 @@ public class OBJ_Bomba extends SuperObjeto {
     public OBJ_Bomba(GamePanel gp) {
         this.gp = gp;
         nome = "Bomba";
-        tempoColocada = System.currentTimeMillis();
+
+        framesParaExplodir = gp.getFps() * 5; // 5 segundos
+        framesDuracaoExplosao = gp.getFps() / 2; // 0.5 segundos de explosão (ajustável)
 
         try {
             imagem = ImageIO.read(getClass().getResourceAsStream("/objetos/bomba_1.png"));
@@ -51,35 +58,40 @@ public class OBJ_Bomba extends SuperObjeto {
     }
 
     public void update() {
-        if (explodiu && explosaoAtiva) {
-            causarDanoAoJogador();
-            if (System.currentTimeMillis() - tempoExplosao > 500) {
-                explosaoAtiva = false;
-                removerDoJogo();
+        if (gp.gameState == GameState.PLAY) {
+            if (explodiu && explosaoAtiva) {
+                causarDanoAoJogador();
+
+                contadorFramesExplosao++;
+                if (contadorFramesExplosao > framesDuracaoExplosao) {
+                    explosaoAtiva = false;
+                    removerDoJogo();
+                }
+                return;
             }
-            return;
-        }
 
-        spriteCount++;
-        if (spriteCount > 15) {
-            spriteNum = (spriteNum + 1) % 3;
-            spriteCount = 0;
-        }
+            // Animação da bomba antes de explodir
+            spriteCount++;
+            if (spriteCount > 15) {
+                spriteNum = (spriteNum + 1) % 3;
+                spriteCount = 0;
+            }
 
-        checaPresencaJogador(gp);
-        if(gp.gameState == GameState.PLAY) {
-            long tempoAtual = System.currentTimeMillis();
-            if (tempoAtual - tempoColocada >= 5000) {
+            checaPresencaJogador(gp);
+
+            // Contador de frames para explodir
+            contadorFramesDesdeColocada++;
+            if (contadorFramesDesdeColocada >= framesParaExplodir) {
                 explodir();
             }
         }
-
+        // Se estiver pausado, simplesmente não incrementa os contadores
     }
 
     private void explodir() {
         explodiu = true;
         explosaoAtiva = true;
-        tempoExplosao = System.currentTimeMillis();
+        contadorFramesExplosao = 0;
 
         zonasExplosao = new Rectangle[5];
 
@@ -89,8 +101,7 @@ public class OBJ_Bomba extends SuperObjeto {
         zonasExplosao[1] = new Rectangle(mundoX, mundoY - alcance * tile, tile, alcance * tile); // cima
         zonasExplosao[2] = new Rectangle(mundoX, mundoY + tile, tile, alcance * tile); // baixo
         zonasExplosao[3] = new Rectangle(mundoX - alcance * tile, mundoY, alcance * tile, tile); // esquerda
-        zonasExplosao[4] = new Rectangle(mundoX + tile, mundoY, alcance * tile, tile); // direita
-
+        zonasExplosao[4] = new Rectangle(mundoX + tile, mundoY, alcance * tile, tile); // direita	
     }
 
     private void causarDanoAoJogador() {
@@ -215,7 +226,5 @@ public class OBJ_Bomba extends SuperObjeto {
     public boolean isExplosaoAtiva() {
         return explosaoAtiva;
     }
-
-    
     
 }
