@@ -10,6 +10,7 @@ import java.awt.AlphaComposite;
 */
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -117,6 +118,7 @@ public class Jogador extends Personagem {
             
             int iTileIndex = gp.getcCheca().checaEntidade(this, gp.monstros);
             interageBot(botIndex);
+            
 
             if (!getColisaoLig()) {
                 switch (getDirecao()) {
@@ -150,6 +152,10 @@ public class Jogador extends Personagem {
         		invencivelCont = 0;
         	}
         }
+        
+        verificaDanoPorExplosao();
+        verificaDanoBotPorExplosao();
+
     }
     
     //pegarObjeto poderia ser deixado apenas para Bombas e poderes, e criaríamos outro método parecido específico para a Porta
@@ -179,6 +185,70 @@ public class Jogador extends Personagem {
 
     	}
     }
+    
+    public void explodirBot(int i) {
+    	if(i != 999) {
+    		gp.monstros[i].vida -= 1;
+    		if(gp.monstros[i].vida <= 0) {
+    			gp.monstros[i] = null;
+    		}
+    	}
+    }
+    
+    public void verificaDanoPorExplosao() {
+        for (int i = 0; i < gp.obj.length; i++) {
+            if (gp.obj[i] instanceof objeto.OBJ_Bomba bomba) {
+                if (!bomba.isExplosaoAtiva()) continue;
+
+                Rectangle jogadorArea = new Rectangle(
+                    getMundoX() + areaSolida.x,
+                    getMundoY() + areaSolida.y,
+                    areaSolida.width,
+                    areaSolida.height
+                );
+
+                for (Rectangle zona : bomba.getZonasExplosao()) {
+                    if (zona != null && jogadorArea.intersects(zona)) {
+                        if (!invencivel) {
+                            vida--;
+                            invencivel = true;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public void verificaDanoBotPorExplosao() {
+        for (int b = 0; b < gp.monstros.length; b++) {
+            if (gp.monstros[b] == null) continue;
+
+            // Retângulo de colisão do bot
+            Rectangle botArea = new Rectangle(
+                gp.monstros[b].getMundoX() + gp.monstros[b].getAreaSolida().x,
+                gp.monstros[b].getMundoY() + gp.monstros[b].getAreaSolida().y,
+                gp.monstros[b].getAreaSolida().width,
+                gp.monstros[b].getAreaSolida().height
+            );
+
+            // Para cada bomba no mapa
+            for (int i = 0; i < gp.obj.length; i++) {
+                if (gp.obj[i] instanceof objeto.OBJ_Bomba bomba) {
+                    if (!bomba.isExplosaoAtiva()) continue;
+
+                    // Verifica se o bot está na zona da explosão
+                    for (Rectangle zona : bomba.getZonasExplosao()) {
+                        if (zona != null && botArea.intersects(zona)) {
+                            explodirBot(b);
+                            break; // Sai do loop das zonas para este bot
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     public void desenhar(Graphics2D g2) {
         BufferedImage imagem = null;
