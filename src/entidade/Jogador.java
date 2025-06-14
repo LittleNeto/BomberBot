@@ -106,7 +106,7 @@ public class Jogador extends Personagem {
             //checa a colisão com o tile
             setColisaoLig(false);
             gp.getcCheca().checaTile(this);
-            gp.getcCheca().checaEntidade(this, gp.iTiles);
+            gp.getcCheca().checaBlocoInterativo(this, gp.iTiles);
             
             //checa a colisão com o objeto
             int objetoIndex = gp.getcCheca().checaObjeto(this, true);
