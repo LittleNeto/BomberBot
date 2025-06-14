@@ -15,6 +15,7 @@ public class ManipuladorTeclado implements KeyListener {
     private boolean cimaPress, baixoPress, esqPress, dirPress;
     //DEBUG
     boolean checkDrawTime = false;
+    private boolean teclaBombaPressionada;
     
     public ManipuladorTeclado(GamePanel gp) {
     	this.gp = gp;
@@ -60,14 +61,19 @@ public class ManipuladorTeclado implements KeyListener {
             if (code == KeyEvent.VK_W) { //caso a tecla W seja pressionada
             	this.setCimaPress(true);
             }
-            if (code == KeyEvent.VK_A) { //caso a tecla W seja pressionada
+            if (code == KeyEvent.VK_A) { //caso a tecla A seja pressionada
             	this.setEsqPress(true);
             }
-            if (code == KeyEvent.VK_S) { //caso a tecla W seja pressionada
+            if (code == KeyEvent.VK_S) { //caso a tecla S seja pressionada
             	this.setBaixoPress(true);
             }
-            if (code == KeyEvent.VK_D) { //caso a tecla W seja pressionada
+            if (code == KeyEvent.VK_D) { //caso a tecla D seja pressionada
             	this.setDirPress(true);
+            }
+            
+            //para colocar a bomba
+            if (code == KeyEvent.VK_X) {
+            	teclaBombaPressionada = true;
             }
         }
         
@@ -80,7 +86,7 @@ public class ManipuladorTeclado implements KeyListener {
         	}
         }
         
-        //DEBUG
+        //DEBUG - transformar em JUNIT
         if (code == KeyEvent.VK_T) { //caso a tecla T seja pressionada
         	if (checkDrawTime == false) {
         		checkDrawTime = true;
@@ -106,6 +112,9 @@ public class ManipuladorTeclado implements KeyListener {
         if (code == KeyEvent.VK_D) { //caso a tecla W seja pressionada
         	this.setDirPress(false);
         }
+        if (code == KeyEvent.VK_X) { //caso a tecla W seja pressionada
+        	teclaBombaPressionada = false;
+        }
     }
 
     //setters
@@ -124,6 +133,9 @@ public class ManipuladorTeclado implements KeyListener {
 	public void setDirPress(boolean dirPress) {
 		this.dirPress = dirPress;
 	}
+	public void setTeclaBombaPressionada(boolean teclaBombaPressionada) {
+		this.teclaBombaPressionada = teclaBombaPressionada;
+	}
 	
 	//getters
 	public boolean getCimaPress() {
@@ -140,6 +152,10 @@ public class ManipuladorTeclado implements KeyListener {
 	
 	public boolean getDirPress() {
 		return dirPress;
+	}
+
+	public boolean getTeclaBombaPressionada() {
+		return teclaBombaPressionada;
 	}
 	
 }
