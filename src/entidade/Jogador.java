@@ -1,6 +1,16 @@
 package entidade;
 
+import java.awt.AlphaComposite;
+
+/**
+*
+* @author Mateus
+* @version 14.0
+* @since 16 maio 2025
+*/
+
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -14,6 +24,10 @@ public class Jogador extends Personagem {
 
     private final int telaX;
     private final int telaY;
+    public boolean invencivel = false;
+    public int invencivelCont = 0;
+    
+    
     int botsMortos; //SERÁ USADO PARA PASSAR DE CADA FASE
 
     public Jogador(GamePanel gp, ManipuladorTeclado keyH) {
@@ -32,6 +46,9 @@ public class Jogador extends Personagem {
         carregarImagens();
     }
 
+    /**
+     * @param
+     */
     public void setDefaultValues() {
         setMundoX(gp.getTileSize()); //define as coordenadas x e y que o jogador aparece na tela, a velocidade e a direção padrão
         setMundoY(gp.getTileSize() * 2);
@@ -89,6 +106,7 @@ public class Jogador extends Personagem {
             //checa a colisão com o tile
             setColisaoLig(false);
             gp.getcCheca().checaTile(this);
+            gp.getcCheca().checaEntidade(this, gp.iTiles);
             
             //checa a colisão com o objeto
             int objetoIndex = gp.getcCheca().checaObjeto(this, true);
@@ -97,6 +115,10 @@ public class Jogador extends Personagem {
             //checa a colisão com o Bot
             int botIndex = gp.getcCheca().checaEntidade(this, gp.monstros);
             interageBot(botIndex);
+            
+            int iTileIndex = gp.getcCheca().checaEntidade(this, gp.monstros);
+            interageBot(botIndex);
+            
 
             if (!getColisaoLig()) {
                 switch (getDirecao()) {
@@ -122,6 +144,18 @@ public class Jogador extends Personagem {
                 setSpriteCount(0);
             }
         }
+        
+        if (invencivel == true) {
+        	invencivelCont++;
+        	if (invencivelCont > 120) { //como atualiza 60 vezes por segundo, seriam 2 segundos de invencibilidade
+        		invencivel = false;
+        		invencivelCont = 0;
+        	}
+        }
+        
+        verificaDanoPorExplosao();
+        verificaDanoBotPorExplosao();
+
     }
     
     //pegarObjeto poderia ser deixado apenas para Bombas e poderes, e criaríamos outro método parecido específico para a Porta
@@ -144,11 +178,77 @@ public class Jogador extends Personagem {
     
     public void interageBot(int i) {
     	if (i != 999) {
-//    		gp.ui.mostrarMensagem("Você encostou no bot");
-//    		this.botsMortos++; //TESTE
-    		
+    		if (invencivel == false) {
+        		this.setVida(this.vida - 1);
+        		invencivel = true;
+    		}
+
     	}
     }
+    
+    public void explodirBot(int i) {
+    	if(i != 999) {
+    		gp.monstros[i].vida -= 1;
+    		if(gp.monstros[i].vida <= 0) {
+    			gp.monstros[i] = null;
+    		}
+    	}
+    }
+    
+    public void verificaDanoPorExplosao() {
+        for (int i = 0; i < gp.obj.length; i++) {
+            if (gp.obj[i] instanceof objeto.OBJ_Bomba bomba) {
+                if (!bomba.isExplosaoAtiva()) continue;
+
+                Rectangle jogadorArea = new Rectangle(
+                    getMundoX() + areaSolida.x,
+                    getMundoY() + areaSolida.y,
+                    areaSolida.width,
+                    areaSolida.height
+                );
+
+                for (Rectangle zona : bomba.getZonasExplosao()) {
+                    if (zona != null && jogadorArea.intersects(zona)) {
+                        if (!invencivel) {
+                            vida--;
+                            invencivel = true;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public void verificaDanoBotPorExplosao() {
+        for (int b = 0; b < gp.monstros.length; b++) {
+            if (gp.monstros[b] == null) continue;
+
+            // Retângulo de colisão do bot
+            Rectangle botArea = new Rectangle(
+                gp.monstros[b].getMundoX() + gp.monstros[b].getAreaSolida().x,
+                gp.monstros[b].getMundoY() + gp.monstros[b].getAreaSolida().y,
+                gp.monstros[b].getAreaSolida().width,
+                gp.monstros[b].getAreaSolida().height
+            );
+
+            // Para cada bomba no mapa
+            for (int i = 0; i < gp.obj.length; i++) {
+                if (gp.obj[i] instanceof objeto.OBJ_Bomba bomba) {
+                    if (!bomba.isExplosaoAtiva()) continue;
+
+                    // Verifica se o bot está na zona da explosão
+                    for (Rectangle zona : bomba.getZonasExplosao()) {
+                        if (zona != null && botArea.intersects(zona)) {
+                            explodirBot(b);
+                            break; // Sai do loop das zonas para este bot
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     public void desenhar(Graphics2D g2) {
         BufferedImage imagem = null;
@@ -175,8 +275,17 @@ public class Jogador extends Personagem {
         } else if (getMundoY() > gp.getTileSize() * gp.getMaxMundoLin() - (gp.getScreenHeight() - telaY)) {
             drawY = getMundoY() - (gp.getTileSize() * gp.getMaxMundoLin() - gp.getScreenHeight());
         }
-
+        
+        //PODERÁ SER REMOVIDO DEPOIS
+        //aplica o efeito de transparência logo após o personagem sofrer dano
+        if (invencivel == true) {
+        	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        }
         g2.drawImage(imagem, drawX, drawY, null);
+        
+        //para resetar o efeito
+    	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
     }
 
     // Setters e getters

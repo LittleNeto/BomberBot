@@ -1,9 +1,15 @@
 package entidade;
 
+
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import principal.GamePanel;
+import principal.UtilityTool;
 
 public abstract class Personagem {
 
@@ -29,6 +35,7 @@ public abstract class Personagem {
     protected int vidaMax;
     protected int vida;
     protected int velocidade;
+    public int tipo;
     
     //usado para ajudar na lógica de movimento dos Bots
     public int actionLockCounter = 0;
@@ -46,7 +53,17 @@ public abstract class Personagem {
     	colisaoLig = false;
     	gp.getcCheca().checaTile(this);
     	gp.getcCheca().checaObjeto(this, false);
-    	gp.getcCheca().checaJogador(this);
+    	gp.getcCheca().checaEntidade(this, gp.iTiles);
+    	boolean interagiuJogador = gp.getcCheca().checaJogador(this);
+    	
+    	if(this.tipo == 1 && interagiuJogador == true) {
+    		if(gp.getJogador().invencivel == false) {
+    			//tira a vida
+    			int vida = gp.getJogador().getVida();
+    			gp.getJogador().setVida(vida - 1);
+    			gp.getJogador().invencivel = true;
+    		}
+    	}
     	
         if (!getColisaoLig()) {
             switch (getDirecao()) {
@@ -125,7 +142,21 @@ public abstract class Personagem {
             g2.drawImage(imagem, drawX, drawY, gp.getTileSize(), gp.getTileSize(), null);
         }
     }
-
+    
+    public BufferedImage setup(String imagemNome) {
+    	UtilityTool uTool = new UtilityTool();
+    	BufferedImage imagem = null;
+    	
+    	try {
+    		imagem = ImageIO.read(getClass().getResourceAsStream(imagemNome));
+    		imagem = uTool.scaleImage(imagem, gp.getTileSize(), gp.getTileSize());
+    		
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return imagem;
+    }
 
 
     // Setters
