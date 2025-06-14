@@ -7,8 +7,11 @@ package principal;
 
 import entidade.Jogador;
 import entidade.Personagem;
+import objeto.OBJ_Bomba;
 import objeto.SuperObjeto;
+import recursos.Bomba;
 import tile.TileManager;
+import tile_Interativo.BlocoInterativo;
 
 import javax.swing.JPanel;
 import java.awt.Dimension;
@@ -48,6 +51,7 @@ public class GamePanel extends JPanel implements Runnable {
     private Jogador jogador = new Jogador(this, this.getKeyH()); //cria uma instância jogador dentro da Tela do jogo
     public SuperObjeto[] obj = new SuperObjeto[10]; //não significa que só podem existir 10 objetos no jogo, mas que pode ter 10 objetos ao mesmo tempo
     public Personagem[] monstros = new Personagem[10];
+    public BlocoInterativo iTiles[] = new BlocoInterativo[100];
 
     //GAME STATE
     public GameState gameState;
@@ -67,6 +71,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void setupGame() {
         aSetter.setObject();
         aSetter.setBot();
+        aSetter.setBlocoInterativo();
         setGameState(GameState.TITULO);
 
     }
@@ -115,11 +120,31 @@ public class GamePanel extends JPanel implements Runnable {
     	
     	if (gameState == GameState.PLAY) {
             this.getJogador().update();
+            
+            if (keyH.getTeclaBombaPressionada()) {
+                int posicaoX = getJogador().getMundoX() + getJogador().getAreaSolida().x;
+                int posicaoY = getJogador().getMundoY() + getJogador().getAreaSolida().y;
+                colocarBomba(posicaoX, posicaoY); // coloca bomba no centro do jogador
+                keyH.setTeclaBombaPressionada(false); // evita que a tecla apertada continue colocando bombas
+
+            }
+
+            
             for (int i = 0; i < monstros.length; i++) {
             	if (monstros[i] != null) {
             		monstros[i].update();
             	}
-            }	
+            }
+            for (int i = 0; i < iTiles.length; i++) {
+            	if(iTiles[i] != null) {
+            		iTiles[i].update();
+            	}
+            }
+            for (int i = 0; i < obj.length; i++) {
+                if (obj[i] instanceof OBJ_Bomba) {
+                    ((OBJ_Bomba) obj[i]).update();
+                }
+            }
     	}
     	if (gameState == gameState.PAUSE) {
     		//nada
@@ -145,6 +170,11 @@ public class GamePanel extends JPanel implements Runnable {
             //TILE
             this.getTileM().desenhar(g2); //vem antes para que o cenário seja desenhado antes do personagem
             
+            for(int i = 0; i < iTiles.length; i++) {
+            	if(iTiles[i] != null) {
+            		iTiles[i].desenhar(g2);
+            	}
+            }
             //OBS: podemos separar a geração de tiles em dois, para que primeiro seja desenhado as paredes e a terra e por cima dos obejtos sejam desenhados o lixo
             //ou também podemos desenhar o bloxo de lixo como um objeto, de forma que ele seja desenhado depois, mas seria mais trabalhoso provavelmente
             
@@ -181,6 +211,22 @@ public class GamePanel extends JPanel implements Runnable {
         
         g2.dispose(); //libera memória do que não está sendo mais usado
     }
+    
+    public void colocarBomba(int x, int y) {
+        int posicaoBombaX = (x) / getTileSize() * getTileSize();
+        int posicaoBombaY = (y) / getTileSize() * getTileSize();
+
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] == null) {
+                obj[i] = new OBJ_Bomba(this);
+                obj[i].mundoX = posicaoBombaX;
+                obj[i].mundoY = posicaoBombaY;
+                break;
+            }
+        }
+    }
+
+
     
     public void tocarMusica(int i) {
     	sound.setFile(i);
@@ -222,6 +268,8 @@ public class GamePanel extends JPanel implements Runnable {
 
 
 
+
+  
     //setters
 	public void setFps(int fps) {
 		this.fps = fps;
