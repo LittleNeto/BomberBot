@@ -53,7 +53,7 @@ public abstract class Personagem {
     	colisaoLig = false;
     	gp.getcCheca().checaTile(this);
     	gp.getcCheca().checaObjeto(this, false);
-    	gp.getcCheca().checaEntidade(this, gp.iTiles);
+    	gp.getcCheca().checaBlocoInterativo(this, gp.iTiles);
     	boolean interagiuJogador = gp.getcCheca().checaJogador(this);
     	
     	if(this.tipo == 1 && interagiuJogador == true) {
@@ -89,6 +89,7 @@ public abstract class Personagem {
             setSpriteCount(0);
         }
     }
+    
     public void desenhar(Graphics2D g2) {
         BufferedImage imagem = null;
 
@@ -157,7 +158,7 @@ public abstract class Personagem {
     	
     	return imagem;
     }
-
+    
 
     // Setters
     public void setVida(int vida) {
