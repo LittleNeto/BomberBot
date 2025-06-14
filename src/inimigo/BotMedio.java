@@ -33,14 +33,14 @@ public class BotMedio extends BotPersonagem{
 
     public void getImagem() {
         try {
-            this.setCima1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_cima_1.png")));
-            this.setCima2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_cima_2.png")));
-            this.setBaixo1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_baixo_1.png")));
-            this.setBaixo2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_baixo_2.png")));
-            this.setEsq1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_esquerda_1.png")));
-            this.setEsq2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_esquerda_2.png")));
-            this.setDir1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_direita_1.png")));
-            this.setDir2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_direita_2.png")));
+            this.setCima1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_cima_1.png")));
+            this.setCima2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_cima_2.png")));
+            this.setBaixo1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_baixo_1.png")));
+            this.setBaixo2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_baixo_2.png")));
+            this.setEsq1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_esquerda_1.png")));
+            this.setEsq2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_esquerda_2.png")));
+            this.setDir1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_direita_1.png")));
+            this.setDir2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_direita_2.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
