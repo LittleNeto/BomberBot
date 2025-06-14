@@ -20,4 +20,3 @@ public class BlocoLixo extends BlocoInterativo{
 		destruivel = true;
 	}
 }
-
