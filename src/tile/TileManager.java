@@ -32,7 +32,7 @@ public class TileManager {
 		
 		setup(0, "terra_alfa", false);
 		setup(1, "parede_alfa", true);
-		setup(2, "lixo_alfa", true);
+		setup(2, "terra_alfa", false);
 
 	}
 	
