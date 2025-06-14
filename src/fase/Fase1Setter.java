@@ -16,11 +16,6 @@ public class Fase1Setter implements FaseSetter {
 		
 	}
 
-	@Override
-	public void setPoderes(GamePanel gp) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 
 }

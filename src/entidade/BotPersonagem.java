@@ -35,13 +35,13 @@ public abstract class BotPersonagem extends Personagem {
     }
 
     // Escolhe aleatoriamente uma direção entre cima, baixo, esquerda e direita
-    protected String escolherNovaDirecao() {
+    public String escolherNovaDirecao() {
         String[] direcoes = {"cima", "baixo", "esquerda", "direita"};
         return direcoes[random.nextInt(direcoes.length)];
     }
 
     // Só segue o jogador SE ele estiver próximo (dentro da distância definida)
-    protected boolean seguirJogadorSeEstiverPerto(int distanciaMax) {
+    public boolean seguirJogadorSeEstiverPerto(int distanciaMax) {
         int dx = gp.getJogador().getMundoX() - this.getMundoX();
         int dy = gp.getJogador().getMundoY() - this.getMundoY();
 
@@ -77,7 +77,7 @@ public abstract class BotPersonagem extends Personagem {
     }
 
     // Verifica se o bot está atualmente dentro de alguma zona de perigo (explosão ativa)
-    protected boolean estaNaZonaDePerigo() {
+    public boolean estaNaZonaDePerigo() {
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] instanceof OBJ_Bomba bomba) {
                 if (!bomba.isExplosaoAtiva()) continue;
@@ -93,7 +93,7 @@ public abstract class BotPersonagem extends Personagem {
     }
 
     // Função para fuga da zona de perigo → escolhe a direção mais segura ou a mais distante da explosão
-    protected void fugirDaZonaDePerigo() {
+    public void fugirDaZonaDePerigo() {
         Rectangle botArea = getAreaSolidaMundo();
         String[] direcoes = {"cima", "baixo", "esquerda", "direita"};
         String melhorDirecao = null;
