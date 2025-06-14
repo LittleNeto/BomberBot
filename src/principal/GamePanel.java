@@ -199,6 +199,8 @@ public class GamePanel extends JPanel implements Runnable {
             
             //UI
             ui.desenhar(g2);
+            
+            
         }
         
         
