@@ -7,8 +7,11 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import entidade.BotPersonagem;
+import entidade.Personagem;
 import principal.GamePanel;
 import principal.GameState;
+import java.util.HashSet; 
+import java.util.Set;
 
 public class OBJ_Bomba extends SuperObjeto {
 
@@ -33,6 +36,9 @@ public class OBJ_Bomba extends SuperObjeto {
     private BufferedImage imagemChama;
     private Rectangle[] zonasExplosao;
     private final int alcance = 1;
+    
+    private Set<Personagem> personagensDentroDaBomba = new HashSet<>();
+
 
     public OBJ_Bomba(GamePanel gp, BotPersonagem dono) {
         this.gp = gp;
@@ -80,7 +86,13 @@ public class OBJ_Bomba extends SuperObjeto {
                 spriteCount = 0;
             }
 
-            checaPresencaJogador(gp);
+            checaPresencaPersonagem(gp.getJogador());
+            
+            for (Personagem p : gp.monstros) {
+                if (p != null) {
+                    checaPresencaPersonagem(p);
+                }
+            }
 
             // Contador de frames para explodir
             contadorFramesDesdeColocada++;
@@ -128,6 +140,11 @@ public class OBJ_Bomba extends SuperObjeto {
             if (gp.obj[i] == this) {
                 gp.obj[i] = null;
                 gp.setBombaAtiva(false); // permite colocar outra bomba
+                
+                if (dono != null) {
+                    dono.decrementarBombas();
+                }
+                
                 break;
             }
         }
@@ -196,31 +213,31 @@ public class OBJ_Bomba extends SuperObjeto {
         }
     }
 
-    public void checaPresencaJogador(GamePanel gp) {
+    public void checaPresencaPersonagem(Personagem p) {
         Rectangle areaBomba = new Rectangle(
-                mundoX + areaSolida.x,
-                mundoY + areaSolida.y,
-                areaSolida.width,
-                areaSolida.height
+            mundoX + areaSolida.x,
+            mundoY + areaSolida.y,
+            areaSolida.width,
+            areaSolida.height
         );
 
-        Rectangle areaJogador = new Rectangle(
-                gp.getJogador().getMundoX() + gp.getJogador().getAreaSolida().x,
-                gp.getJogador().getMundoY() + gp.getJogador().getAreaSolida().y,
-                gp.getJogador().getAreaSolida().width,
-                gp.getJogador().getAreaSolida().height
+        Rectangle areaPersonagem = new Rectangle(
+            p.getMundoX() + p.getAreaSolida().x,
+            p.getMundoY() + p.getAreaSolida().y,
+            p.getAreaSolida().width,
+            p.getAreaSolida().height
         );
 
-        if (areaBomba.intersects(areaJogador)) {
-            jogadorAindaDentro = true;
-            this.colisao = false;
+        if (areaBomba.intersects(areaPersonagem)) {
+            personagensDentroDaBomba.add(p);
         } else {
-            if (jogadorAindaDentro) {
-                jogadorAindaDentro = false;
-                this.colisao = true;
-            }
+            personagensDentroDaBomba.remove(p);
         }
+
+        // Ativa colisão só quando ninguém mais estiver dentro
+        this.colisao = personagensDentroDaBomba.isEmpty();
     }
+
     
     public Rectangle[] getZonasExplosao() {
         return zonasExplosao;

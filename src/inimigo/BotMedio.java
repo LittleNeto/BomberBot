@@ -50,7 +50,7 @@ public class BotMedio extends BotPersonagem{
     public void setAction() {
     	
     	if (estaNaZonaDePerigo()) {
-            fugirDaZonaDePerigo();
+    		fugirDaZonaDePerigo();
             return;
         }
 
@@ -80,5 +80,6 @@ public class BotMedio extends BotPersonagem{
         }
         
         plantarBomba();
+        
     }
 }

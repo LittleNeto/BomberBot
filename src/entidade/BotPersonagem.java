@@ -64,12 +64,33 @@ public abstract class BotPersonagem extends Personagem {
         int dy = Math.abs(gp.getJogador().getMundoY() - this.getMundoY());
 
         if (dx <= gp.getTileSize() && dy <= gp.getTileSize()) {
-            ultimaBombaX = this.getMundoX();
-            ultimaBombaY = this.getMundoY();
-            gp.colocarBombaBot(ultimaBombaX, ultimaBombaY, 1, this);
+
+            // Tile atual do bot (onde ele ESTÁ) → a bomba deve ser plantada aqui
+            int botTileX = (this.getMundoX() + areaSolida.x + areaSolida.width / 2) / gp.getTileSize();
+            int botTileY = (this.getMundoY() + areaSolida.y + areaSolida.height / 2) / gp.getTileSize();
+
+            int posX = botTileX * gp.getTileSize();
+            int posY = botTileY * gp.getTileSize();
+
+            // Verifica se já tem bomba nesse tile
+            for (int i = 0; i < gp.obj.length; i++) {
+                if (gp.obj[i] instanceof OBJ_Bomba b) {
+                    if (b.mundoX == posX && b.mundoY == posY) {
+                        return; // Já tem bomba aqui → não planta de novo
+                    }
+                }
+            }
+
+            ultimaBombaX = posX;
+            ultimaBombaY = posY;
+
+            gp.colocarBombaBot(posX, posY, 1, this);
             bombasAtivas++;
         }
     }
+
+
+
 
     // Decrementa o contador de bombas ativas (chamado quando uma bomba explode e desaparece)
     public void decrementarBombas() {
@@ -93,7 +114,7 @@ public abstract class BotPersonagem extends Personagem {
     }
 
     // Função para fuga da zona de perigo → escolhe a direção mais segura ou a mais distante da explosão
-    public void fugirDaZonaDePerigo() {
+    public String fugirDaZonaDePerigo() {
         Rectangle botArea = getAreaSolidaMundo();
         String[] direcoes = {"cima", "baixo", "esquerda", "direita"};
         String melhorDirecao = null;
@@ -103,7 +124,6 @@ public abstract class BotPersonagem extends Personagem {
             int deslocamento = gp.getTileSize();
             Rectangle areaTeste = new Rectangle(botArea);
 
-            // Calcula onde o bot estaria se fosse nessa direção
             switch (dir) {
                 case "cima" -> areaTeste.y -= deslocamento;
                 case "baixo" -> areaTeste.y += deslocamento;
@@ -114,37 +134,39 @@ public abstract class BotPersonagem extends Personagem {
             boolean seguro = true;
             int menorDistanciaPerigo = Integer.MAX_VALUE;
 
-            // Verifica colisão dessa área teste com todas as explosões ativas
             for (int i = 0; i < gp.obj.length; i++) {
                 if (gp.obj[i] instanceof OBJ_Bomba bomba && bomba.isExplosaoAtiva()) {
                     for (Rectangle zona : bomba.getZonasExplosao()) {
-                        if (zona != null && areaTeste.intersects(zona)) {
-                            seguro = false;
-                            menorDistanciaPerigo = 0;
-                            break;
-                        }
                         if (zona != null) {
-                            int distancia = (int) areaTeste.getLocation().distance(zona.getLocation());
-                            menorDistanciaPerigo = Math.min(menorDistanciaPerigo, distancia);
+                            if (areaTeste.intersects(zona)) {
+                                seguro = false;
+                                menorDistanciaPerigo = 0;
+                            } else {
+                                int distancia = (int) areaTeste.getLocation().distance(zona.getLocation());
+                                menorDistanciaPerigo = Math.min(menorDistanciaPerigo, distancia);
+                            }
                         }
                     }
                 }
             }
 
-            // Escolhe a direção mais segura ou mais distante do perigo
             if (seguro || menorDistanciaPerigo > maiorDistancia) {
                 melhorDirecao = dir;
                 maiorDistancia = menorDistanciaPerigo;
             }
         }
 
-        // Atualiza a direção do bot
         if (melhorDirecao != null) {
             this.direcao = melhorDirecao;
+            return melhorDirecao;
         } else {
-            this.direcao = escolherNovaDirecao();  // Se não houver melhor direção → escolhe aleatoriamente
+            String aleatoria = escolherNovaDirecao();
+            this.direcao = aleatoria;
+            return aleatoria;
         }
     }
+
+
 
     // Cria um retângulo representando a posição e área sólida do bot no mundo
     protected Rectangle getAreaSolidaMundo() {
