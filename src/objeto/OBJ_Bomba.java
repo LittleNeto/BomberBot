@@ -15,6 +15,8 @@ public class OBJ_Bomba extends SuperObjeto{
 	private int spriteCount = 0;
 	private int spriteNum = 0;
 	private boolean jogadorAindaDentro = true;
+	private long tempoColocada;
+	private boolean explodiu = false;
 
 	
 	public OBJ_Bomba(GamePanel gp) {
@@ -22,6 +24,7 @@ public class OBJ_Bomba extends SuperObjeto{
 		this.gp = gp;
 
 		nome = "Bomba";
+	    this.tempoColocada = System.currentTimeMillis();
 
 		try {
 			imagem = ImageIO.read(getClass().getResourceAsStream("/objetos/bomba_1.png"));
@@ -42,16 +45,38 @@ public class OBJ_Bomba extends SuperObjeto{
 	}
 	
 	public void update() {
+	    if (explodiu) return;
+
 	    spriteCount++;
-	    
-	    if (spriteCount > 15) { //velocidade da animação
-	        spriteNum = (spriteNum + 1) % 3; 
+	    if (spriteCount > 15) {
+	        spriteNum = (spriteNum + 1) % 3;
 	        spriteCount = 0;
 	    }
-	    
+
 	    checaPresencaJogador(gp);
+
+	    long tempoAtual = System.currentTimeMillis();
+	    if (tempoAtual - tempoColocada >= 5000) { // 5 segundos
+	        explodir();
+	    }
 	}
-	
+
+	private void explodir() {
+	    explodiu = true;
+	    // Aqui você pode adicionar animação ou lógica de explosão.
+	    removerDoJogo(); // removê-la do array do GamePanel
+	}
+
+	private void removerDoJogo() {
+	    for (int i = 0; i < gp.obj.length; i++) {
+	        if (gp.obj[i] == this) {
+	            gp.obj[i] = null;
+	            gp.setBombaAtiva(false); // libera para colocar nova bomba
+	            break;
+	        }
+	    }
+	}
+
 	@Override
 	public void desenhar(Graphics2D g2, GamePanel gp) {
 	    BufferedImage imagemAtual = getImagemAtual();
