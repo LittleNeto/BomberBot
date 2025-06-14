@@ -40,19 +40,6 @@ public abstract class BotPersonagem extends Personagem {
         return direcoes[random.nextInt(direcoes.length)];
     }
 
-    // Faz o bot seguir o jogador na direção predominante (mais distante em X ou Y)
-    protected String seguirJogador() {
-        int dx = gp.getJogador().getMundoX() - this.getMundoX();
-        int dy = gp.getJogador().getMundoY() - this.getMundoY();
-
-        if (Math.abs(dx) > Math.abs(dy)) {
-            direcao = (dx > 0) ? "direita" : "esquerda";
-        } else {
-            direcao = (dy > 0) ? "baixo" : "cima";
-        }
-        return direcao;
-    }
-
     // Só segue o jogador SE ele estiver próximo (dentro da distância definida)
     protected boolean seguirJogadorSeEstiverPerto(int distanciaMax) {
         int dx = gp.getJogador().getMundoX() - this.getMundoX();
