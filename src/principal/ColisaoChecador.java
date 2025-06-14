@@ -166,28 +166,28 @@ public class ColisaoChecador {
 				case "cima":
 					personagem.getAreaSolida().y -= personagem.getVelocidade();
 					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
-						personagem.setColisaoLig(true);
+//						personagem.setColisaoLig(true);
 						index = i;
 					}
 					break;
 				case "baixo":
 					personagem.getAreaSolida().y += personagem.getVelocidade();
 					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
-						personagem.setColisaoLig(true);
+//						personagem.setColisaoLig(true);
 						index = i;
 					}
 					break;
 				case "esquerda":
 					personagem.getAreaSolida().x -= personagem.getVelocidade();
 					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
-						personagem.setColisaoLig(true);
+//						personagem.setColisaoLig(true);
 						index = i;
 					}
 					break;
 				case "direita":
 					personagem.getAreaSolida().x += personagem.getVelocidade();
 					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
-						personagem.setColisaoLig(true);
+//						personagem.setColisaoLig(true);
 						index = i;
 					}
 					break;
@@ -250,6 +250,61 @@ public class ColisaoChecador {
 	//getters
 	public GamePanel getGp() {
 		return gp;
+	}
+
+
+	public int checaBlocoInterativo(Personagem personagem, BlocoInterativo[] target) {
+		
+		int index = 999;
+		
+		for (int i = 0; i < target.length; i++) {
+			
+			if (target[i] != null) {
+				
+				personagem.getAreaSolida().x = personagem.getMundoX() + personagem.getAreaSolida().x;
+				personagem.getAreaSolida().y = personagem.getMundoY() + personagem.getAreaSolida().y;
+				
+				target[i].getAreaSolida().x = target[i].getMundoX() + target[i].getAreaSolida().x;
+				target[i].getAreaSolida().y = target[i].getMundoY() + target[i].getAreaSolida().y;
+				
+				switch(personagem.getDirecao()) {
+				case "cima":
+					personagem.getAreaSolida().y -= personagem.getVelocidade();
+					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
+						personagem.setColisaoLig(true);
+						index = i;
+					}
+					break;
+				case "baixo":
+					personagem.getAreaSolida().y += personagem.getVelocidade();
+					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
+						personagem.setColisaoLig(true);
+						index = i;
+					}
+					break;
+				case "esquerda":
+					personagem.getAreaSolida().x -= personagem.getVelocidade();
+					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
+						personagem.setColisaoLig(true);
+						index = i;
+					}
+					break;
+				case "direita":
+					personagem.getAreaSolida().x += personagem.getVelocidade();
+					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
+						personagem.setColisaoLig(true);
+						index = i;
+					}
+					break;
+				}
+				personagem.getAreaSolida().x = personagem.areaSolidaDefaultX;
+				personagem.getAreaSolida().y = personagem.areaSolidaDefaultY;				
+				target[i].getAreaSolida().x = target[i].getAreaSolidaDefaultX();
+				target[i].getAreaSolida().y = target[i].getAreaSolidaDefaultY();
+			}
+
+		}
+		return index;
 	}
  
 }
