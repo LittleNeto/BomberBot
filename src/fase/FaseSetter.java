@@ -2,7 +2,7 @@ package fase;
 
 import principal.GamePanel;
 import objeto.OBJ_Porta;
-import recursos.Mapa;
+import recursos.GeradorMapa;
 import tile_Interativo.BlocoLixo;
 
 public interface FaseSetter {
@@ -15,11 +15,11 @@ public interface FaseSetter {
 	    	gp.obj[0].mundoY = gp.getTileSize() * 1;
 	    }
 	    
-	    default void setBlocoInterativo(GamePanel gp, Mapa mapa) {
+	    default void setBlocoInterativo(GamePanel gp,GeradorMapa gMapa) {
 	    	int i = 0;
-	        for (int lin = 0; lin < mapa.getGrade().length; lin++) {
-	            for (int col = 0; col < mapa.getGrade()[0].length; col++) {
-	                if (mapa.getGrade()[lin][col] == 2) {
+	        for (int lin = 0; lin < gMapa.getGrade().length; lin++) {
+	            for (int col = 0; col < gMapa.getGrade()[0].length; col++) {
+	                if (gMapa.getGrade()[lin][col] == 2) {
 	                    gp.iTiles[i] = new BlocoLixo(gp, col, lin);
 	                    i++;
 	                }

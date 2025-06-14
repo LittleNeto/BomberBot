@@ -49,6 +49,10 @@ public class BotMedio extends BotPersonagem{
     @Override
     public void setAction() {
     	
+    	if (contadorCooldownBomba < cooldownBomba) {
+    	    contadorCooldownBomba++;
+    	}
+    	
     	if (estaNaZonaDePerigo()) {
     		fugirDaZonaDePerigo();
             return;

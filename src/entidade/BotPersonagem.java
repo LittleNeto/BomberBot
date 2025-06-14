@@ -22,6 +22,10 @@ public abstract class BotPersonagem extends Personagem {
     // Guarda a posição onde a última bomba foi plantada
     protected int ultimaBombaX = -1;
     protected int ultimaBombaY = -1;
+    
+    
+    protected int cooldownBomba = 60; // 60 frames ≈ 1 segundo
+    protected int contadorCooldownBomba = 0;
 
     // Distância máxima (em pixels) para o bot começar a perseguir o jogador
     protected int distanciaMax = gp.getTileSize() * 6;
@@ -59,13 +63,15 @@ public abstract class BotPersonagem extends Personagem {
     // Planta uma bomba na posição atual SE ainda puder (respeitando limite) E se o jogador estiver próximo
     public void plantarBomba() {
         if (bombasAtivas >= limiteBombas) return;
+        if (contadorCooldownBomba < cooldownBomba) return;
 
         int dx = Math.abs(gp.getJogador().getMundoX() - this.getMundoX());
         int dy = Math.abs(gp.getJogador().getMundoY() - this.getMundoY());
 
+        // Apenas se o jogador estiver suficientemente próximo
         if (dx <= gp.getTileSize() && dy <= gp.getTileSize()) {
 
-            // Tile atual do bot (onde ele ESTÁ) → a bomba deve ser plantada aqui
+            // Tile atual do bot (onde ele está)
             int botTileX = (this.getMundoX() + areaSolida.x + areaSolida.width / 2) / gp.getTileSize();
             int botTileY = (this.getMundoY() + areaSolida.y + areaSolida.height / 2) / gp.getTileSize();
 
@@ -76,18 +82,26 @@ public abstract class BotPersonagem extends Personagem {
             for (int i = 0; i < gp.obj.length; i++) {
                 if (gp.obj[i] instanceof OBJ_Bomba b) {
                     if (b.mundoX == posX && b.mundoY == posY) {
-                        return; // Já tem bomba aqui → não planta de novo
+                        return; // Já tem bomba aqui → não planta
                     }
                 }
+            }
+
+            // Impede de plantar novamente no mesmo local
+            if (ultimaBombaX == posX && ultimaBombaY == posY) {
+                return;
             }
 
             ultimaBombaX = posX;
             ultimaBombaY = posY;
 
+            // Planta a bomba
             gp.colocarBombaBot(posX, posY, 1, this);
             bombasAtivas++;
+            contadorCooldownBomba = 0; // reinicia cooldown
         }
     }
+
 
 
 
