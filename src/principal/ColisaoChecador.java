@@ -1,6 +1,7 @@
 package principal;
 
 import entidade.Personagem;
+import tile_Interativo.BlocoInterativo;
 
 public class ColisaoChecador {
 	
@@ -165,28 +166,28 @@ public class ColisaoChecador {
 				case "cima":
 					personagem.getAreaSolida().y -= personagem.getVelocidade();
 					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
-//						personagem.setColisaoLig(true);
+						personagem.setColisaoLig(true);
 						index = i;
 					}
 					break;
 				case "baixo":
 					personagem.getAreaSolida().y += personagem.getVelocidade();
 					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
-//						personagem.setColisaoLig(true);
+						personagem.setColisaoLig(true);
 						index = i;
 					}
 					break;
 				case "esquerda":
 					personagem.getAreaSolida().x -= personagem.getVelocidade();
 					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
-//						personagem.setColisaoLig(true);
+						personagem.setColisaoLig(true);
 						index = i;
 					}
 					break;
 				case "direita":
 					personagem.getAreaSolida().x += personagem.getVelocidade();
 					if(personagem.getAreaSolida().intersects(target[i].getAreaSolida())) {
-//						personagem.setColisaoLig(true);
+						personagem.setColisaoLig(true);
 						index = i;
 					}
 					break;
@@ -201,7 +202,10 @@ public class ColisaoChecador {
 		return index;
 	}
 	
-	public void checaJogador(Personagem personagem) {
+	public boolean checaJogador(Personagem personagem) {
+		
+		boolean interagiuJogador = false;
+		
 		personagem.getAreaSolida().x = personagem.getMundoX() + personagem.getAreaSolida().x;
 		personagem.getAreaSolida().y = personagem.getMundoY() + personagem.getAreaSolida().y;
 		
@@ -211,38 +215,32 @@ public class ColisaoChecador {
 		switch(personagem.getDirecao()) {
 		case "cima":
 			personagem.getAreaSolida().y -= personagem.getVelocidade();
-			if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
-				System.out.println("Encostou no jogador CIMA");
-//				personagem.setColisaoLig(true);
-			}
 			break;
 		case "baixo":
 			personagem.getAreaSolida().y += personagem.getVelocidade();
-			if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
-//				personagem.setColisaoLig(true);
-				System.out.println("Encostou no jogador BAIXO");
-			}
 			break;
 		case "esquerda":
 			personagem.getAreaSolida().x -= personagem.getVelocidade();
-			if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
-//				personagem.setColisaoLig(true);
-				System.out.println("Encostou no jogador ESQ");
-			}
 			break;
 		case "direita":
 			personagem.getAreaSolida().x += personagem.getVelocidade();
-			if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
-//				personagem.setColisaoLig(true);
-				System.out.println("Encostou no jogador DIR");
-			}
 			break;
+		}
+		
+		if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
+			if(personagem.getAreaSolida().intersects(gp.getJogador().getAreaSolida())) {
+				interagiuJogador = true;
+				System.out.println("Encostou no jogador");
+			}
 		}
 		personagem.getAreaSolida().x = personagem.areaSolidaDefaultX;
 		personagem.getAreaSolida().y = personagem.areaSolidaDefaultY;				
 		gp.getJogador().getAreaSolida().x = gp.getJogador().areaSolidaDefaultX;
 		gp.getJogador().getAreaSolida().y = gp.getJogador().areaSolidaDefaultY;
+		
+		return interagiuJogador;
 	}
+	
 
 	//setters
 	public void setGp(GamePanel gp) {
