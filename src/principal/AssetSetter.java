@@ -4,7 +4,7 @@ import inimigo.BotDificil;
 import inimigo.BotFacil;
 import inimigo.BotMedio;
 import objeto.OBJ_Porta;
-import recursos.Mapa;
+import recursos.GeradorMapa;
 import tile_Interativo.BlocoLixo;
 /**
  * 
@@ -15,38 +15,38 @@ import tile_Interativo.BlocoLixo;
 
 public class AssetSetter {
     GamePanel gp;
-    Mapa mapa;
+    GeradorMapa gMapa;
     
-    public AssetSetter(GamePanel gp, Mapa mapa) {
+    public AssetSetter(GamePanel gp, GeradorMapa gMapa) {
         this.gp = gp;
-        this.mapa = mapa;
+        this.gMapa = gMapa;
     }
     
     public void setObject() {
     	
     	gp.obj[0] = new OBJ_Porta(gp);
-    	gp.obj[0].mundoX = gp.getTileSize() * 2;
-    	gp.obj[0].mundoY = gp.getTileSize() * 1;
+    	gp.obj[0].mundoX = gp.getTileSize() * this.gMapa.posicaoPorta[0][1];
+    	gp.obj[0].mundoY = gp.getTileSize() * this.gMapa.posicaoPorta[0][0];
     }
   
     public void setBot() {
         gp.monstros[0] = new BotFacil(gp);
-        gp.monstros[0].setMundoX(gp.getTileSize() * this.mapa.posicaoInimigos[0][1]);
-        gp.monstros[0].setMundoY(gp.getTileSize() * this.mapa.posicaoInimigos[0][0]);
+        gp.monstros[0].setMundoX(gp.getTileSize() * this.gMapa.posicaoInimigos[0][1]);
+        gp.monstros[0].setMundoY(gp.getTileSize() * this.gMapa.posicaoInimigos[0][0]);
         
         gp.monstros[1] = new BotFacil(gp);
-        gp.monstros[1].setMundoX(gp.getTileSize() * this.mapa.posicaoInimigos[1][1]);
-        gp.monstros[1].setMundoY(gp.getTileSize() * this.mapa.posicaoInimigos[1][0]);
+        gp.monstros[1].setMundoX(gp.getTileSize() * this.gMapa.posicaoInimigos[1][1]);
+        gp.monstros[1].setMundoY(gp.getTileSize() * this.gMapa.posicaoInimigos[1][0]);
         
     }
     
     //CONSERTAR DEPOIS
     public void setBlocoInterativo() {
         int i = 0;
-        for (int lin = 0; lin < mapa.getGrade().length; lin++) {
-            for (int col = 0; col < mapa.getGrade()[0].length; col++) {
-                if (mapa.getGrade()[lin][col] == 2) {
-                    gp.iTiles[i] = new BlocoLixo(gp, col, lin);
+        for (int lin = 0; lin < this.gMapa.getGrade().length; lin++) {
+            for (int col = 0; col < this.gMapa.getGrade()[0].length; col++) {
+                if (this.gMapa.getGrade()[lin][col] == 2) {
+                    this.gp.iTiles[i] = new BlocoLixo(gp, col, lin);
                     i++;
                 }
             }
