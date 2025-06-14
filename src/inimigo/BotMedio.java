@@ -54,7 +54,9 @@ public class BotMedio extends BotPersonagem{
     	}
     	
     	if (estaNaZonaDePerigo()) {
-    		fugirDaZonaDePerigo();
+    		 System.out.println("⚠️ Bot detectou perigo em: " + getMundoX() + "," + getMundoY());
+    		    direcao = fugirDaZonaDePerigo();
+    		    System.out.println("🟡 Tentando fugir para: " + direcao);
             return;
         }
 

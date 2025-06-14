@@ -1,10 +1,13 @@
 package entidade;
 
 import java.awt.Rectangle;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import inimigo.EstadoBot;
 import objeto.OBJ_Bomba;
 import principal.GamePanel;
+
 
 public abstract class BotPersonagem extends Personagem {
 
@@ -113,13 +116,19 @@ public abstract class BotPersonagem extends Personagem {
 
     // Verifica se o bot está atualmente dentro de alguma zona de perigo (explosão ativa)
     public boolean estaNaZonaDePerigo() {
+        Rectangle botArea = getAreaSolidaMundo();
+
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] instanceof OBJ_Bomba bomba) {
-                if (!bomba.isExplosaoAtiva()) continue;
+                int tempoRestante = bomba.getFramesRestantes();
 
-                for (Rectangle zona : bomba.getZonasExplosao()) {
-                    if (zona != null && getAreaSolidaMundo().intersects(zona)) {
-                        return true;
+                if (tempoRestante <= 180 || bomba.isExplosaoAtiva()) {
+                    Rectangle[] zonas = bomba.getZonasExplosaoPrevisao();
+
+                    for (Rectangle zona : zonas) {
+                        if (zona != null && botArea.intersects(zona)) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -127,58 +136,119 @@ public abstract class BotPersonagem extends Personagem {
         return false;
     }
 
-    // Função para fuga da zona de perigo → escolhe a direção mais segura ou a mais distante da explosão
+
+
+
+    /**
+     * Define a direção mais segura para o bot fugir de zonas de explosão.
+     * Avalia cada direção possível (cima, baixo, esquerda, direita) e
+     * atribui uma pontuação com base na colisão e na proximidade de zonas perigosas.
+     *
+     * A direção com maior pontuação é escolhida como rota de fuga.
+     *
+     * @return A melhor direção escolhida ou uma direção aleatória se nenhuma for segura.
+     */
     public String fugirDaZonaDePerigo() {
-        Rectangle botArea = getAreaSolidaMundo();
-        String[] direcoes = {"cima", "baixo", "esquerda", "direita"};
-        String melhorDirecao = null;
-        int maiorDistancia = -1;
+        Rectangle botArea = getAreaSolidaMundo();           // Posição atual do bot no mundo
+        int tile = gp.getTileSize();                        // Tamanho de um tile
 
-        for (String dir : direcoes) {
-            int deslocamento = gp.getTileSize();
-            Rectangle areaTeste = new Rectangle(botArea);
+        // Define retângulos de teste para cada direção (cima, baixo, esquerda, direita)
+        Map<String, Rectangle> direcoes = new HashMap<>();
+        direcoes.put("cima",     new Rectangle(botArea.x, botArea.y - tile, botArea.width, botArea.height));
+        direcoes.put("baixo",    new Rectangle(botArea.x, botArea.y + tile, botArea.width, botArea.height));
+        direcoes.put("esquerda", new Rectangle(botArea.x - tile, botArea.y, botArea.width, botArea.height));
+        direcoes.put("direita",  new Rectangle(botArea.x + tile, botArea.y, botArea.width, botArea.height));
 
-            switch (dir) {
-                case "cima" -> areaTeste.y -= deslocamento;
-                case "baixo" -> areaTeste.y += deslocamento;
-                case "esquerda" -> areaTeste.x -= deslocamento;
-                case "direita" -> areaTeste.x += deslocamento;
-            }
+        String melhorDirecao = null;           // Guarda a direção mais segura
+        int melhorPontuacao = Integer.MIN_VALUE; // Inicializa a melhor pontuação como negativa
 
-            boolean seguro = true;
-            int menorDistanciaPerigo = Integer.MAX_VALUE;
+        // Avalia cada direção possível
+        for (Map.Entry<String, Rectangle> entrada : direcoes.entrySet()) {
+            String direcao = entrada.getKey();
+            Rectangle areaTeste = entrada.getValue();
 
+            // Ignora direções que colidem com o mapa (paredes, blocos, etc.)
+            if (colideComTile(areaTeste)) continue;
+
+            int pontuacao = 0; // Inicializa pontuação para essa direção
+
+            // Percorre todas as bombas no jogo
             for (int i = 0; i < gp.obj.length; i++) {
-                if (gp.obj[i] instanceof OBJ_Bomba bomba && bomba.isExplosaoAtiva()) {
-                    for (Rectangle zona : bomba.getZonasExplosao()) {
-                        if (zona != null) {
-                            if (areaTeste.intersects(zona)) {
-                                seguro = false;
-                                menorDistanciaPerigo = 0;
-                            } else {
-                                int distancia = (int) areaTeste.getLocation().distance(zona.getLocation());
-                                menorDistanciaPerigo = Math.min(menorDistanciaPerigo, distancia);
+                if (gp.obj[i] instanceof OBJ_Bomba bomba) {
+                    int tempoRestante = bomba.getFramesRestantes();
+
+                    // Só considera bombas prestes a explodir (até 2 segundos) ou já ativas
+                    if (tempoRestante <= 120 || bomba.isExplosaoAtiva()) {
+                        Rectangle[] zonas = bomba.getZonasExplosaoPrevisao();
+
+                        // Para cada zona de explosão prevista
+                        for (Rectangle zona : zonas) {
+                            if (zona != null) {
+                                if (areaTeste.intersects(zona)) {
+                                    pontuacao -= 1000; // Penalidade alta se a direção cair numa explosão
+                                } else {
+                                    // Caso contrário, somamos a distância como pontuação positiva
+                                    int distancia = (int) areaTeste.getLocation().distance(zona.getLocation());
+                                    pontuacao += distancia;
+                                }
                             }
                         }
                     }
                 }
             }
 
-            if (seguro || menorDistanciaPerigo > maiorDistancia) {
-                melhorDirecao = dir;
-                maiorDistancia = menorDistanciaPerigo;
+            // Se a pontuação for melhor do que as anteriores, atualiza a melhor direção
+            if (pontuacao > melhorPontuacao) {
+                melhorPontuacao = pontuacao;
+                melhorDirecao = direcao;
             }
         }
 
+        // Se achou uma direção segura, aplica no bot
         if (melhorDirecao != null) {
             this.direcao = melhorDirecao;
             return melhorDirecao;
         } else {
-            String aleatoria = escolherNovaDirecao();
-            this.direcao = aleatoria;
-            return aleatoria;
+            // Se todas as direções são ruins, escolhe uma aleatória como último recurso
+            this.direcao = escolherNovaDirecao();
+            return this.direcao;
         }
     }
+    
+    
+    /**
+     * Verifica se uma área retangular (como uma posição futura do bot)
+     * colide com algum tile do mapa que tem colisão (ex: parede, bloco).
+     *
+     * @param areaTeste A área a ser testada.
+     * @return true se houver colisão com o mapa; false caso contrário.
+     */
+    private boolean colideComTile(Rectangle areaTeste) {
+        int tileSize = gp.getTileSize();
+
+        // Converte coordenadas de mundo para índices de tile (linhas e colunas)
+        int col1 = areaTeste.x / tileSize;
+        int row1 = areaTeste.y / tileSize;
+        int col2 = (areaTeste.x + areaTeste.width - 1) / tileSize;
+        int row2 = (areaTeste.y + areaTeste.height - 1) / tileSize;
+
+        int[][] mapa = gp.getTileM().getGMapa().getGrade(); // Matriz de tiles do mapa atual
+
+        // Percorre todos os tiles cobertos pela área simulada
+        for (int r = row1; r <= row2; r++) {
+            for (int c = col1; c <= col2; c++) {
+                // Evita sair dos limites do mapa
+                if (r < 0 || c < 0 || r >= mapa.length || c >= mapa[0].length) return true;
+
+                int tileId = mapa[r][c];
+                if (gp.getTileM().getTile()[tileId].getColisao()) {
+                    return true; // Se o tile tem colisão, a área é inválida
+                }
+            }
+        }
+        return false; // Sem colisão
+    }
+
 
 
 

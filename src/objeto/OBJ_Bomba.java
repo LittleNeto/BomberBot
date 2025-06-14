@@ -237,6 +237,24 @@ public class OBJ_Bomba extends SuperObjeto {
         // Ativa colisão só quando ninguém mais estiver dentro
         this.colisao = personagensDentroDaBomba.isEmpty();
     }
+    
+    public Rectangle[] getZonasExplosaoPrevisao() {
+        Rectangle[] zonas = new Rectangle[5];
+
+        int tile = gp.getTileSize();
+        int bx = mundoX;
+        int by = mundoY;
+
+        zonas[0] = new Rectangle(bx, by, tile, tile); // centro
+
+        zonas[1] = new Rectangle(bx, by - alcance * tile, tile, alcance * tile); // cima
+        zonas[2] = new Rectangle(bx, by + tile, tile, alcance * tile);           // baixo
+        zonas[3] = new Rectangle(bx - alcance * tile, by, alcance * tile, tile); // esquerda
+        zonas[4] = new Rectangle(bx + tile, by, alcance * tile, tile);           // direita
+
+        return zonas;
+    }
+
 
     
     public Rectangle[] getZonasExplosao() {
@@ -245,6 +263,10 @@ public class OBJ_Bomba extends SuperObjeto {
 
     public boolean isExplosaoAtiva() {
         return explosaoAtiva;
+    }
+    
+    public int getFramesRestantes() {
+        return framesParaExplodir - contadorFramesDesdeColocada;
     }
     
 }
