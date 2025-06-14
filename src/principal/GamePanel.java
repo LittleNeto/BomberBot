@@ -34,7 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
     private final int maxMundoCol = 31; // exemplo: mapa de 50 colunas
     private final int maxMundoLin = 10;
     
-    
+
     //FPS
     private int fps = 60;
     
@@ -56,6 +56,8 @@ public class GamePanel extends JPanel implements Runnable {
     //GAME STATE
     public GameState gameState;
 
+    
+    private boolean bombaAtiva = false;
     
     public GamePanel() {
         this.setPreferredSize(new Dimension(this.getScreenWidth(), this.getScreenHeight())); //define a dimensão da tela
@@ -213,6 +215,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
     
     public void colocarBomba(int x, int y) {
+        if (bombaAtiva) return; // já existe uma bomba no mapa
+
         int posicaoBombaX = (x) / getTileSize() * getTileSize();
         int posicaoBombaY = (y) / getTileSize() * getTileSize();
 
@@ -221,12 +225,20 @@ public class GamePanel extends JPanel implements Runnable {
                 obj[i] = new OBJ_Bomba(this);
                 obj[i].mundoX = posicaoBombaX;
                 obj[i].mundoY = posicaoBombaY;
+                bombaAtiva = true;
                 break;
             }
         }
     }
 
 
+    public boolean isBombaAtiva() {
+        return bombaAtiva;
+    }
+
+    public void setBombaAtiva(boolean ativa) {
+        this.bombaAtiva = ativa;
+    }
     
     public void tocarMusica(int i) {
     	sound.setFile(i);
