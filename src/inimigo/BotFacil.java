@@ -9,9 +9,16 @@ import javax.imageio.ImageIO;
 import principal.GamePanel;
 
 public class BotFacil extends Personagem implements Bot_if{
+	
+	Random random = new Random();
+	private EstadoBot estadoAtual = EstadoBot.ANDANDO;
+	private int tempoDeEspera = 20; //frames de espera entre uma cosão e a escolha da nova direção (0.3s)
+	private int contadorDeEspera = 0;
+	
+	
     public BotFacil(GamePanel gp) {
         super(gp);
-        velocidade = 3;
+        velocidade = 1;
         direcao = "baixo"; 
         areaSolida = new Rectangle();
         areaSolida.x = 16;
@@ -44,28 +51,38 @@ public class BotFacil extends Personagem implements Bot_if{
         }
     }
     
+    @Override
     public void setAction() {
     	
-    	actionLockCounter++;
-    	if (actionLockCounter == 120) { //estabelecer um intervalo para o bot mudar de direção, ele não muda por 120 frames (2 segundos aproximadamente)
-        	Random random = new Random();
-        	int i = random.nextInt(100) + 1; //pega um número aleatório de 0 à 99, o +1 impede que seja 0
-        	 //25% de chance de ir para qualquer direção
-        	if (i <= 25) {
-        		direcao = "cima";
-        	}
-        	if (i > 25 && i <= 50) {
-        		direcao = "baixo";
-        	}
-        	if (i > 50 && i <= 75) {
-        		direcao = "esquerda";
-        	}
-        	if (i > 75 && i <= 100) {
-        		direcao = "direita";
-        	}
-        	
-        	actionLockCounter = 0;
+    	switch(estadoAtual) {
+	    	case ANDANDO -> {
+	    		if(getColisaoLig()) {
+	    			estadoAtual = EstadoBot.COLIDIU;
+	    			contadorDeEspera = 0;
+	    		}
+	    	}
+	    	case COLIDIU ->{
+	    		contadorDeEspera++;
+	    		if(contadorDeEspera >= tempoDeEspera) {
+	    			estadoAtual = EstadoBot.ESPERANDO_NOVA_DIRECAO;
+	    		}
+	    	}
+	    	
+	    	case ESPERANDO_NOVA_DIRECAO ->{
+	    		escolherNovaDirecao();
+	    		estadoAtual = EstadoBot.ANDANDO;
+	    	}
     	}
     	
+    	actionLockCounter++;
+    	if (actionLockCounter >= 360 && estadoAtual == EstadoBot.ANDANDO) {
+            escolherNovaDirecao();
+            actionLockCounter = 0;
+        }
+    }
+    
+    private void escolherNovaDirecao() {
+        String[] direcoes = {"cima", "baixo", "esquerda", "direita"};
+        direcao = direcoes[random.nextInt(direcoes.length)];
     }
 }
