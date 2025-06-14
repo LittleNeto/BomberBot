@@ -3,6 +3,7 @@ package principal;
 import inimigo.BotFacil;
 import objeto.OBJ_Porta;
 import recursos.Mapa;
+import tile_Interativo.BlocoLixo;
 /**
  * 
  * @author usuario
@@ -21,10 +22,11 @@ public class AssetSetter {
     
     public void setObject() {
     	
-    	gp.obj[1] = new OBJ_Porta(gp);
-    	gp.obj[1].mundoX = gp.getTileSize() * 2;
-    	gp.obj[1].mundoY = gp.getTileSize() * 1;
+    	gp.obj[0] = new OBJ_Porta(gp);
+    	gp.obj[0].mundoX = gp.getTileSize() * 2;
+    	gp.obj[0].mundoY = gp.getTileSize() * 1;
     }
+  
     public void setBot() {
         gp.monstros[0] = new BotFacil(gp);
         gp.monstros[0].setMundoX(gp.getTileSize() * this.mapa.posicaoInimigos[0][1]);
@@ -34,5 +36,18 @@ public class AssetSetter {
         gp.monstros[1].setMundoX(gp.getTileSize() * this.mapa.posicaoInimigos[1][1]);
         gp.monstros[1].setMundoY(gp.getTileSize() * this.mapa.posicaoInimigos[1][0]);
     }
-        
+    
+    //CONSERTAR DEPOIS
+    public void setBlocoInterativo() {
+        int i = 0;
+        for (int lin = 0; lin < mapa.getGrade().length; lin++) {
+            for (int col = 0; col < mapa.getGrade()[0].length; col++) {
+                if (mapa.getGrade()[lin][col] == 2) {
+                    gp.iTiles[i] = new BlocoLixo(gp, col, lin);
+                    i++;
+                }
+            }
+        }
+    }
+
 }
