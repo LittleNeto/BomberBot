@@ -62,6 +62,18 @@ public class Jogador extends Personagem {
         botsMortos = 0; 
         
     }
+    
+    public void setDefaultPositions() {
+        setMundoX(gp.getTileSize()); //define as coordenadas x e y que o jogador aparece na tela, a velocidade e a direção padrão
+        setMundoY(gp.getTileSize() * 2);
+        setVelocidade(3);
+        setDirecao("baixo");
+    }
+    
+    public void resetarVida() {
+    	vida = vidaMax;
+    	invencivel = false;
+    }
 
     public void carregarImagens() {
         

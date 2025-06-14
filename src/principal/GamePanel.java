@@ -55,7 +55,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     //GAME STATE
     public GameState gameState;
-
+	private long tempoGameOver = 0;
     
     private boolean bombaAtiva = false;
     
@@ -121,6 +121,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
     	
     	if (gameState == GameState.PLAY) {
+    		tempoGameOver = 0; // Garante que não resta tempo residual ao iniciar um novo jogo
             this.getJogador().update();
             
             if (keyH.getTeclaBombaPressionada()) {
@@ -147,10 +148,27 @@ public class GamePanel extends JPanel implements Runnable {
                     ((OBJ_Bomba) obj[i]).update();
                 }
             }
+            
+            if(this.getJogador().getVida() <= 0) {
+            	gameState = gameState.GAME_OVER;
+            }
     	}
     	if (gameState == gameState.PAUSE) {
     		//nada
     	}
+    	if (gameState == gameState.GAME_OVER) {
+    	    if (tempoGameOver == 0) {
+    	        tempoGameOver = System.currentTimeMillis(); // Marca o início da contagem
+    	    } else {
+    	        long tempoAtual = System.currentTimeMillis();
+    	        if (tempoAtual - tempoGameOver >= 10000) { // 10 segundos
+    	            restart();
+    	            gameState = GameState.TITULO;
+    	            tempoGameOver = 0; // Reinicia o contador
+    	        }
+    	    }
+    	}
+
     	
     }
     
@@ -232,6 +250,38 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
+	
+    public void restart() {
+        // 1. Parar música do jogo
+        sound.parar(); // Método que você deve garantir que pare qualquer som atual
+
+        // 2. Zerar estados e arrays
+        jogador = new Jogador(this, this.getKeyH());
+        obj = new SuperObjeto[10];
+        monstros = new Personagem[10];
+        iTiles = new BlocoInterativo[100];
+
+        // 3. Resetar mapa (recarregar tile manager ou criar novo)
+        tileM = new TileManager(this);
+
+        // 4. Resetar dados do jogador
+        jogador.setDefaultPositions();
+        jogador.resetarVida();
+        this.setBombaAtiva(false);
+
+        // 5. Resetar tempo do Game Over
+        tempoGameOver = 0;
+
+        // 6. Recriar elementos como no início
+        aSetter = new AssetSetter(this, tileM.getMapa()); // garantir recriação do mapa e objetos
+        aSetter.setObject();
+        aSetter.setBot();
+        aSetter.setBlocoInterativo();
+
+        // 7. Tocar música do título
+        tocarMusica(GameState.TITULO.getMusicaIndex()); // toque a música de título (você pode adaptar o índice)
+    }
+
     
     public void colocarBombaBot(int x, int y, int alcance, entidade.BotPersonagem dono) {
         int posicaoBombaX = (x) / getTileSize() * getTileSize();
