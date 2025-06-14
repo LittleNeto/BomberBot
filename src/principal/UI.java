@@ -75,6 +75,11 @@ public class UI {
 			desenharVidaJogador();
 			desenharTelaPausa();
 		}
+		//Game Over state
+		if(gp.gameState == GameState.GAME_OVER) {
+			desenharVidaJogador();
+			desenharTelaGameOver();
+		}
 	}
 	
 	public void desenharVidaJogador() {
@@ -178,6 +183,30 @@ public class UI {
 		int y = gp.getScreenHeight()/2;
 		
 		g2.drawString(texto, x, y);
+	}
+	
+	public void desenharTelaGameOver() {
+		g2.setColor(new Color(0, 0, 0, 150));
+		g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
+		
+		int x;
+		int y;
+		String texto;
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 110f));
+		
+		texto = "GAME OVER";
+		
+		//sombra
+		g2.setColor(Color.black);
+		x = getXparaTextoCentralizado(texto);
+		y = gp.getTileSize() * 4;
+		g2.drawString(texto, x, y);
+		
+		//main
+		g2.setColor(Color.white);
+		g2.drawString(texto, x - 4, y - 4);
+		
+
 	}
 	
 	public int getXparaTextoCentralizado(String texto) {
