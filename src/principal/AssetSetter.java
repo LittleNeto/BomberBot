@@ -1,5 +1,6 @@
 package principal;
 
+import inimigo.BotDificil;
 import inimigo.BotFacil;
 import inimigo.BotMedio;
 import objeto.OBJ_Porta;
@@ -36,6 +37,7 @@ public class AssetSetter {
         gp.monstros[1] = new BotFacil(gp);
         gp.monstros[1].setMundoX(gp.getTileSize() * this.mapa.posicaoInimigos[1][1]);
         gp.monstros[1].setMundoY(gp.getTileSize() * this.mapa.posicaoInimigos[1][0]);
+        
     }
     
     //CONSERTAR DEPOIS

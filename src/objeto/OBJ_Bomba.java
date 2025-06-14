@@ -6,12 +6,14 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import entidade.BotPersonagem;
 import principal.GamePanel;
 import principal.GameState;
 
 public class OBJ_Bomba extends SuperObjeto {
 
     GamePanel gp;
+    private BotPersonagem dono;
 
     private int spriteCount = 0;
     private int spriteNum = 0;
@@ -32,9 +34,10 @@ public class OBJ_Bomba extends SuperObjeto {
     private Rectangle[] zonasExplosao;
     private final int alcance = 1;
 
-    public OBJ_Bomba(GamePanel gp) {
+    public OBJ_Bomba(GamePanel gp, BotPersonagem dono) {
         this.gp = gp;
         nome = "Bomba";
+        this.dono = dono;
 
         framesParaExplodir = gp.getFps() * 5; // 5 segundos
         framesDuracaoExplosao = gp.getFps() / 2; // 0.5 segundos de explosão (ajustável)

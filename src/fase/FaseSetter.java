@@ -1,7 +1,9 @@
-package principal;
+package fase;
+
+import principal.GamePanel;
 
 public interface FaseSetter {
-	    void setObjetos(GamePanel gp);
+	    void setObject(GamePanel gp);
 	    void setInimigos(GamePanel gp);
 	    void setPoderes(GamePanel gp);
 }

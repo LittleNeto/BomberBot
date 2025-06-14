@@ -7,13 +7,13 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import principal.GamePanel;
 
-public class BotMedio extends BotPersonagem{
+public class BotDificil extends BotPersonagem {
 
     Random random = new Random();
 
-    public BotMedio(GamePanel gp) {
+    public BotDificil(GamePanel gp) {
         super(gp);
-        velocidade = 3;
+        velocidade = 4;
         direcao = "baixo";
 
         areaSolida = new Rectangle();
@@ -26,21 +26,22 @@ public class BotMedio extends BotPersonagem{
 
         vidaMax = 1;
         vida = vidaMax;
-
+        
         tipo = 1;
+
         getImagem();
     }
 
     public void getImagem() {
         try {
-            this.setCima1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_cima_1.png")));
-            this.setCima2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_cima_2.png")));
-            this.setBaixo1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_baixo_1.png")));
-            this.setBaixo2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_baixo_2.png")));
-            this.setEsq1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_esquerda_1.png")));
-            this.setEsq2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_esquerda_2.png")));
-            this.setDir1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_direita_1.png")));
-            this.setDir2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_direita_2.png")));
+            this.setCima1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_cima_1.png")));
+            this.setCima2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_cima_2.png")));
+            this.setBaixo1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_baixo_1.png")));
+            this.setBaixo2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_baixo_2.png")));
+            this.setEsq1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_esquerda_1.png")));
+            this.setEsq2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_esquerda_2.png")));
+            this.setDir1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_direita_1.png")));
+            this.setDir2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_direita_2.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,9 +49,8 @@ public class BotMedio extends BotPersonagem{
 
     @Override
     public void setAction() {
-    	
     	if (estaNaZonaDePerigo()) {
-            fugirDaZonaDePerigo();
+        	fugirDaZonaDePerigo();
             return;
         }
 
@@ -68,17 +68,25 @@ public class BotMedio extends BotPersonagem{
                 }
             }
             case ESPERANDO_NOVA_DIRECAO -> {
-                direcao = escolherNovaDirecao();
+            	if(!seguirJogadorSeEstiverPerto(getDistanciaMax())) {
+            		direcao = escolherNovaDirecao();
+            	}
                 estadoAtual = EstadoBot.ANDANDO;
             }
         }
 
         actionLockCounter++;
         if (actionLockCounter >= 360 && estadoAtual == EstadoBot.ANDANDO) {
-            direcao = escolherNovaDirecao();
+        	if(!seguirJogadorSeEstiverPerto(getDistanciaMax())) {
+        		direcao = escolherNovaDirecao();
+        	}
             actionLockCounter = 0;
         }
-        
+
         plantarBomba();
+    	
     }
+
+    
 }
+

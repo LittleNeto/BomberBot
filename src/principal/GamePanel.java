@@ -224,10 +224,24 @@ public class GamePanel extends JPanel implements Runnable {
 
         for (int i = 0; i < obj.length; i++) {
             if (obj[i] == null) {
-                obj[i] = new OBJ_Bomba(this);
+                obj[i] = new OBJ_Bomba(this, null);
                 obj[i].mundoX = posicaoBombaX;
                 obj[i].mundoY = posicaoBombaY;
                 bombaAtiva = true;
+                break;
+            }
+        }
+    }
+    
+    public void colocarBombaBot(int x, int y, int alcance, entidade.BotPersonagem dono) {
+        int posicaoBombaX = (x) / getTileSize() * getTileSize();
+        int posicaoBombaY = (y) / getTileSize() * getTileSize();
+
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] == null) {
+                obj[i] = new objeto.OBJ_Bomba(this, dono); // Passa o bot dono
+                obj[i].mundoX = posicaoBombaX;
+                obj[i].mundoY = posicaoBombaY;
                 break;
             }
         }

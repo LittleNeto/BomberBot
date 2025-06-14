@@ -48,38 +48,42 @@ public class BotFacil extends BotPersonagem {
         }
     }
     
+    
+    @Override
     public void setAction() {
-    	
-    	switch(estadoAtual) {
-	    	case ANDANDO -> {
-	    		if(getColisaoLig()) {
-	    			estadoAtual = EstadoBot.COLIDIU;
-	    			contadorDeEspera = 0;
-	    		}
-	    	}
-	    	case COLIDIU ->{
-	    		contadorDeEspera++;
-	    		if(contadorDeEspera >= tempoDeEspera) {
-	    			estadoAtual = EstadoBot.ESPERANDO_NOVA_DIRECAO;
-	    		}
-	    	}
-	    	
-	    	case ESPERANDO_NOVA_DIRECAO ->{
-	    		direcao = escolherNovaDirecao();
-	    		estadoAtual = EstadoBot.ANDANDO;
-	    	}
-    	}
-    	
-    	actionLockCounter++;
-    	if (actionLockCounter >= 360 && estadoAtual == EstadoBot.ANDANDO) {
+    	if (estaNaZonaDePerigo()) {
+            fugirDaZonaDePerigo();
+            return;
+        }
+
+        switch (estadoAtual) {
+            case ANDANDO -> {
+                if (colisaoLig) {
+                    estadoAtual = EstadoBot.COLIDIU;
+                    contadorDeEspera = 0;
+                }
+            }
+            case COLIDIU -> {
+                contadorDeEspera++;
+                if (contadorDeEspera >= tempoDeEspera) {
+                    estadoAtual = EstadoBot.ESPERANDO_NOVA_DIRECAO;
+                }
+            }
+            case ESPERANDO_NOVA_DIRECAO -> {
+                direcao = escolherNovaDirecao();
+                estadoAtual = EstadoBot.ANDANDO;
+            }
+        }
+
+        actionLockCounter++;
+        if (actionLockCounter >= 360 && estadoAtual == EstadoBot.ANDANDO) {
             direcao = escolherNovaDirecao();
             actionLockCounter = 0;
         }
+    	
     }
     
 
-    public void plantarBomba() {
-    	//bots de nivel facil não plantam bomba
-    }
+
     
 }
