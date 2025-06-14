@@ -25,6 +25,8 @@ public class BotAvancado extends Personagem implements Bot_if {
         
         vidaMax = 1;
         vida = vidaMax;
+
+	tipo = 1;
         
         getImagem();
     }
