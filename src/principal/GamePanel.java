@@ -9,7 +9,6 @@ import entidade.Jogador;
 import entidade.Personagem;
 import objeto.OBJ_Bomba;
 import objeto.SuperObjeto;
-import recursos.Bomba;
 import tile.TileManager;
 import tile_Interativo.BlocoInterativo;
 
@@ -44,7 +43,7 @@ public class GamePanel extends JPanel implements Runnable {
     Sound sound = new Sound();
     private Thread gameThread; //implementado para ajudar a atualizar a tela durante o decorrer do jogo
     private ColisaoChecador cCheca = new ColisaoChecador(this);
-    public AssetSetter aSetter = new AssetSetter(this, this.getTileM().getMapa());
+    public AssetSetter aSetter = new AssetSetter(this, this.getTileM().getGMapa());
     public UI ui = new UI(this);
     
     //ENTIDADES E OBJETOS
