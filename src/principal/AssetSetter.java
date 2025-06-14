@@ -30,7 +30,7 @@ public class AssetSetter {
     }
   
     public void setBot() {
-<<<<<<< HEAD
+
         gp.monstros[0] = new BotMedio(gp);
         gp.monstros[0].setMundoX(gp.getTileSize() * this.mapa.posicaoInimigos[0][1]);
         gp.monstros[0].setMundoY(gp.getTileSize() * this.mapa.posicaoInimigos[0][0]);
@@ -38,15 +38,7 @@ public class AssetSetter {
         gp.monstros[1] = new BotMedio(gp);
         gp.monstros[1].setMundoX(gp.getTileSize() * this.mapa.posicaoInimigos[1][1]);
         gp.monstros[1].setMundoY(gp.getTileSize() * this.mapa.posicaoInimigos[1][0]);
-=======
-        gp.monstros[0] = new BotFacil(gp);
-        gp.monstros[0].setMundoX(gp.getTileSize() * this.gMapa.posicaoInimigos[0][1]);
-        gp.monstros[0].setMundoY(gp.getTileSize() * this.gMapa.posicaoInimigos[0][0]);
-        
-        gp.monstros[1] = new BotFacil(gp);
-        gp.monstros[1].setMundoX(gp.getTileSize() * this.gMapa.posicaoInimigos[1][1]);
-        gp.monstros[1].setMundoY(gp.getTileSize() * this.gMapa.posicaoInimigos[1][0]);
->>>>>>> 32a4624db183a45ba979eff9673f30fb31cb795a
+
         
     }
     
