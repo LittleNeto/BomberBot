@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import principal.GamePanel;
+import principal.GameState;
 
 public class OBJ_Bomba extends SuperObjeto {
 
@@ -24,7 +25,7 @@ public class OBJ_Bomba extends SuperObjeto {
 
     private BufferedImage imagemChama;
     private Rectangle[] zonasExplosao;
-    private final int alcance = 2;
+    private final int alcance = 1;
 
     public OBJ_Bomba(GamePanel gp) {
         this.gp = gp;
@@ -66,11 +67,13 @@ public class OBJ_Bomba extends SuperObjeto {
         }
 
         checaPresencaJogador(gp);
-
-        long tempoAtual = System.currentTimeMillis();
-        if (tempoAtual - tempoColocada >= 5000) {
-            explodir();
+        if(gp.gameState == GameState.PLAY) {
+            long tempoAtual = System.currentTimeMillis();
+            if (tempoAtual - tempoColocada >= 5000) {
+                explodir();
+            }
         }
+
     }
 
     private void explodir() {
@@ -78,13 +81,16 @@ public class OBJ_Bomba extends SuperObjeto {
         explosaoAtiva = true;
         tempoExplosao = System.currentTimeMillis();
 
-        int tile = gp.getTileSize();
-        zonasExplosao = new Rectangle[4];
+        zonasExplosao = new Rectangle[5];
 
-        zonasExplosao[0] = new Rectangle(mundoX, mundoY - alcance * tile, tile, alcance * tile); // cima
-        zonasExplosao[1] = new Rectangle(mundoX, mundoY + tile, tile, alcance * tile); // baixo
-        zonasExplosao[2] = new Rectangle(mundoX - alcance * tile, mundoY, alcance * tile, tile); // esquerda
-        zonasExplosao[3] = new Rectangle(mundoX + tile, mundoY, alcance * tile, tile); // direita
+        int tile = gp.getTileSize();
+
+        zonasExplosao[0] = new Rectangle(mundoX, mundoY, tile, tile); // zona da bomba (posição central)
+        zonasExplosao[1] = new Rectangle(mundoX, mundoY - alcance * tile, tile, alcance * tile); // cima
+        zonasExplosao[2] = new Rectangle(mundoX, mundoY + tile, tile, alcance * tile); // baixo
+        zonasExplosao[3] = new Rectangle(mundoX - alcance * tile, mundoY, alcance * tile, tile); // esquerda
+        zonasExplosao[4] = new Rectangle(mundoX + tile, mundoY, alcance * tile, tile); // direita
+
     }
 
     private void causarDanoAoJogador() {
@@ -142,23 +148,28 @@ public class OBJ_Bomba extends SuperObjeto {
 
             if (explosaoAtiva) {
                 int tile = gp.getTileSize();
-                // Cima
+
+                // chama na posição da bomba (central)
+                g2.drawImage(imagemChama, drawX, drawY, tile, tile, null);
+
+                // cima
                 for (int i = 1; i <= alcance; i++) {
                     g2.drawImage(imagemChama, drawX, drawY - i * tile, tile, tile, null);
                 }
-                // Baixo
+                // baixo
                 for (int i = 1; i <= alcance; i++) {
                     g2.drawImage(imagemChama, drawX, drawY + i * tile, tile, tile, null);
                 }
-                // Esquerda
+                // esquerda
                 for (int i = 1; i <= alcance; i++) {
                     g2.drawImage(imagemChama, drawX - i * tile, drawY, tile, tile, null);
                 }
-                // Direita
+                // direita
                 for (int i = 1; i <= alcance; i++) {
                     g2.drawImage(imagemChama, drawX + i * tile, drawY, tile, tile, null);
                 }
             }
+
         }
     }
 
