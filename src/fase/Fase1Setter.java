@@ -10,6 +10,7 @@ import inimigo.BotMedio;
 public class Fase1Setter implements FaseSetter {
 	GamePanel gp;
 	GeradorMapa gMapa;
+	final int QTD_BOTS = 6;
 
 	public Fase1Setter(GamePanel gp, GeradorMapa gMapa) {
 		this.gp = gp;
@@ -18,29 +19,11 @@ public class Fase1Setter implements FaseSetter {
 	
 	@Override
 	public void setInimigos(GamePanel gp) {
-		 gp.monstros[0] = new BotFacil(gp);
-		 gp.monstros[0].setMundoX(gp.getTileSize() * this.gMapa.posicaoInimigos[0][1]);
-		 gp.monstros[0].setMundoY(gp.getTileSize() * this.gMapa.posicaoInimigos[0][0]);
- 
-		 gp.monstros[1] = new BotFacil(gp);
-		 gp.monstros[1].setMundoX(gp.getTileSize() * this.gMapa.posicaoInimigos[1][1]);
-		 gp.monstros[1].setMundoY(gp.getTileSize() * this.gMapa.posicaoInimigos[1][0]);
-		 
-		 gp.monstros[2] = new BotFacil(gp);
-		 gp.monstros[2].setMundoX(gp.getTileSize() * this.gMapa.posicaoInimigos[2][1]);
-		 gp.monstros[2].setMundoY(gp.getTileSize() * this.gMapa.posicaoInimigos[2][0]);
- 
-		 gp.monstros[3] = new BotFacil(gp);
-		 gp.monstros[3].setMundoX(gp.getTileSize() * this.gMapa.posicaoInimigos[3][1]);
-		 gp.monstros[3].setMundoY(gp.getTileSize() * this.gMapa.posicaoInimigos[3][0]);
-		 
-		 gp.monstros[4] = new BotFacil(gp);
-		 gp.monstros[4].setMundoX(gp.getTileSize() * this.gMapa.posicaoInimigos[4][1]);
-		 gp.monstros[4].setMundoY(gp.getTileSize() * this.gMapa.posicaoInimigos[4][0]);
- 
-		 gp.monstros[5] = new BotFacil(gp);
-		 gp.monstros[5].setMundoX(gp.getTileSize() * this.gMapa.posicaoInimigos[5][1]);
-		 gp.monstros[5].setMundoY(gp.getTileSize() * this.gMapa.posicaoInimigos[5][0]);
+		for (int i = 0; i < 6; i++) {
+			 gp.monstros[i] = new BotFacil(gp);
+			 gp.monstros[i].setMundoX(gp.getTileSize() * this.gMapa.posicaoInimigos[i][1]);
+			 gp.monstros[i].setMundoY(gp.getTileSize() * this.gMapa.posicaoInimigos[i][0]);
+		}
 		
 	}
 	
