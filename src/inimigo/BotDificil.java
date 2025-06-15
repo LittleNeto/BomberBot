@@ -7,6 +7,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import principal.GamePanel;
 
+
 /**
  * Representa um bot com comportamento mais difícil/inteligente.
  * Esse bot é mais rápido e segue o jogador de forma mais eficiente,
@@ -22,6 +23,7 @@ public class BotDificil extends BotPersonagem {
     /** Gerador de aleatoriedade para decisões de movimento */
     Random random = new Random();
 
+    
     /**
      * Construtor do bot difícil.
      *
@@ -44,9 +46,9 @@ public class BotDificil extends BotPersonagem {
         // Define a vida do bot
         vidaMax = 1;
         vida = vidaMax;
-
+        
         // Define tipo (pode ser usado para diferenciação visual ou lógica)
-        tipo = 1;
+        tipo = 0;
 
         // Carrega sprites do bot
         getImagem();
@@ -58,14 +60,15 @@ public class BotDificil extends BotPersonagem {
      */
     public void getImagem() {
         try {
-            this.setCima1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_cima_1.png")));
-            this.setCima2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_cima_2.png")));
-            this.setBaixo1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_baixo_1.png")));
-            this.setBaixo2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_baixo_2.png")));
-            this.setEsq1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_esquerda_1.png")));
-            this.setEsq2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_esquerda_2.png")));
-            this.setDir1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_direita_1.png")));
-            this.setDir2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_direita_2.png")));
+        	this.setCima1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_cima_1.png"))); //pega cada png da pasta de sprites
+            this.setCima2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_cima_2.png"))); 
+            this.setBaixo1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_baixo_1.png"))); 
+            this.setBaixo2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_baixo_2.png"))); 
+            this.setEsq1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_esquerda_1.png"))); 
+            this.setEsq2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_esquerda_2.png"))); 
+            this.setDir1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_direita_1.png"))); 
+            this.setDir2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botC_direita_2.png"))); 
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,15 +81,15 @@ public class BotDificil extends BotPersonagem {
      */
     @Override
     public void setAction() {
-
+    	
         // Atualiza cooldown para plantar bomba
-        if (contadorCooldownBomba < cooldownBomba) {
-            contadorCooldownBomba++;
-        }
-
+    	if (contadorCooldownBomba < cooldownBomba) {
+    	    contadorCooldownBomba++;
+    	}
+    	
         // Se estiver em zona de perigo, foge imediatamente
-        if (estaNaZonaDePerigo()) {
-            fugirDaZonaDePerigo();
+    	if (estaNaZonaDePerigo()) {
+        	fugirDaZonaDePerigo();
             return;
         }
 
@@ -99,7 +102,6 @@ public class BotDificil extends BotPersonagem {
                     contadorDeEspera = 0;
                 }
             }
-
             case COLIDIU -> {
                 // Espera um tempo antes de trocar direção
                 contadorDeEspera++;
@@ -107,13 +109,12 @@ public class BotDificil extends BotPersonagem {
                     estadoAtual = EstadoBot.ESPERANDO_NOVA_DIRECAO;
                 }
             }
-
             case ESPERANDO_NOVA_DIRECAO -> {
                 // Se o jogador estiver por perto, segue-o
-                if (!seguirJogadorSeEstiverPerto(getDistanciaMax())) {
+            	if(!seguirJogadorSeEstiverPerto(getDistanciaMax())) {
                     // Caso contrário, anda em direção aleatória
-                    direcao = escolherNovaDirecao();
-                }
+            		direcao = escolherNovaDirecao();
+            	}
                 estadoAtual = EstadoBot.ANDANDO;
             }
         }
@@ -121,13 +122,16 @@ public class BotDificil extends BotPersonagem {
         // Após certo tempo andando, verifica novamente se deve mudar de direção
         actionLockCounter++;
         if (actionLockCounter >= 360 && estadoAtual == EstadoBot.ANDANDO) {
-            if (!seguirJogadorSeEstiverPerto(getDistanciaMax())) {
-                direcao = escolherNovaDirecao();
-            }
+        	if(!seguirJogadorSeEstiverPerto(getDistanciaMax())) {
+        		direcao = escolherNovaDirecao();
+        	}
             actionLockCounter = 0;
         }
 
         // Tenta plantar bomba se possível
         plantarBomba();
+    	
     }
+
+    
 }
