@@ -3,6 +3,7 @@ package inimigo;
 import entidade.BotPersonagem;
 import java.awt.Rectangle;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import principal.GamePanel;
 
@@ -17,57 +18,59 @@ import principal.GamePanel;
  * @author júlio
  */
 public class BotFacil extends BotPersonagem {
-
+	
     /**
      * Construtor do bot fácil.
      *
      * @param gp Referência ao GamePanel (contexto do jogo).
      */
-    public BotFacil(GamePanel gp) {
+    public BotFacil(GamePanel gp) { 
         super(gp);
-        velocidade = 3;
+        velocidade = 2;
         direcao = "baixo"; 
-
+        
         // Define a área de colisão (hitbox)
         areaSolida = new Rectangle();
         areaSolida.x = 16;
         areaSolida.y = 32;
         areaSolida.width = 64;
         areaSolida.height = 64;
-
+        
         areaSolidaDefaultX = areaSolida.x;
         areaSolidaDefaultY = areaSolida.y;
-
+        
         // Define vida
         vidaMax = 1;
         vida = vidaMax;
-
+        
         // Tipo de bot (pode ser usado para identificação)
         tipo = 1;
-
+        
         // Carrega sprites do bot
         getImagem();
     }
-
+    
     /**
      * Carrega as imagens de animação do bot a partir dos recursos do projeto.
      * As imagens são divididas por direção e quadro.
      */
     public void getImagem() {
         try {
-            this.setCima1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_cima_1.png")));
-            this.setCima2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_cima_2.png")));
-            this.setBaixo1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_baixo_1.png")));
-            this.setBaixo2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_baixo_2.png")));
-            this.setEsq1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_esquerda_1.png")));
-            this.setEsq2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_esquerda_2.png")));
-            this.setDir1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_direita_1.png")));
-            this.setDir2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_direita_2.png")));
+
+               this.setCima1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_cima_1.png"))); //pega cada png da pasta de sprites
+               this.setCima2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_cima_2.png"))); 
+               this.setBaixo1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_baixo_1.png"))); 
+               this.setBaixo2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_baixo_2.png"))); 
+               this.setEsq1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_esquerda_1.png"))); 
+               this.setEsq2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_esquerda_2.png"))); 
+               this.setDir1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_direita_1.png"))); 
+               this.setDir2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_direita_2.png"))); 
+
         } catch (IOException e) {
-            e.printStackTrace();
+               e.printStackTrace();
         }
     }
-
+    
     /**
      * Define o comportamento do bot fácil a cada atualização (frame).
      * 
@@ -79,12 +82,12 @@ public class BotFacil extends BotPersonagem {
     @Override
     public void setAction() {
         // Atualiza cooldown de bomba
-        if (contadorCooldownBomba < cooldownBomba) {
-            contadorCooldownBomba++;
-        }
-
+    	if (contadorCooldownBomba < cooldownBomba) {
+    	    contadorCooldownBomba++;
+    	} 
+    	
         // Se estiver em perigo, tenta fugir
-        if (estaNaZonaDePerigo()) {
+    	if (estaNaZonaDePerigo()) {
             fugirDaZonaDePerigo();
             return;
         }
@@ -97,14 +100,12 @@ public class BotFacil extends BotPersonagem {
                     contadorDeEspera = 0;
                 }
             }
-
             case COLIDIU -> {
                 contadorDeEspera++;
                 if (contadorDeEspera >= tempoDeEspera) {
                     estadoAtual = EstadoBot.ESPERANDO_NOVA_DIRECAO;
                 }
             }
-
             case ESPERANDO_NOVA_DIRECAO -> {
                 direcao = escolherNovaDirecao();
                 estadoAtual = EstadoBot.ANDANDO;
@@ -117,5 +118,10 @@ public class BotFacil extends BotPersonagem {
             direcao = escolherNovaDirecao();
             actionLockCounter = 0;
         }
+    	
     }
+    
+
+
+    
 }
