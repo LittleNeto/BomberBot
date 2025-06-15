@@ -42,6 +42,10 @@ public class Fase3Setter implements FaseSetter {
 	public GeradorMapa getgMapa() {
 		return gMapa;
 	}
+
+	public int getQTD_BOTS() {
+		return QTD_BOTS;
+	}
 	
 
 }
