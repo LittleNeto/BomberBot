@@ -31,7 +31,6 @@ public class Jogador extends Personagem {
     public int invencivelCont = 0;
     
     private int botsMortos = 0; //SERÁ USADO PARA PASSAR DE CADA FASE
-    private int tempoTotalJogo = 0;
 
     public Jogador(GamePanel gp, ManipuladorTeclado keyH) {
         super(gp);
@@ -188,12 +187,12 @@ public class Jogador extends Personagem {
     				}
     			}
     			if (gp.faseAtual == FaseAtual.FASE2) {
-    				if (botsMortos >= gp.f1Setter.getQTD_BOTS()) {
+    				if (botsMortos >= gp.f2Setter.getQTD_BOTS()) {
     					gp.passarFase();
     				}
     			}
     			if (gp.faseAtual == FaseAtual.FASE3) {
-    				if (botsMortos >= gp.f1Setter.getQTD_BOTS()) {
+    				if (botsMortos >= gp.f2Setter.getQTD_BOTS()) {
     					gp.passarFase();
     				}
     			}
@@ -367,10 +366,6 @@ public class Jogador extends Personagem {
         this.botsMortos = botsMortos;
     }
     
-	public void setTempoTotalJogo(int tempoTotalJogo) {
-		this.tempoTotalJogo = tempoTotalJogo;
-	}
-    
 
     public GamePanel getGp() {
         return gp;
@@ -392,8 +387,4 @@ public class Jogador extends Personagem {
     	return this.botsMortos;
     }
 
-	public int getTempoTotalJogo() {
-		return tempoTotalJogo;
-	}
-    
 }
