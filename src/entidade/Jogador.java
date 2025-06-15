@@ -28,8 +28,8 @@ public class Jogador extends Personagem {
     public boolean invencivel = false;
     public int invencivelCont = 0;
     
-    
-    int botsMortos; //SERÁ USADO PARA PASSAR DE CADA FASE
+	private double tempoJogo = 200;
+    private int botsMortos; //SERÁ USADO PARA PASSAR DE CADA FASE
 
     public Jogador(GamePanel gp, ManipuladorTeclado keyH) {
         super(gp);
@@ -343,6 +343,13 @@ public class Jogador extends Personagem {
     public void setKeyH(ManipuladorTeclado keyH) {
         this.keyH = keyH;
     }
+    
+    public void setTempoJogo(double tempoJogo) {
+        this.tempoJogo = tempoJogo;
+    }
+    public void setBotsMortos(int botsMortos) {
+        this.botsMortos = botsMortos;
+    }
 
     public GamePanel getGp() {
         return gp;
@@ -359,5 +366,10 @@ public class Jogador extends Personagem {
     public int getTelaY() {
         return telaY;
     }
-    
+    public double getTempoJogo() {
+    	return this.tempoJogo;
+    }
+    public int getBotsMortos() {
+    	return this.botsMortos;
+    }
 }
