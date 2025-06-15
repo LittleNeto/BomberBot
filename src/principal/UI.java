@@ -26,6 +26,8 @@ public class UI {
 	public boolean jogoAcabado = false; 
 	public int numComando = 0;
 	
+	private double tempoJogo = 400;
+	
 	DecimalFormat dFormt = new DecimalFormat("#0"); //para configurar como o tempo é mostrado na tela
 	
 	public UI(GamePanel gp) {
@@ -65,6 +67,16 @@ public class UI {
 			desenharTelaTitle();
 		}
 		
+		//Ranking State
+		if(gp.gameState == GameState.RANKING) {
+//			desenharTelaRanking();
+		}
+		
+		//Cadastrar Ranking state
+		if (gp.gameState == GameState.RANKING) {
+//			desenharTelaCadastrarRanking();
+		}
+		
 		//Fases state
 		if(gp.gameState == GameState.FASE1) {
 			desenharTelaFase("Fase 1");
@@ -79,50 +91,95 @@ public class UI {
 		//Play state
 		if(gp.gameState == GameState.PLAY) {
 			desenharVidaJogador();
+			desenharTempoJogo();
 		}
 		//Pause state
 		if(gp.gameState == GameState.PAUSE) {
 			desenharVidaJogador();
+			desenharTempoJogo();
 			desenharTelaPausa();
 		}
 		//Game Over state
 		if(gp.gameState == GameState.GAME_OVER) {
 			desenharVidaJogador();
+			desenharTempoJogo();
 			desenharTelaGameOver();
 		}
 	}
 	
 	public void desenharTempoJogo() {
-		
+	    g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32F));
+	    g2.setColor(Color.white);
+
+	    String textoTempo = "TEMPO: " + dFormt.format(tempoJogo);
+	    int x = gp.getTileSize() * 14;
+	    int y = 64;
+
+	    g2.drawString(textoTempo, x, y);
 	}
+
+	public void atualizarTempoJogo(double delta) {
+	    if (gp.gameState == GameState.PLAY && tempoJogo > 0) {
+	        tempoJogo -= delta;
+	        if (tempoJogo < 0) {
+	            tempoJogo = 0;
+	        }
+	    }
+	}
+
 
 	
 	public void desenharVidaJogador() {
-
 	    int x = gp.getTileSize() / 2;
-	    int y = -10;
+	    int y = 0;
 
-	    int vida = gp.getJogador().getVida(); // 0, 1, 2 ou 3
+	    int vida = gp.getJogador().getVida(); //de 0 a 6
 
-	    BufferedImage img;
+	    BufferedImage imgBarra1;
+	    BufferedImage imgBarra2;
 
-	    switch (vida) {
+	    int vida1 = Math.min(vida, 3);
+	    switch (vida1) {
 	        case 3:
-	            img = vida_cheia;
+	            imgBarra1 = vida_cheia;
 	            break;
 	        case 2:
-	            img = vida_media;
+	            imgBarra1 = vida_media;
 	            break;
 	        case 1:
-	            img = vida_baixa;
+	            imgBarra1= vida_baixa;
 	            break;
 	        default:
-	            img = vida_vazia;
+	            imgBarra1 = vida_vazia;
 	            break;
 	    }
 
-	    g2.drawImage(img, x, y, null);
+	    int vida2 = vida - 3;
+	    if (vida2 <= 0) {
+	        imgBarra2 = vida_vazia;
+	    } else {
+	        switch (vida2) {
+	            case 3:
+	                imgBarra2 = vida_cheia;
+	                break;
+	            case 2:
+	                imgBarra2 = vida_media;
+	                break;
+	            case 1:
+	                imgBarra2 = vida_baixa;
+	                break;
+	            default:
+	                imgBarra2 = vida_vazia;
+	                break;
+	        }
+	    }
+
+	    g2.drawImage(imgBarra1, x, y, null);
+
+	    g2.drawImage(imgBarra2, x + gp.getTileSize() + 5, y, null);
 	}
+
+
 
 
 
@@ -251,6 +308,14 @@ public class UI {
 		
 		return x;
 	}
+
+	public double getTempoJogo() {
+		return tempoJogo;
+	}
+
+	public void setTempoJogo(double tempoJogo) {
+		this.tempoJogo = tempoJogo;
+	}
 	
 	public Graphics2D getG2() {
 		return this.g2;
@@ -259,4 +324,6 @@ public class UI {
 	public void setG2(Graphics2D g2) {
 		this.g2 = g2;
 	}
+	
+	
 }
