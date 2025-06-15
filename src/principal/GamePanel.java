@@ -68,7 +68,8 @@ public class GamePanel extends JPanel implements Runnable {
     
     private boolean bombaAtiva = false;
     
-    private int tempoTotal = 0;
+    private int tempoTotalFase = 0;
+    private int tempoTotalJogo = 0;
     
     public GamePanel() {
         this.setPreferredSize(new Dimension(this.getScreenWidth(), this.getScreenHeight())); //define a dimensão da tela
@@ -195,6 +196,7 @@ public class GamePanel extends JPanel implements Runnable {
     	if (gameState == GameState.PLAY) {
     		tempoGameOver = 0; // Garante que não resta tempo residual ao iniciar um novo jogo
     		tempoTelaFase = 0;
+//    		tempoTotal = 0;
             this.getJogador().update();
             
             if (keyH.getTeclaBombaPressionada()) {
@@ -266,7 +268,7 @@ public class GamePanel extends JPanel implements Runnable {
         } else if (gameState == GameState.RANKING) { 
         	ui.desenhar(g2);
         } else if (gameState == GameState.CADASTRAR_RANKING) { 
-        	
+        	ui.desenhar(g2);
         } else { 	
   
             //TILE
@@ -337,7 +339,7 @@ public class GamePanel extends JPanel implements Runnable {
         sound.parar(); //para o som que estava tocando
         
         ui.setTempoJogo(400);
-        this.getJogador().setTempoTotalJogo(0);
+        this.setTempoTotalJogo(0);
 
         // 2. Zerar estados e arrays
         jogador = new Jogador(this, this.getKeyH());
@@ -456,21 +458,23 @@ public class GamePanel extends JPanel implements Runnable {
     public void passarFase() {
     	 if(this.faseAtual == FaseAtual.FASE1) {
     		 int tempoAtual = (int) ui.getTempoJogo();
-    		 this.getJogador().setTempoTotalJogo(this.getJogador().getTempoTotalJogo() + tempoAtual);
-    		 System.out.println("Tempo Total = " + this.getJogador().getTempoTotalJogo());
+    		 this.setTempoTotalJogo(this.getTempoTotalJogo() + tempoAtual);
+    		 System.out.println("Tempo Total = " + this.getTempoTotalJogo());
     		 this.gameState = GameState.FASE2;
     	 }
     	 if(this.faseAtual == FaseAtual.FASE2) {
     		 int tempoAtual = (int) ui.getTempoJogo();
-    		 this.getJogador().setTempoTotalJogo(this.getJogador().getTempoTotalJogo() + tempoAtual);
-    		 System.out.println("Tempo Total = " + this.getJogador().getTempoTotalJogo());
+    		 this.setTempoTotalJogo(this.getTempoTotalJogo() + tempoAtual);
+    		 System.out.println("Tempo Total = " + this.getTempoTotalJogo());
     		 this.gameState = GameState.FASE3;
     	 }
     	 if(this.faseAtual == FaseAtual.FASE3) {
     		 int tempoAtual = (int) ui.getTempoJogo();
-    		 this.getJogador().setTempoTotalJogo(this.getJogador().getTempoTotalJogo() + tempoAtual);
-    		 System.out.println("Tempo Total = " + this.getJogador().getTempoTotalJogo());
+    		 this.setTempoTotalJogo(this.getTempoTotalJogo() + tempoAtual);
+    		 System.out.println("Tempo Total = " + this.getTempoTotalJogo());
     		 this.gameState = GameState.CADASTRAR_RANKING;
+    		 ui.aguardandoNome = true;
+    		 ui.nomeDigitado = "";
     	 }
     }
 
@@ -501,6 +505,12 @@ public class GamePanel extends JPanel implements Runnable {
 	public void setJogador(Jogador jogador) {
 		this.jogador = jogador;
 	}
+	
+
+	public void setTempoTotalJogo(int tempoTotalJogo) {
+		this.tempoTotalJogo = tempoTotalJogo;
+	}
+	
 
 	//getters
 	public int getFps() {
@@ -562,5 +572,14 @@ public class GamePanel extends JPanel implements Runnable {
 	public int getMaxMundoLin() {
 		return maxMundoLin;
 	}
+
+
+
+	public int getTempoTotalJogo() {
+		return tempoTotalJogo;
+	}
+
+
+	
 
 }
