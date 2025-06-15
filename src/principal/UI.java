@@ -65,6 +65,16 @@ public class UI {
 			desenharTelaTitle();
 		}
 		
+		//Fases state
+		if(gp.gameState == GameState.FASE1) {
+			desenharTelaFase("Fase 1");
+		}
+		if(gp.gameState == GameState.FASE2) {
+			desenharTelaFase("Fase 2");
+		}
+		if(gp.gameState == GameState.FASE3) {
+			desenharTelaFase("Fase 3");
+		}
 		
 		//Play state
 		if(gp.gameState == GameState.PLAY) {
@@ -200,6 +210,27 @@ public class UI {
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 110f));
 		
 		texto = "GAME OVER";
+		
+		//sombra
+		g2.setColor(Color.black);
+		x = getXparaTextoCentralizado(texto);
+		y = gp.getTileSize() * 4;
+		g2.drawString(texto, x, y);
+		
+		//main
+		g2.setColor(Color.white);
+		g2.drawString(texto, x - 4, y - 4);
+		
+	}
+	
+	public void desenharTelaFase(String texto) {
+		g2.setColor(new Color(30, 30, 102));
+		g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
+		
+		int x;
+		int y;
+
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 110f));
 		
 		//sombra
 		g2.setColor(Color.black);
