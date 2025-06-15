@@ -106,6 +106,15 @@ public class BlocoInterativo{
     public void setDirecao(String direcao) {
         this.direcao = direcao;
     }
+    public void setAreaSolida(Rectangle areaSolida) {
+    	this.areaSolida = areaSolida;
+    }
+    public void setAreaSolidaDefaultX(int areaSolidaDefaultX) {
+    	this.areaSolidaDefaultX = areaSolidaDefaultX;
+    }
+    public void setAreaSolidaDefaultY(int areaSolidaDefaultY) {
+    	this.areaSolidaDefaultY = areaSolidaDefaultY;
+    }
     
     
     public Rectangle getAreaSolida() {

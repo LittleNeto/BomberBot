@@ -8,7 +8,7 @@ import javax.sound.sampled.Clip;
 
 public class Sound {
 	
-	Clip clip;
+	public Clip clip;
 	URL soundURL[] = new URL[30]; //uma lista dos 'paths' dos sons
 	private long posicaoAtual = 0;
 	

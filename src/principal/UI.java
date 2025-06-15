@@ -17,7 +17,7 @@ import objeto.SuperObjeto;
 public class UI {
 	
 	GamePanel gp;
-	Graphics2D g2;
+	private Graphics2D g2;
 	Font retroGame;
 	BufferedImage vida_cheia, vida_media, vida_baixa, vida_vazia;
 	public boolean mensagemLig;
@@ -252,4 +252,11 @@ public class UI {
 		return x;
 	}
 	
+	public Graphics2D getG2() {
+		return this.g2;
+	}
+	
+	public void setG2(Graphics2D g2) {
+		this.g2 = g2;
+	}
 }
