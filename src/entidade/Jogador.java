@@ -1,4 +1,3 @@
-
 package entidade;
 
 import java.awt.AlphaComposite;
@@ -15,7 +14,10 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import principal.FaseAtual;
 import principal.GamePanel;
+import principal.GameState;
 import principal.ManipuladorTeclado;
 import principal.UtilityTool;
 
@@ -28,8 +30,8 @@ public class Jogador extends Personagem {
     public boolean invencivel = false;
     public int invencivelCont = 0;
     
-	private double tempoJogo = 200;
-    private int botsMortos; //SERÁ USADO PARA PASSAR DE CADA FASE
+    private int botsMortos = 0; //SERÁ USADO PARA PASSAR DE CADA FASE
+    private int tempoTotalJogo = 0;
 
     public Jogador(GamePanel gp, ManipuladorTeclado keyH) {
         super(gp);
@@ -57,7 +59,7 @@ public class Jogador extends Personagem {
         setDirecao("baixo");
         
         //STATUS DO PLAYER
-        vidaMax = 3;
+        vidaMax = 6;
         vida = vidaMax;
         botsMortos = 0; 
         
@@ -129,7 +131,6 @@ public class Jogador extends Personagem {
             int botIndex = gp.getcCheca().checaEntidade(this, gp.monstros);
             interageBot(botIndex);
             
-            int iTileIndex = gp.getcCheca().checaEntidade(this, gp.monstros);
             interageBot(botIndex);
             
 
@@ -178,12 +179,25 @@ public class Jogador extends Personagem {
     	if(i != 999) { //pode ser qualquer número, desde que não apareça no array de objetos
     		
     		String nomeObjeto = gp.obj[i].nome;
-    		
+    		 
     		switch(nomeObjeto) {
     		case "Porta": //TESTE
-//    			if(botsMortos > 10) {
-//    				gp.ui.jogoAcabado = true;
-//    			}
+    			if (gp.faseAtual == FaseAtual.FASE1) {
+    				if (botsMortos >= gp.f1Setter.getQTD_BOTS()) {
+    					gp.passarFase();
+    				}
+    			}
+    			if (gp.faseAtual == FaseAtual.FASE1) {
+    				if (botsMortos >= gp.f1Setter.getQTD_BOTS()) {
+    					gp.passarFase();
+    				}
+    			}
+    			if (gp.faseAtual == FaseAtual.FASE1) {
+    				if (botsMortos >= gp.f1Setter.getQTD_BOTS()) {
+    					gp.passarFase();
+    				}
+    			}
+
     			break;
     		}
     	}
@@ -192,9 +206,12 @@ public class Jogador extends Personagem {
     
     public void interageBot(int i) {
     	if (i != 999 && gp.monstros[i]!= null) {
-    		if (invencivel == false) {
-        		this.setVida(this.vida - 1);
-        		invencivel = true;
+    		if (gp.monstros[i].tipo == 1) {
+        		if (invencivel == false) {
+            		this.setVida(this.vida - 1);
+            		invencivel = true;
+        		}		
+    			
     		}
 
     	}
@@ -205,6 +222,8 @@ public class Jogador extends Personagem {
             gp.monstros[i].vida -= 1;
             if (gp.monstros[i].vida <= 0) {
                 gp.monstros[i] = null;
+                this.botsMortos++;
+                System.out.println("Qtd de bots mortos: " + this.botsMortos);
             }
         }
     }
@@ -344,12 +363,14 @@ public class Jogador extends Personagem {
         this.keyH = keyH;
     }
     
-    public void setTempoJogo(double tempoJogo) {
-        this.tempoJogo = tempoJogo;
-    }
     public void setBotsMortos(int botsMortos) {
         this.botsMortos = botsMortos;
     }
+    
+	public void setTempoTotalJogo(int tempoTotalJogo) {
+		this.tempoTotalJogo = tempoTotalJogo;
+	}
+    
 
     public GamePanel getGp() {
         return gp;
@@ -366,10 +387,13 @@ public class Jogador extends Personagem {
     public int getTelaY() {
         return telaY;
     }
-    public double getTempoJogo() {
-    	return this.tempoJogo;
-    }
+
     public int getBotsMortos() {
     	return this.botsMortos;
     }
+
+	public int getTempoTotalJogo() {
+		return tempoTotalJogo;
+	}
+    
 }
