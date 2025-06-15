@@ -134,4 +134,10 @@ public class BlocoInterativo{
     public int getAreaSolidaDefaultY() {
     	return this.areaSolidaDefaultY;
     }
+    public String getDirecao() {
+    	return this.direcao;
+    }
+    public BufferedImage getBaixo1() {
+    	return this.baixo1;
+    }
 }
