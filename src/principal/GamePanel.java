@@ -10,6 +10,7 @@ import entidade.Personagem;
 import fase.Fase1Setter;
 import fase.Fase2Setter;
 import fase.Fase3Setter;
+import fase.FaseSetter;
 import objeto.OBJ_Bomba;
 import objeto.SuperObjeto;
 import tile.TileManager;
@@ -52,6 +53,7 @@ public class GamePanel extends JPanel implements Runnable {
     public Fase1Setter f1Setter = new Fase1Setter(this, this.getTileM().getGMapa());
     public Fase2Setter f2Setter = new Fase2Setter(this, this.getTileM().getGMapa());
     public Fase3Setter f3Setter = new Fase3Setter(this, this.getTileM().getGMapa());
+    public FaseAtual faseAtual;
     
     //ENTIDADES E OBJETOS
     private Jogador jogador = new Jogador(this, this.getKeyH()); //cria uma instância jogador dentro da Tela do jogo
@@ -66,6 +68,8 @@ public class GamePanel extends JPanel implements Runnable {
     
     private boolean bombaAtiva = false;
     
+    private int tempoTotal = 0;
+    
     public GamePanel() {
         this.setPreferredSize(new Dimension(this.getScreenWidth(), this.getScreenHeight())); //define a dimensão da tela
         this.setBackground(Color.black);
@@ -78,9 +82,7 @@ public class GamePanel extends JPanel implements Runnable {
     
     
     public void setupGame() {
-//    	f1Setter.setObject(this);
-//        f1Setter.setInimigos(this);
-//        f1Setter.setBlocoInterativo(this, f1Setter.getgMapa());
+    	
         setGameState(GameState.TITULO);
 
     }
@@ -133,10 +135,56 @@ public class GamePanel extends JPanel implements Runnable {
     	    } else {
     	        long tempoAtual = System.currentTimeMillis();
     	        if (tempoAtual - tempoTelaFase >= 5000) { // 5 segundos
-    	            f1Setter.setObject(this);
-    	            f1Setter.setInimigos(this); // ← só cria agora
-    	            f1Setter.setBlocoInterativo(this, f1Setter.getgMapa());
+    	        	carregaFase();
 
+    	            FaseSetter fase = new Fase1Setter(this, tileM.getGMapa());//recria tudo
+    	            fase.setObject(this);
+    	            fase.setInimigos(this);
+    	            fase.setBlocoInterativo(this, fase.getgMapa());
+    	            
+    	        	faseAtual = FaseAtual.FASE1;
+    	            setGameState(GameState.PLAY);
+    	            tempoTelaFase = 0; // reinicia o contador
+    	        }
+    	    }
+    	}
+    	
+    	if (gameState == GameState.FASE2) {
+    		sound.parar();
+    	    if (tempoTelaFase == 0) {
+    	        tempoTelaFase = System.currentTimeMillis(); //inicio da contagem
+    	    } else {
+    	        long tempoAtual = System.currentTimeMillis();
+    	        if (tempoAtual - tempoTelaFase >= 5000) { // 5 segundos
+    	        	carregaFase();
+
+    	            FaseSetter fase = new Fase2Setter(this, tileM.getGMapa());//recria tudo
+    	            fase.setObject(this);
+    	            fase.setInimigos(this);
+    	            fase.setBlocoInterativo(this, fase.getgMapa());
+    	            
+    	        	faseAtual = FaseAtual.FASE2;
+    	            setGameState(GameState.PLAY);
+    	            tempoTelaFase = 0; // reinicia o contador
+    	        }
+    	    }
+    	}
+    	
+    	if (gameState == GameState.FASE3) {
+    		sound.parar();
+    	    if (tempoTelaFase == 0) {
+    	        tempoTelaFase = System.currentTimeMillis(); //inicio da contagem
+    	    } else {
+    	        long tempoAtual = System.currentTimeMillis();
+    	        if (tempoAtual - tempoTelaFase >= 5000) { // 5 segundos
+    	        	carregaFase();
+
+    	            FaseSetter fase = new Fase3Setter(this, tileM.getGMapa());//recria tudo
+    	            fase.setObject(this);
+    	            fase.setInimigos(this);
+    	            fase.setBlocoInterativo(this, fase.getgMapa());
+    	            
+    	        	faseAtual = FaseAtual.FASE3;
     	            setGameState(GameState.PLAY);
     	            tempoTelaFase = 0; // reinicia o contador
     	        }
@@ -174,14 +222,14 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
             
-            if(this.getJogador().getVida() <= 0) {
-            	gameState = gameState.GAME_OVER;
+            if(this.getJogador().getVida() <= 0 || ui.getTempoJogo() <= 0) {
+            	gameState = GameState.GAME_OVER;
             }
     	}
-    	if (gameState == gameState.PAUSE) {
+    	if (gameState == GameState.PAUSE) {
     		//nada
     	}
-    	if (gameState == gameState.GAME_OVER) {
+    	if (gameState == GameState.GAME_OVER) {
     	    if (tempoGameOver == 0) {
     	        tempoGameOver = System.currentTimeMillis(); // Marca o início da contagem
     	    } else {
@@ -193,6 +241,8 @@ public class GamePanel extends JPanel implements Runnable {
     	        }
     	    }
     	}
+
+    	ui.atualizarTempoJogo(1.0 / 60.0); // ou passe o delta se estiver calculando dinamicamente
 
     	
     }
@@ -213,7 +263,12 @@ public class GamePanel extends JPanel implements Runnable {
         //TITLE State
         if (gameState == GameState.TITULO) {
         	ui.desenhar(g2);
-        } else {
+        } else if (gameState == GameState.RANKING) { 
+        	ui.desenhar(g2);
+        } else if (gameState == GameState.CADASTRAR_RANKING) { 
+        	
+        } else { 	
+  
             //TILE
             this.getTileM().desenhar(g2); //vem antes para que o cenário seja desenhado antes do personagem
             
@@ -229,9 +284,6 @@ public class GamePanel extends JPanel implements Runnable {
             		iTiles[i].desenhar(g2);
             	}
             }
-            //OBS: podemos separar a geração de tiles em dois, para que primeiro seja desenhado as paredes e a terra e por cima dos obejtos sejam desenhados o lixo
-            //ou também podemos desenhar o bloxo de lixo como um objeto, de forma que ele seja desenhado depois, mas seria mais trabalhoso provavelmente
-            
             
             //BOTS
             for(int i = 0; i < monstros.length; i++) {
@@ -282,7 +334,10 @@ public class GamePanel extends JPanel implements Runnable {
     
     public void restart() {
         // 1. Parar música do jogo
-        sound.parar(); // Método que você deve garantir que pare qualquer som atual
+        sound.parar(); //para o som que estava tocando
+        
+        ui.setTempoJogo(400);
+        this.getJogador().setTempoTotalJogo(0);
 
         // 2. Zerar estados e arrays
         jogador = new Jogador(this, this.getKeyH());
@@ -302,14 +357,40 @@ public class GamePanel extends JPanel implements Runnable {
         tempoGameOver = 0;
 
         // 6. Recriar elementos como no início
-        f1Setter = new Fase1Setter(this, tileM.getGMapa()); // garantir recriação do mapa e objetos
+        f1Setter = new Fase1Setter(this, tileM.getGMapa());//recria tudo
         f1Setter.setObject(this);
         f1Setter.setInimigos(this);
         f1Setter.setBlocoInterativo(this, f1Setter.getgMapa());
 
         // 7. Tocar música do título
-        tocarMusica(GameState.TITULO.getMusicaIndex()); // toque a música de título (você pode adaptar o índice)
+        tocarMusica(GameState.TITULO.getMusicaIndex()); //toca a música de título
     }
+    
+    public void carregaFase() {
+        // 1. Parar música do jogo
+        sound.parar(); //para o som que estava tocando
+
+        ui.setTempoJogo(400);
+        
+        // 2. Zerar estados e arrays
+        jogador = new Jogador(this, this.getKeyH());
+        obj = new SuperObjeto[10];
+        monstros = new Personagem[6];
+        iTiles = new BlocoInterativo[100];
+
+        // 3. Resetar mapa (recarregar tile manager ou criar novo)
+        tileM = new TileManager(this);
+
+        // 4. Resetar dados do jogador
+        jogador.setDefaultPositions();
+        jogador.resetarVida();
+        this.setBombaAtiva(false);
+
+        // 5. Resetar tempo do Game Over
+        tempoGameOver = 0;
+
+    }
+
 
     
     public void colocarBombaBot(int x, int y, int alcance, entidade.BotPersonagem dono) {
@@ -372,7 +453,26 @@ public class GamePanel extends JPanel implements Runnable {
         this.gameState = novoEstado;
     }
 
-
+    public void passarFase() {
+    	 if(this.faseAtual == FaseAtual.FASE1) {
+    		 int tempoAtual = (int) ui.getTempoJogo();
+    		 this.getJogador().setTempoTotalJogo(this.getJogador().getTempoTotalJogo() + tempoAtual);
+    		 System.out.println("Tempo Total = " + this.getJogador().getTempoTotalJogo());
+    		 this.gameState = GameState.FASE2;
+    	 }
+    	 if(this.faseAtual == FaseAtual.FASE2) {
+    		 int tempoAtual = (int) ui.getTempoJogo();
+    		 this.getJogador().setTempoTotalJogo(this.getJogador().getTempoTotalJogo() + tempoAtual);
+    		 System.out.println("Tempo Total = " + this.getJogador().getTempoTotalJogo());
+    		 this.gameState = GameState.FASE3;
+    	 }
+    	 if(this.faseAtual == FaseAtual.FASE3) {
+    		 int tempoAtual = (int) ui.getTempoJogo();
+    		 this.getJogador().setTempoTotalJogo(this.getJogador().getTempoTotalJogo() + tempoAtual);
+    		 System.out.println("Tempo Total = " + this.getJogador().getTempoTotalJogo());
+    		 this.gameState = GameState.CADASTRAR_RANKING;
+    	 }
+    }
 
 
 
