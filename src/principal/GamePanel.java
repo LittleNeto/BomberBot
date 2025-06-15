@@ -7,6 +7,7 @@ package principal;
 
 import entidade.Jogador;
 import entidade.Personagem;
+import fase.Fase1Setter;
 import objeto.OBJ_Bomba;
 import objeto.SuperObjeto;
 import tile.TileManager;
@@ -43,7 +44,7 @@ public class GamePanel extends JPanel implements Runnable {
     Sound sound = new Sound();
     private Thread gameThread; //implementado para ajudar a atualizar a tela durante o decorrer do jogo
     private ColisaoChecador cCheca = new ColisaoChecador(this);
-    public AssetSetter aSetter = new AssetSetter(this, this.getTileM().getGMapa());
+    public Fase1Setter f1Setter = new Fase1Setter(this, this.getTileM().getGMapa());
     public UI ui = new UI(this);
     
     //ENTIDADES E OBJETOS
@@ -70,9 +71,9 @@ public class GamePanel extends JPanel implements Runnable {
     
     
     public void setupGame() {
-        aSetter.setObject();
-        aSetter.setBot();
-        aSetter.setBlocoInterativo();
+    	f1Setter.setObject(this);
+        f1Setter.setInimigos(this);
+        f1Setter.setBlocoInterativo(this, f1Setter.getgMapa());
         setGameState(GameState.TITULO);
 
     }
@@ -189,6 +190,13 @@ public class GamePanel extends JPanel implements Runnable {
             //TILE
             this.getTileM().desenhar(g2); //vem antes para que o cenário seja desenhado antes do personagem
             
+            //OBJETOS
+            for (int i = 0; i < obj.length; i++) {
+            	if (obj[i] != null) {
+            		obj[i].desenhar(g2, this);
+            	}
+            }
+            
             for(int i = 0; i < iTiles.length; i++) {
             	if(iTiles[i] != null) {
             		iTiles[i].desenhar(g2);
@@ -197,12 +205,6 @@ public class GamePanel extends JPanel implements Runnable {
             //OBS: podemos separar a geração de tiles em dois, para que primeiro seja desenhado as paredes e a terra e por cima dos obejtos sejam desenhados o lixo
             //ou também podemos desenhar o bloxo de lixo como um objeto, de forma que ele seja desenhado depois, mas seria mais trabalhoso provavelmente
             
-            //OBJETOS
-            for (int i = 0; i < obj.length; i++) {
-            	if (obj[i] != null) {
-            		obj[i].desenhar(g2, this);
-            	}
-            }
             
             //BOTS
             for(int i = 0; i < monstros.length; i++) {
@@ -257,7 +259,7 @@ public class GamePanel extends JPanel implements Runnable {
         // 2. Zerar estados e arrays
         jogador = new Jogador(this, this.getKeyH());
         obj = new SuperObjeto[10];
-        monstros = new Personagem[10];
+        monstros = new Personagem[6];
         iTiles = new BlocoInterativo[100];
 
         // 3. Resetar mapa (recarregar tile manager ou criar novo)
@@ -272,10 +274,10 @@ public class GamePanel extends JPanel implements Runnable {
         tempoGameOver = 0;
 
         // 6. Recriar elementos como no início
-        aSetter = new AssetSetter(this, tileM.getGMapa()); // garantir recriação do mapa e objetos
-        aSetter.setObject();
-        aSetter.setBot();
-        aSetter.setBlocoInterativo();
+        f1Setter = new Fase1Setter(this, tileM.getGMapa()); // garantir recriação do mapa e objetos
+        f1Setter.setObject(this);
+        f1Setter.setInimigos(this);
+        f1Setter.setBlocoInterativo(this, f1Setter.getgMapa());
 
         // 7. Tocar música do título
         tocarMusica(GameState.TITULO.getMusicaIndex()); // toque a música de título (você pode adaptar o índice)
