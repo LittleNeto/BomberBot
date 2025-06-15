@@ -3,6 +3,9 @@ package principal;
 //cada música tem seu próprio valor e o -1 indica que não tem
 public enum GameState {
     TITULO(0),
+    FASE1(4),
+    FASE2(4),
+    FASE3(4),
     PLAY(1),
     RANKING(2),
     CADASTRAR_RANKING(3),
