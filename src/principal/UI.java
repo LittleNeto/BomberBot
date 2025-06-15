@@ -26,7 +26,6 @@ public class UI {
 	public boolean jogoAcabado = false; 
 	public int numComando = 0;
 	
-	double tempoJogo = 200;
 	DecimalFormat dFormt = new DecimalFormat("#0"); //para configurar como o tempo é mostrado na tela
 	
 	public UI(GamePanel gp) {
@@ -66,6 +65,7 @@ public class UI {
 			desenharTelaTitle();
 		}
 		
+		
 		//Play state
 		if(gp.gameState == GameState.PLAY) {
 			desenharVidaJogador();
@@ -81,6 +81,11 @@ public class UI {
 			desenharTelaGameOver();
 		}
 	}
+	
+	public void desenharTempoJogo() {
+		
+	}
+
 	
 	public void desenharVidaJogador() {
 
