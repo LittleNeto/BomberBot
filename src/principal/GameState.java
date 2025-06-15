@@ -1,24 +1,583 @@
 package principal;
 
-//cada música tem seu próprio valor e o -1 indica que não tem
-public enum GameState {
-    TITULO(0),
-    FASE1(4),
-    FASE2(4),
-    FASE3(4),
-    PLAY(1),
-    RANKING(2),
-    CADASTRAR_RANKING(3),
-    GAME_OVER(4),
-    PAUSE(-1);  
+/**
+ *
+ * @author Mateus
+ */
 
-    private final int musicaIndex;
+import entidade.Jogador;
+import entidade.Personagem;
+import fase.Fase1Setter;
+import fase.Fase2Setter;
+import fase.Fase3Setter;
+import fase.FaseSetter;
+import objeto.OBJ_Bomba;
+import objeto.SuperObjeto;
+import tile.TileManager;
+import tile_Interativo.BlocoInterativo;
 
-    private GameState(int musicaIndex) {
-        this.musicaIndex = musicaIndex;
+import javax.swing.JPanel;
+import java.awt.Dimension;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+public class GamePanel extends JPanel implements Runnable {
+    //configurações da tela
+    private final int tileSizeOriginal = 32; //tamanho padrão de cada "bloco" da tela
+    private final int escala = 3; //reescala a tela para que 32X32 não fique tão pequeno
+    
+    private final int tileSize = this.getTileSizeOriginal() * this.getEscala(); //tile de 96X96
+    
+    private final int maxScreenCol = 17;
+    private final int maxScreenLin = 10;
+    private final int screenWidth = this.getTileSize() * this.getMaxScreenCol(); //1632 pixels de largura
+    private final int screenHeight = this.getTileSize() * this.getMaxScreenLin(); //960 pixels de altura
+    
+    private final int maxMundoCol = 31; // exemplo: mapa de 50 colunas
+    private final int maxMundoLin = 10;
+    
+
+    //FPS
+    private int fps = 60;
+    
+    //SISTEMA
+    private TileManager tileM = new TileManager(this);
+    private ManipuladorTeclado keyH = new ManipuladorTeclado(this);
+    Sound sound = new Sound();
+    private Thread gameThread; //implementado para ajudar a atualizar a tela durante o decorrer do jogo
+    private ColisaoChecador cCheca = new ColisaoChecador(this);
+    public UI ui = new UI(this);
+    
+    //FASES
+    public Fase1Setter f1Setter = new Fase1Setter(this, this.getTileM().getGMapa());
+    public Fase2Setter f2Setter = new Fase2Setter(this, this.getTileM().getGMapa());
+    public Fase3Setter f3Setter = new Fase3Setter(this, this.getTileM().getGMapa());
+    public FaseAtual faseAtual;
+    
+    //ENTIDADES E OBJETOS
+    private Jogador jogador = new Jogador(this, this.getKeyH()); //cria uma instância jogador dentro da Tela do jogo
+    public SuperObjeto[] obj = new SuperObjeto[10]; //não significa que só podem existir 10 objetos no jogo, mas que pode ter 10 objetos ao mesmo tempo
+    public Personagem[] monstros = new Personagem[10];
+    public BlocoInterativo iTiles[] = new BlocoInterativo[100];
+
+    //GAME STATE
+    public GameState gameState;
+	private long tempoGameOver = 0;
+	private long tempoTelaFase = 0;
+    
+    private boolean bombaAtiva = false;
+    
+    private int tempoTotalFase = 0;
+    private int tempoTotalJogo = 0;
+    
+    public GamePanel() {
+        this.setPreferredSize(new Dimension(this.getScreenWidth(), this.getScreenHeight())); //define a dimensão da tela
+        this.setBackground(Color.black);
+        this.setDoubleBuffered(true); //melhora a renderização do jogo
+        this.addKeyListener(this.getKeyH()); //o gamePanel vai reconhecer o input das teclas
+        this.setFocusable(true);
+        setGameState(GameState.TITULO);
+    }
+    
+    
+    
+    public void setupGame() {
+    	
+        setGameState(GameState.TITULO);
+
     }
 
-    public int getMusicaIndex() {
-        return musicaIndex;
+    public void StartGameThread() {
+        this.setGameThread(new Thread(this));
+        this.getGameThread().start(); //chama o método run
     }
+
+    @Override
+    public void run() { //game loop
+        
+        double intervaloDesenho = 1000000000 / this.getFps();
+        double delta = 0;
+        long tempoAntes = System.nanoTime();
+        long tempoAtual;
+        long timer = 0;
+        int drawCount = 0;
+        
+        while (this.getGameThread() != null) {
+            
+            tempoAtual = System.nanoTime();
+            
+            delta += (tempoAtual - tempoAntes) / intervaloDesenho;
+            timer += (tempoAtual - tempoAntes);
+            tempoAntes = tempoAtual;
+            
+            if (delta >= 1) {
+                // 1 - UPDATE: atualizar as informações (como posição do jogador)
+                update();
+                // 2 - DESENHAR: desenhar a tela com as informações atualizadas
+                repaint(); // chama o método paintComponent
+                delta--;
+                drawCount++;
+            }
+            
+            if (timer >= 1000000000) {
+//                System.out.println("Fps: " + drawCount);
+                drawCount = 0;
+                timer = 0;
+            }
+        }
+    }
+    
+    public void update() {
+    	if (gameState == GameState.FASE1) {
+    		sound.parar();
+    	    if (tempoTelaFase == 0) {
+    	        tempoTelaFase = System.currentTimeMillis(); //inicio da contagem
+    	    } else {
+    	        long tempoAtual = System.currentTimeMillis();
+    	        if (tempoAtual - tempoTelaFase >= 5000) { // 5 segundos
+    	        	carregaFase();
+
+    	            FaseSetter fase = new Fase1Setter(this, tileM.getGMapa());//recria tudo
+    	            fase.setObject(this);
+    	            fase.setInimigos(this);
+    	            fase.setBlocoInterativo(this, fase.getgMapa());
+    	            
+    	        	faseAtual = FaseAtual.FASE1;
+    	            setGameState(GameState.PLAY);
+    	            tempoTelaFase = 0; // reinicia o contador
+    	        }
+    	    }
+    	}
+    	
+    	if (gameState == GameState.FASE2) {
+    		sound.parar();
+    	    if (tempoTelaFase == 0) {
+    	        tempoTelaFase = System.currentTimeMillis(); //inicio da contagem
+    	    } else {
+    	        long tempoAtual = System.currentTimeMillis();
+    	        if (tempoAtual - tempoTelaFase >= 5000) { // 5 segundos
+    	        	carregaFase();
+
+    	            FaseSetter fase = new Fase2Setter(this, tileM.getGMapa());//recria tudo
+    	            fase.setObject(this);
+    	            fase.setInimigos(this);
+    	            fase.setBlocoInterativo(this, fase.getgMapa());
+    	            
+    	        	faseAtual = FaseAtual.FASE2;
+    	            setGameState(GameState.PLAY);
+    	            tempoTelaFase = 0; // reinicia o contador
+    	        }
+    	    }
+    	}
+    	
+    	if (gameState == GameState.FASE3) {
+    		sound.parar();
+    	    if (tempoTelaFase == 0) {
+    	        tempoTelaFase = System.currentTimeMillis(); //inicio da contagem
+    	    } else {
+    	        long tempoAtual = System.currentTimeMillis();
+    	        if (tempoAtual - tempoTelaFase >= 5000) { // 5 segundos
+    	        	carregaFase();
+
+    	            FaseSetter fase = new Fase3Setter(this, tileM.getGMapa());//recria tudo
+    	            fase.setObject(this);
+    	            fase.setInimigos(this);
+    	            fase.setBlocoInterativo(this, fase.getgMapa());
+    	            
+    	        	faseAtual = FaseAtual.FASE3;
+    	            setGameState(GameState.PLAY);
+    	            tempoTelaFase = 0; // reinicia o contador
+    	        }
+    	    }
+    	}
+
+    	
+    	if (gameState == GameState.PLAY) {
+    		tempoGameOver = 0; // Garante que não resta tempo residual ao iniciar um novo jogo
+    		tempoTelaFase = 0;
+//    		tempoTotal = 0;
+            this.getJogador().update();
+            
+            if (keyH.getTeclaBombaPressionada()) {
+                int posicaoX = getJogador().getMundoX() + getJogador().getAreaSolida().x;
+                int posicaoY = getJogador().getMundoY() + getJogador().getAreaSolida().y;
+                colocarBomba(posicaoX, posicaoY); // coloca bomba no centro do jogador
+                keyH.setTeclaBombaPressionada(false); // evita que a tecla apertada continue colocando bombas
+
+            }
+
+            
+            for (int i = 0; i < monstros.length; i++) {
+            	if (monstros[i] != null) {
+            		monstros[i].update();
+            	}
+            }
+            for (int i = 0; i < iTiles.length; i++) {
+            	if(iTiles[i] != null) {
+            		iTiles[i].update();
+            	}
+            }
+            for (int i = 0; i < obj.length; i++) {
+                if (obj[i] instanceof OBJ_Bomba) {
+                    ((OBJ_Bomba) obj[i]).update();
+                }
+            }
+            
+            if(this.getJogador().getVida() <= 0 || ui.getTempoJogo() <= 0) {
+            	gameState = GameState.GAME_OVER;
+            }
+    	}
+    	if (gameState == GameState.PAUSE) {
+    		//nada
+    	}
+    	if (gameState == GameState.GAME_OVER) {
+    	    if (tempoGameOver == 0) {
+    	        tempoGameOver = System.currentTimeMillis(); // Marca o início da contagem
+    	    } else {
+    	        long tempoAtual = System.currentTimeMillis();
+    	        if (tempoAtual - tempoGameOver >= 10000) { // 10 segundos
+    	            restart();
+    	            gameState = GameState.TITULO;
+    	            tempoGameOver = 0; // Reinicia o contador
+    	        }
+    	    }
+    	}
+
+    	ui.atualizarTempoJogo(1.0 / 60.0); // ou passe o delta se estiver calculando dinamicamente
+
+    	
+    }
+    
+    
+    
+    public void paintComponent(Graphics g) { //está sobrescrevendo um método que já existe em java
+        
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D)g; //tem mais funções que o Graphics
+        
+        //DEBUG
+        long drawStart = 0;
+        if(keyH.checkDrawTime == true) {
+            drawStart = System.nanoTime();     	
+        }  
+        
+        //TITLE State
+        if (gameState == GameState.TITULO) {
+        	ui.desenhar(g2);
+        } else if (gameState == GameState.RANKING) { 
+        	ui.desenhar(g2);
+        } else if (gameState == GameState.CADASTRAR_RANKING) { 
+        	ui.desenhar(g2);
+        } else { 	
+  
+            //TILE
+            this.getTileM().desenhar(g2); //vem antes para que o cenário seja desenhado antes do personagem
+            
+            //OBJETOS
+            for (int i = 0; i < obj.length; i++) {
+            	if (obj[i] != null) {
+            		obj[i].desenhar(g2, this);
+            	}
+            }
+            
+            for(int i = 0; i < iTiles.length; i++) {
+            	if(iTiles[i] != null) {
+            		iTiles[i].desenhar(g2);
+            	}
+            }
+            
+            //BOTS
+            for(int i = 0; i < monstros.length; i++) {
+                if (monstros[i] != null) {
+                    monstros[i].desenhar(g2);
+                }
+            }
+            
+            //JOGADOR
+            this.getJogador().desenhar(g2);
+            
+            //UI
+            ui.desenhar(g2);
+            
+            
+        }
+        
+        
+        //DEBUG
+        if (keyH.checkDrawTime == true) {
+            long drawEnd = System.nanoTime();
+            long passed = drawEnd - drawStart;
+            g2.setColor(Color.white);
+            g2.drawString("Draw Time: " + passed, 10, 400);
+            System.out.println("Draw Time: " + passed);	
+        }
+        
+        g2.dispose(); //libera memória do que não está sendo mais usado
+    }
+    
+    public void colocarBomba(int x, int y) {
+        if (bombaAtiva) return; // já existe uma bomba no mapa
+
+        int posicaoBombaX = (x) / getTileSize() * getTileSize();
+        int posicaoBombaY = (y) / getTileSize() * getTileSize();
+
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] == null) {
+                obj[i] = new OBJ_Bomba(this, null);
+                obj[i].mundoX = posicaoBombaX;
+                obj[i].mundoY = posicaoBombaY;
+                bombaAtiva = true;
+                break;
+            }
+        }
+    }
+	
+    
+    public void restart() {
+        // 1. Parar música do jogo
+        sound.parar(); //para o som que estava tocando
+        
+        ui.setTempoJogo(400);
+        this.setTempoTotalJogo(0);
+
+        // 2. Zerar estados e arrays
+        jogador = new Jogador(this, this.getKeyH());
+        obj = new SuperObjeto[10];
+        monstros = new Personagem[6];
+        iTiles = new BlocoInterativo[100];
+
+        // 3. Resetar mapa (recarregar tile manager ou criar novo)
+        tileM = new TileManager(this);
+
+        // 4. Resetar dados do jogador
+        jogador.setDefaultPositions();
+        jogador.resetarVida();
+        this.setBombaAtiva(false);
+
+        // 5. Resetar tempo do Game Over
+        tempoGameOver = 0;
+
+        // 6. Recriar elementos como no início
+        f1Setter = new Fase1Setter(this, tileM.getGMapa());//recria tudo
+        f1Setter.setObject(this);
+        f1Setter.setInimigos(this);
+        f1Setter.setBlocoInterativo(this, f1Setter.getgMapa());
+
+        // 7. Tocar música do título
+        tocarMusica(GameState.TITULO.getMusicaIndex()); //toca a música de título
+    }
+    
+    public void carregaFase() {
+        // 1. Parar música do jogo
+        sound.parar(); //para o som que estava tocando
+
+        ui.setTempoJogo(400);
+        
+        // 2. Zerar estados e arrays
+        jogador = new Jogador(this, this.getKeyH());
+        obj = new SuperObjeto[10];
+        monstros = new Personagem[6];
+        iTiles = new BlocoInterativo[100];
+
+        // 3. Resetar mapa (recarregar tile manager ou criar novo)
+        tileM = new TileManager(this);
+
+        // 4. Resetar dados do jogador
+        jogador.setDefaultPositions();
+        jogador.resetarVida();
+        this.setBombaAtiva(false);
+
+        // 5. Resetar tempo do Game Over
+        tempoGameOver = 0;
+
+    }
+
+
+    
+    public void colocarBombaBot(int x, int y, int alcance, entidade.BotPersonagem dono) {
+        int posicaoBombaX = (x) / getTileSize() * getTileSize();
+        int posicaoBombaY = (y) / getTileSize() * getTileSize();
+
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] == null) {
+                obj[i] = new objeto.OBJ_Bomba(this, dono); // Passa o bot dono
+                obj[i].mundoX = posicaoBombaX;
+                obj[i].mundoY = posicaoBombaY;
+                break;
+            }
+        }
+    }
+
+
+    public boolean isBombaAtiva() {
+        return bombaAtiva;
+    }
+
+    public void setBombaAtiva(boolean ativa) {
+        this.bombaAtiva = ativa;
+    }
+    
+    public void tocarMusica(int i) {
+    	sound.setFile(i);
+    	sound.play();
+    	sound.loop(); //a msuica se repete após acabar
+    }
+    
+    public void pausarMusica() {
+    	sound.pausar();
+    }
+    
+    public void retomarMusica() {
+    	sound.retomar();
+    }
+    
+    public void tocarSom(int i) {
+    	sound.setFile(i);
+    	sound.play();
+    }
+    
+    public void setGameState(GameState novoEstado) {
+        //se estiver indo do play para o pause, pausa
+        if (this.gameState == GameState.PLAY && novoEstado == GameState.PAUSE) {
+            pausarMusica();
+        }
+        //Se voltar do Ppause para o play retoma a música de onde ela parou
+        else if (this.gameState == GameState.PAUSE && novoEstado == GameState.PLAY) {
+            retomarMusica();
+        }
+        //se mudar para um outro estado com outra musica
+        else if (novoEstado.getMusicaIndex() != -1 && novoEstado != this.gameState) {
+            sound.parar();
+            tocarMusica(novoEstado.getMusicaIndex());
+        }
+
+        this.gameState = novoEstado;
+    }
+
+    public void passarFase() {
+    	 if(this.faseAtual == FaseAtual.FASE1) {
+    		 int tempoAtual = (int) ui.getTempoJogo();
+    		 this.setTempoTotalJogo(this.getTempoTotalJogo() + tempoAtual);
+    		 System.out.println("Tempo Total = " + this.getTempoTotalJogo());
+    		 this.gameState = GameState.FASE2;
+    	 }
+    	 if(this.faseAtual == FaseAtual.FASE2) {
+    		 int tempoAtual = (int) ui.getTempoJogo();
+    		 this.setTempoTotalJogo(this.getTempoTotalJogo() + tempoAtual);
+    		 System.out.println("Tempo Total = " + this.getTempoTotalJogo());
+    		 this.gameState = GameState.FASE3;
+    	 }
+    	 if(this.faseAtual == FaseAtual.FASE3) {
+    		 int tempoAtual = (int) ui.getTempoJogo();
+    		 this.setTempoTotalJogo(this.getTempoTotalJogo() + tempoAtual);
+    		 System.out.println("Tempo Total = " + this.getTempoTotalJogo());
+    		 this.gameState = GameState.CADASTRAR_RANKING;
+    	 }
+    }
+
+
+
+  
+    //setters
+	public void setFps(int fps) {
+		this.fps = fps;
+	}
+
+	public void setTileM(TileManager tileM) {
+		this.tileM = tileM;
+	}
+
+	public void setKeyH(ManipuladorTeclado keyH) {
+		this.keyH = keyH;
+	}
+
+	public void setGameThread(Thread gameThread) {
+		this.gameThread = gameThread;
+	}
+
+	public void setcCheca(ColisaoChecador cCheca) {
+		this.cCheca = cCheca;
+	}
+
+	public void setJogador(Jogador jogador) {
+		this.jogador = jogador;
+	}
+	
+
+	public void setTempoTotalJogo(int tempoTotalJogo) {
+		this.tempoTotalJogo = tempoTotalJogo;
+	}
+	
+
+	//getters
+	public int getFps() {
+		return fps;
+	}
+	
+	public TileManager getTileM() {
+		return tileM;
+	}
+	
+	public ManipuladorTeclado getKeyH() {
+		return keyH;
+	}
+	
+	public Thread getGameThread() {
+		return gameThread;
+	}
+	
+	public ColisaoChecador getcCheca() {
+		return cCheca;
+	}
+	
+	public Jogador getJogador() {
+		return jogador;
+	}
+	
+	public int getTileSizeOriginal() {
+		return tileSizeOriginal;
+	}
+
+	public int getEscala() {
+		return escala;
+	}
+
+	public int getTileSize() {
+		return tileSize;
+	}
+
+	public int getMaxScreenCol() {
+		return maxScreenCol;
+	}
+
+	public int getMaxScreenLin() {
+		return maxScreenLin;
+	}
+
+	public int getScreenWidth() {
+		return screenWidth;
+	}
+
+	public int getScreenHeight() {
+		return screenHeight;
+	}
+
+	public int getMaxMundoCol() {
+		return maxMundoCol;
+	}
+
+	public int getMaxMundoLin() {
+		return maxMundoLin;
+	}
+
+
+
+	public int getTempoTotalJogo() {
+		return tempoTotalJogo;
+	}
+
+
+	
+
 }
