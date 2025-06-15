@@ -17,7 +17,7 @@ import principal.GamePanel;
  * 
  * @author júlio
  */
-public class BotMedio extends BotPersonagem {
+public class BotMedio extends BotPersonagem{
 
     /** Gerador de números aleatórios para escolha de direção */
     Random random = new Random();
@@ -48,7 +48,7 @@ public class BotMedio extends BotPersonagem {
 
         // Define tipo de bot (pode ser usado para lógica extra)
         tipo = 1;
-
+        
         // Carrega imagens do bot
         getImagem();
     }
@@ -59,14 +59,14 @@ public class BotMedio extends BotPersonagem {
      */
     public void getImagem() {
         try {
-            this.setCima1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_cima_1.png")));
-            this.setCima2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_cima_2.png")));
-            this.setBaixo1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_baixo_1.png")));
-            this.setBaixo2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_baixo_2.png")));
-            this.setEsq1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_esquerda_1.png")));
-            this.setEsq2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_esquerda_2.png")));
-            this.setDir1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_direita_1.png")));
-            this.setDir2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botA_direita_2.png")));
+        	this.setCima1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_cima_1.png"))); //pega cada png da pasta de sprites
+            this.setCima2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_cima_2.png"))); 
+            this.setBaixo1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_baixo_1.png"))); 
+            this.setBaixo2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_baixo_2.png"))); 
+            this.setEsq1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_esquerda_1.png"))); 
+            this.setEsq2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_esquerda_2.png"))); 
+            this.setDir1(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_direita_1.png"))); 
+            this.setDir2(ImageIO.read(getClass().getResourceAsStream("/inimigo/botB_direita_2.png"))); 
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -79,15 +79,17 @@ public class BotMedio extends BotPersonagem {
      */
     @Override
     public void setAction() {
-
+    	
         // Atualiza o cooldown de bomba
-        if (contadorCooldownBomba < cooldownBomba) {
-            contadorCooldownBomba++;
-        }
-
+    	if (contadorCooldownBomba < cooldownBomba) {
+    	    contadorCooldownBomba++;
+    	}
+    	
         // Se estiver em zona de perigo, tenta fugir
-        if (estaNaZonaDePerigo()) {
-            direcao = fugirDaZonaDePerigo();
+    	if (estaNaZonaDePerigo()) {
+    		 System.out.println("⚠️ Bot detectou perigo em: " + getMundoX() + "," + getMundoY());
+    		    direcao = fugirDaZonaDePerigo();
+    		    System.out.println("🟡 Tentando fugir para: " + direcao);
             return;
         }
 
@@ -100,7 +102,6 @@ public class BotMedio extends BotPersonagem {
                     contadorDeEspera = 0;
                 }
             }
-
             case COLIDIU -> {
                 // Espera um tempo antes de trocar direção
                 contadorDeEspera++;
@@ -108,7 +109,6 @@ public class BotMedio extends BotPersonagem {
                     estadoAtual = EstadoBot.ESPERANDO_NOVA_DIRECAO;
                 }
             }
-
             case ESPERANDO_NOVA_DIRECAO -> {
                 // Escolhe nova direção aleatória e volta a andar
                 direcao = escolherNovaDirecao();
@@ -122,8 +122,9 @@ public class BotMedio extends BotPersonagem {
             direcao = escolherNovaDirecao();
             actionLockCounter = 0;
         }
-
+        
         // Tenta plantar bomba se possível
         plantarBomba();
+        
     }
 }
