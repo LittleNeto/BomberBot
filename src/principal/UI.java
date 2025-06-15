@@ -13,6 +13,8 @@ import javax.imageio.ImageIO;
 
 import objeto.OBJ_Vida;
 import objeto.SuperObjeto;
+import recursos.Ranking;
+import recursos.RankingManager;
 
 public class UI {
 	
@@ -29,6 +31,9 @@ public class UI {
 	private double tempoJogo = 400;
 	
 	DecimalFormat dFormt = new DecimalFormat("#0"); //para configurar como o tempo é mostrado na tela
+	
+	private Ranking rank;
+	private RankingManager rankM;
 	
 	public UI(GamePanel gp) {
 		this.gp = gp;
@@ -73,8 +78,8 @@ public class UI {
 		}
 		
 		//Cadastrar Ranking state
-		if (gp.gameState == GameState.RANKING) {
-//			desenharTelaCadastrarRanking();
+		if (gp.gameState == GameState.CADASTRAR_RANKING) {
+			desenharTelaCadastrarRanking();
 		}
 		
 		//Fases state
@@ -107,6 +112,29 @@ public class UI {
 		}
 	}
 	
+	private void desenharTelaCadastrarRanking() {
+		//Background
+		g2.setColor(new Color(30, 30, 102));
+		g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
+		
+		int x;
+		int y;
+		
+		String texto = "VITÓRIA!!!";
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 80f));
+		
+		//sombra
+		g2.setColor(Color.black);
+		x = getXparaTextoCentralizado(texto);
+		y = gp.getTileSize() * 2;
+		g2.drawString(texto, x, y);
+		
+		//main
+		g2.setColor(Color.white);
+		g2.drawString(texto, x - 4, y - 4);
+		
+	}
+
 	public void desenharTempoJogo() {
 	    g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32F));
 	    g2.setColor(Color.white);
@@ -180,10 +208,6 @@ public class UI {
 	}
 
 
-
-
-
-	
 	public void desenharTelaTitle() {
 		
 		//Background
