@@ -45,7 +45,7 @@ public class ManipuladorTeclado implements KeyListener {
             
             if(code == KeyEvent.VK_ENTER) {
         		if (gp.ui.numComando == 0){
-        			gp.setGameState(GameState.PLAY);
+        			gp.setGameState(GameState.FASE1);
         		}
         		if (gp.ui.numComando == 1) {
         			//IMPLEMENTAR O RANKING
