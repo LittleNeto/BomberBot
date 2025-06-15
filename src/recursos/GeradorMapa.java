@@ -7,15 +7,17 @@ package recursos;
 *
 * @author Neto
 */
-
 public class GeradorMapa {
 	
 	/**matriz numérica que servirá como base para posicionar os blocos ao redor do mapa*/
 	public int[][] grade = new int[10][31];
+	
 	/**matriz que representa a posição de cada bot, sendo 6 inimigos com duas coordenadas (X e Y)*/
 	public int[][] posicaoInimigos = new int[6][2];
+	
 	/**Matriz de linha única que identifica a posição da porta, tendo duas coordenadas (X e Y)*/
 	public int[][] posicaoPorta = new int[1][2];
+	
 	
 	/**
 	 * Construtor
@@ -34,14 +36,15 @@ public class GeradorMapa {
 	public int[][] gerarMapa(int[][] grade) {
 		for (int i = 0; i < 10; i++) {
             for (int j = 0; j< 31; j++) {
-            	if (i % 9 == 0 || j % 30 == 0) { // as bordas do mapa devem aparecer sempre com bloco fixo
+                if (i % 9 == 0 || j % 30 == 0) { // as bordas do mapa devem aparecer sempre com bloco fixo
                     grade[i][j] = 1;
                 } else if ((i % 2 == 0) && (j % 2 == 0)) { // posiciona onde os blocos fixos devem aparecer dentro do mapa
                     grade[i][j] = 1;
                 } else if (i * j == 1 || i * j == 2) { // garante que a posição inicial do bot e suas posições adjacentes só tenham bloco de terra
                     grade[i][j] = 0;
-                } else { // sorteia onde os blocos de terra e os blocos de lixo devem aparecer no mapa, tendo, respectivamente, 70% e 30% de aparecer em dada posição
-                    grade[i][j] = Math.random() > 0.7f ? 2 : 0;
+                } else {
+                	// sorteia onde os blocos de terra e os blocos de lixo devem aparecer no mapa, tendo, respectivamente, 70% e 30% de aparecer em dada posição
+                    grade[i][j] = Math.random() > 0.6f ? 2 : 0;
                 }
             }    
         }
@@ -58,11 +61,13 @@ public class GeradorMapa {
 	public int[][] adicionarPosicao(int[][] posicao, int bloco) {
 		int X = 0, Y = 0;
 		for (int[] objeto : posicao) {
+			
 			//avalia em que posições o objeto analisando não pode aparecer
-			while (this.getGrade()[X][Y] != bloco || X < 4 || X < 4) {
+			while (this.getGrade()[X][Y] != bloco || X * Y == 1 || X * Y == 2) {
 				X = (int) Math.floor(Math.random() * 10);
 				Y = (int) Math.floor(Math.random() * 31);
 			}
+			
 			//adiciona as coordenadas de cada elemento
 			objeto[0] = X;
 			objeto[1] = Y;
@@ -127,5 +132,6 @@ public class GeradorMapa {
 	public int[][] getPosicaoPorta() {
 		return this.posicaoPorta;
 	}
+	
 	
 }
