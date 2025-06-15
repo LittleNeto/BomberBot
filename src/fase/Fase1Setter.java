@@ -33,10 +33,15 @@ public class Fase1Setter implements FaseSetter {
     	gp.obj[0].mundoX = gp.getTileSize() * this.gMapa.posicaoPorta[0][1];
     	gp.obj[0].mundoY = gp.getTileSize() * this.gMapa.posicaoPorta[0][0];
     }
-
+	
 	public GeradorMapa getgMapa() {
 		return gMapa;
 	}
+
+	public int getQTD_BOTS() {
+		return QTD_BOTS;
+	}
 	
+
 
 }
