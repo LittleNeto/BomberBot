@@ -17,8 +17,8 @@ class BlocoLixoTest {
 
     @BeforeEach
     public void setUp() {
-        gp = new GamePanel(); // use stub/mocks se necessário
-        bloco = new BlocoLixo(gp, 4, 5); // posição exemplo: col=4, lin=5
+        gp = new GamePanel();
+        bloco = new BlocoLixo(gp, 4, 5);
     }
 
     @Test
@@ -28,9 +28,9 @@ class BlocoLixoTest {
         assertEquals(4 * tileSize, bloco.getMundoX());
         assertEquals(5 * tileSize, bloco.getMundoY());
 
-        assertEquals("baixo", bloco.getDirecao()); // acesso direto, pois é protected
+        assertEquals("baixo", bloco.getDirecao());
         assertTrue(bloco.destruivel);
-        assertNotNull(bloco.getBaixo1()); // imagem deve ser carregada
+        assertNotNull(bloco.getBaixo1());
     }
 
     @Test
