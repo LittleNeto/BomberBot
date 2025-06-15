@@ -130,7 +130,7 @@ public class ColisaoChecador {
 	                index = i; // opcional — caso queira saber qual objeto colidiu
 	            }
 	            if (jogador == true && personagem.getAreaSolida().intersects(gp.obj[i].areaSolida) ) {
-	                System.out.println("Colisão com objeto na direção: " + personagem.getDirecao());
+//	                System.out.println("Colisão com objeto na direção: " + personagem.getDirecao());
 	                index = i; // opcional — caso queira saber qual objeto colidiu
 	            }	            
 	            
