@@ -6,14 +6,14 @@ Uma versão nova do jogo Bomberman, utilizando a linguagem de programação java
 - [X] BotDificil
 - [X] BotFacil
 - [X] BotMedio
-- [X] BotPersonagem (classe abstrata)
+- [X] BotPersonagem (Classe Abstrata)
 - [X] ColisaoChecador
-- [X] EstadoBot (interface)
+- [X] EstadoBot (Enum)
 - [X] Fase1Setter
 - [X] Fase2Setter
 - [X] Fase3Setter
 - [X] FaseAtual (enum)
-- [X] FaseSetter (interface)
+- [X] FaseSetter (Interface)
 - [X] GamePanel
 - [X] GameState (Enum)
 - [X] GeradorMapa
@@ -22,7 +22,7 @@ Uma versão nova do jogo Bomberman, utilizando a linguagem de programação java
 - [X] OBJ_Bomba
 - [X] OBJ_Porta
 - [X] OBJ_ Vida
-- [X] Personagem (classe abstrata)
+- [X] Personagem (Classe Abstrata)
 - [X] Posicao
 - [X] Ranking
 - [X] RankingManager
