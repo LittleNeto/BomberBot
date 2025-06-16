@@ -82,7 +82,7 @@ public class RankingManager {
 	        return;
 	    }
 	    
-	    System.out.println("=== TOP 5 RANKING DOS MAIS BRABOS===");
+	    System.out.println("=== TOP 5 RANKING===");
 
 	    for (int i = 0; i < top5.size(); i++) {
 	        Ranking r = top5.get(i);

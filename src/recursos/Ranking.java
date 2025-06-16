@@ -48,7 +48,6 @@ public class Ranking implements Comparable<Ranking>{
      * @param tempo Tempo de conclusão.
      */
 	public Ranking(LocalDateTime dataHora, String jogador, int tempo) {
-		super();
 		this.dataHora = dataHora;
 		this.jogador = jogador;
 		this.tempo = tempo;
