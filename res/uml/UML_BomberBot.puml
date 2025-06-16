@@ -1,0 +1,674 @@
+@startuml
+class Posicao [[java:principal.Posicao]] {
+	+x: int
+	+y: int
+	+Posicao(x: int, y: int)
+}
+class BotDificil [[java:inimigo.BotDificil]] {
+	~random: Random
+	+BotDificil(gp: GamePanel)
+	+getImagem(): void
+	+setAction(): void
+}
+class BotPersonagem {
+}
+BotPersonagem <|-- BotDificil
+interface FaseSetter [[java:fase.FaseSetter]] {
+	setInimigos(gp: GamePanel): void
+	setObject(gp: GamePanel): void
+	setBlocoInterativo(gp: GamePanel, gMapa: GeradorMapa): void
+}
+class GeradorMapa {
+}
+FaseSetter --> "1" GeradorMapa : getgMapa()
+class UI [[java:principal.UI]] {
+	-g2: Graphics2D
+	~retroGame: Font
+	~vida_cheia: BufferedImage
+	~vida_media: BufferedImage
+	~vida_baixa: BufferedImage
+	~vida_vazia: BufferedImage
+	+mensagemLig: boolean
+	+mensagem: String
+	~mensagemCont: int
+	+jogoAcabado: boolean
+	+numComando: int
+	-tempoJogo: double
+	~dFormt: DecimalFormat
+	+nomeDigitado: String
+	-LIMITE_CARACTERES: int
+	~aguardandoNome: boolean
+	+UI(gp: GamePanel)
+	+mostrarMensagem(texto: String): void
+	+desenhar(g2: Graphics2D): void
+	-desenharTelaRanking(): void
+	-desenharTelaCadastrarRanking(): void
+	+desenharTempoJogo(): void
+	+atualizarTempoJogo(delta: double): void
+	+desenharVidaJogador(): void
+	+desenharTelaTitle(): void
+	+setup(imagemNome: String): BufferedImage
+	+desenharTelaPausa(): void
+	+desenharTelaGameOver(): void
+	+desenharTelaFase(texto: String): void
+	+salvarNoRanking(nome: String, tempo: int): void
+	+getXparaTextoCentralizado(texto: String): int
+	+getTempoJogo(): double
+	+setTempoJogo(tempoJogo: double): void
+	+getG2(): Graphics2D
+	+setG2(g2: Graphics2D): void
+	+getLIMITE_CARACTERES(): int
+}
+class GamePanel {
+}
+UI --> "1" GamePanel : gp
+class RankingManager {
+}
+UI --> "1" RankingManager : rankM
+enum FaseAtual [[java:principal.FaseAtual]] {
+	FASE1
+	FASE2
+	FASE3
+}
+class BlocoInterativo [[java:tile_Interativo.BlocoInterativo]] {
+	+destruivel: boolean
+	-areaSolida: Rectangle
+	-mundoX: int
+	-mundoY: int
+	-areaSolidaDefaultX: int
+	-areaSolidaDefaultY: int
+	-colisaoLig: boolean
+	-direcao: String
+	#baixo1: BufferedImage
+	+BlocoInterativo(gp: GamePanel, col: int, lin: int)
+	+update(): void
+	+desenhar(g2: Graphics2D): void
+	+setup(imagemNome: String): BufferedImage
+	+setMundoX(mundoX: int): void
+	+setMundoY(mundoY: int): void
+	+setDirecao(direcao: String): void
+	+setAreaSolida(areaSolida: Rectangle): void
+	+setAreaSolidaDefaultX(areaSolidaDefaultX: int): void
+	+setAreaSolidaDefaultY(areaSolidaDefaultY: int): void
+	+getAreaSolida(): Rectangle
+	+getMundoX(): int
+	+getMundoY(): int
+	+getAreaSolidaDefaultX(): int
+	+getAreaSolidaDefaultY(): int
+	+getDirecao(): String
+	+getBaixo1(): BufferedImage
+}
+class GamePanel {
+}
+BlocoInterativo --> "1" GamePanel : gp
+class RankingManager [[java:recursos.RankingManager]] {
+	-{static} ARQUIVO: String
+	+{static} salvarDados(jogador: String, tempo: int): void
+	+{static} getTop5(): List<Ranking>
+	+{static} exibir(): void
+}
+class GeradorMapa [[java:recursos.GeradorMapa]] {
+	+grade: int[][]
+	+posicaoInimigos: int[][]
+	+posicaoPorta: int[][]
+	+GeradorMapa()
+	+gerarMapa(grade: int[][]): int[][]
+	+adicionarPosicao(posicao: int[][], bloco: int): int[][]
+	+setGrade(grade: int[][]): void
+	+setPosicaoInimigos(posicaoInimigos: int[][]): void
+	+setPosicaoPorta(posicaoPorta: int[][]): void
+	+getGrade(): int[][]
+	+getPosicaoInimigos(): int[][]
+	+getPosicaoPorta(): int[][]
+}
+class Fase3Setter [[java:fase.Fase3Setter]] {
+	~QTD_BOTS: int
+	+Fase3Setter(gp: GamePanel, gMapa: GeradorMapa)
+	+setInimigos(gp: GamePanel): void
+	+setObject(gp: GamePanel): void
+	+getQTD_BOTS(): int
+}
+class GamePanel {
+}
+Fase3Setter --> "1" GamePanel : gp
+class GeradorMapa {
+}
+Fase3Setter --> "1" GeradorMapa : gMapa
+class GeradorMapa {
+}
+Fase3Setter --> "1" GeradorMapa : getgMapa()
+interface FaseSetter {
+}
+FaseSetter <|.. Fase3Setter
+class Fase1Setter [[java:fase.Fase1Setter]] {
+	~QTD_BOTS: int
+	+Fase1Setter(gp: GamePanel, gMapa: GeradorMapa)
+	+setInimigos(gp: GamePanel): void
+	+setObject(gp: GamePanel): void
+	+getQTD_BOTS(): int
+}
+class GamePanel {
+}
+Fase1Setter --> "1" GamePanel : gp
+class GeradorMapa {
+}
+Fase1Setter --> "1" GeradorMapa : gMapa
+class GeradorMapa {
+}
+Fase1Setter --> "1" GeradorMapa : getgMapa()
+interface FaseSetter {
+}
+FaseSetter <|.. Fase1Setter
+class Jogador [[java:entidade.Jogador]] {
+	-telaX: int
+	-telaY: int
+	+invencivel: boolean
+	+invencivelCont: int
+	-botsMortos: int
+	+Jogador(gp: GamePanel, keyH: ManipuladorTeclado)
+	+setDefaultValues(): void
+	+setDefaultPositions(): void
+	+resetarVida(): void
+	+carregarImagens(): void
+	+setup(imagemNome: String): BufferedImage
+	+update(): void
+	+pegarObjeto(i: int): void
+	+interageBot(i: int): void
+	+explodirBot(i: int): void
+	+verificaDanoPorExplosao(): void
+	+verificaDanoBotPorExplosao(): void
+	+verificaExplosaoBlocosInterativos(): void
+	+desenhar(g2: Graphics2D): void
+	+setGp(gp: GamePanel): void
+	+setKeyH(keyH: ManipuladorTeclado): void
+	+setBotsMortos(botsMortos: int): void
+	+getTelaX(): int
+	+getTelaY(): int
+	+getBotsMortos(): int
+}
+class ManipuladorTeclado {
+}
+Jogador --> "1" ManipuladorTeclado : keyH
+class GamePanel {
+}
+Jogador --> "1" GamePanel : getGp()
+class ManipuladorTeclado {
+}
+Jogador --> "1" ManipuladorTeclado : getKeyH()
+class Personagem {
+}
+Personagem <|-- Jogador
+enum EstadoBot [[java:inimigo.EstadoBot]] {
+	ANDANDO
+	COLIDIU
+	ESPERANDO_NOVA_DIRECAO
+}
+class Sound [[java:principal.Sound]] {
+	~clip: Clip
+	~soundURL: URL[]
+	-posicaoAtual: long
+	+Sound()
+	+setFile(i: int): void
+	+play(): void
+	+loop(): void
+	+parar(): void
+	+pausar(): void
+	+retomar(): void
+}
+class SuperObjeto [[java:objeto.SuperObjeto]] {
+	+imagem: BufferedImage
+	+imagem1: BufferedImage
+	+imagem2: BufferedImage
+	+imagem3: BufferedImage
+	+nome: String
+	+colisao: boolean
+	+mundoX: int
+	+mundoY: int
+	+areaSolida: Rectangle
+	+areaSolidaDefaultX: int
+	+areaSolidaDefaultY: int
+	+desenhar(g2: Graphics2D, gp: GamePanel): void
+}
+class UtilityTool {
+}
+SuperObjeto --> "1" UtilityTool : uTool
+abstract class BotPersonagem [[java:entidade.BotPersonagem]] {
+	#tempoDeEspera: int
+	#contadorDeEspera: int
+	#bombasAtivas: int
+	#limiteBombas: int
+	#ultimaBombaX: int
+	#ultimaBombaY: int
+	#cooldownBomba: int
+	#contadorCooldownBomba: int
+	#distanciaMax: int
+	#random: Random
+	+BotPersonagem(gp: GamePanel)
+	+escolherNovaDirecao(): String
+	+seguirJogadorSeEstiverPerto(distanciaMax: int): boolean
+	+plantarBomba(): void
+	+decrementarBombas(): void
+	+estaNaZonaDePerigo(): boolean
+	+fugirDaZonaDePerigo(): String
+	-colideComTile(areaTeste: Rectangle): boolean
+	#getAreaSolidaMundo(): Rectangle
+	+getDistanciaMax(): int
+}
+class EstadoBot {
+}
+BotPersonagem --> "1" EstadoBot : estadoAtual
+class Personagem {
+}
+Personagem <|-- BotPersonagem
+class ManipuladorTeclado [[java:principal.ManipuladorTeclado]] {
+	-cimaPress: boolean
+	-baixoPress: boolean
+	-esqPress: boolean
+	-dirPress: boolean
+	~checkDrawTime: boolean
+	-teclaBombaPressionada: boolean
+	+ManipuladorTeclado(gp: GamePanel)
+	+keyTyped(e: KeyEvent): void
+	+keyPressed(e: KeyEvent): void
+	+keyReleased(e: KeyEvent): void
+	+setCimaPress(cimaPress: boolean): void
+	+setBaixoPress(baixoPress: boolean): void
+	+setEsqPress(esqPress: boolean): void
+	+setDirPress(dirPress: boolean): void
+	+setTeclaBombaPressionada(teclaBombaPressionada: boolean): void
+	+getCimaPress(): boolean
+	+getBaixoPress(): boolean
+	+getEsqPress(): boolean
+	+getDirPress(): boolean
+	+getTeclaBombaPressionada(): boolean
+}
+class GamePanel {
+}
+ManipuladorTeclado --> "1" GamePanel : gp
+class UI {
+}
+ManipuladorTeclado --> "1" UI : ui
+interface KeyListener {
+}
+KeyListener <|.. ManipuladorTeclado
+class GamePanel [[java:principal.GamePanel]] {
+	-tileSizeOriginal: int
+	-escala: int
+	-tileSize: int
+	-maxScreenCol: int
+	-maxScreenLin: int
+	-screenWidth: int
+	-screenHeight: int
+	-maxMundoCol: int
+	-maxMundoLin: int
+	-fps: int
+	-gameThread: Thread
+	-tempoGameOver: long
+	-tempoTelaFase: long
+	-bombaAtiva: boolean
+	-tempoTotalFase: int
+	-tempoTotalJogo: int
+	+GamePanel()
+	+setupGame(): void
+	+StartGameThread(): void
+	+run(): void
+	+update(): void
+	+paintComponent(g: Graphics): void
+	+colocarBomba(x: int, y: int): void
+	+restart(): void
+	+carregaFase(): void
+	+colocarBombaBot(x: int, y: int, alcance: int, dono: entidade.BotPersonagem): void
+	+isBombaAtiva(): boolean
+	+setBombaAtiva(ativa: boolean): void
+	+tocarMusica(i: int): void
+	+pausarMusica(): void
+	+retomarMusica(): void
+	+tocarSom(i: int): void
+	+setGameState(novoEstado: GameState): void
+	+passarFase(): void
+	+setFps(fps: int): void
+	+setTileM(tileM: TileManager): void
+	+setKeyH(keyH: ManipuladorTeclado): void
+	+setGameThread(gameThread: Thread): void
+	+setcCheca(cCheca: ColisaoChecador): void
+	+setJogador(jogador: Jogador): void
+	+setTempoTotalJogo(tempoTotalJogo: int): void
+	+getFps(): int
+	+getGameThread(): Thread
+	+getTileSizeOriginal(): int
+	+getEscala(): int
+	+getTileSize(): int
+	+getMaxScreenCol(): int
+	+getMaxScreenLin(): int
+	+getScreenWidth(): int
+	+getScreenHeight(): int
+	+getMaxMundoCol(): int
+	+getMaxMundoLin(): int
+	+getTempoTotalJogo(): int
+}
+class TileManager {
+}
+GamePanel --> "1" TileManager : tileM
+class ManipuladorTeclado {
+}
+GamePanel --> "1" ManipuladorTeclado : keyH
+class Sound {
+}
+GamePanel --> "1" Sound : sound
+class ColisaoChecador {
+}
+GamePanel --> "1" ColisaoChecador : cCheca
+class UI {
+}
+GamePanel --> "1" UI : ui
+class Fase1Setter {
+}
+GamePanel --> "1" Fase1Setter : f1Setter
+class Fase2Setter {
+}
+GamePanel --> "1" Fase2Setter : f2Setter
+class Fase3Setter {
+}
+GamePanel --> "1" Fase3Setter : f3Setter
+class FaseAtual {
+}
+GamePanel --> "1" FaseAtual : faseAtual
+class Jogador {
+}
+GamePanel --> "1" Jogador : jogador
+class SuperObjeto {
+}
+GamePanel --> "*" SuperObjeto : obj
+class Personagem {
+}
+GamePanel --> "*" Personagem : monstros
+class BlocoInterativo {
+}
+GamePanel --> "*" BlocoInterativo : iTiles
+class GameState {
+}
+GamePanel --> "1" GameState : gameState
+class TileManager {
+}
+GamePanel --> "1" TileManager : getTileM()
+class ManipuladorTeclado {
+}
+GamePanel --> "1" ManipuladorTeclado : getKeyH()
+class ColisaoChecador {
+}
+GamePanel --> "1" ColisaoChecador : getcCheca()
+class Jogador {
+}
+GamePanel --> "1" Jogador : getJogador()
+class JPanel {
+}
+JPanel <|-- GamePanel
+interface Runnable {
+}
+Runnable <|.. GamePanel
+class Ranking [[java:recursos.Ranking]] {
+	-dataHora: LocalDateTime
+	-jogador: String
+	-tempo: int
+	-{static} FORMATTER: DateTimeFormatter
+	-{static} DDMMYYYY_FORMATTER: DateTimeFormatter
+	+Ranking(dataHora: LocalDateTime, jogador: String, tempo: int)
+	+{static} puxaLinha(linha: String): Ranking
+	+formataLinha(): String
+	+getTempo(): int
+	+getDataHora(): LocalDateTime
+	+getJogador(): String
+	+getDataFormatada(): String
+	+compareTo(outro: Ranking): int
+	+toString(): String
+}
+interface "Comparable<Ranking>" as Comparable_Ranking_ {
+}
+Comparable_Ranking_ <|.. Ranking
+class BlocoLixo [[java:tile_Interativo.BlocoLixo]] {
+	+BlocoLixo(gp: GamePanel, col: int, lin: int)
+}
+class GamePanel {
+}
+BlocoLixo --> "1" GamePanel : gp
+class BlocoInterativo {
+}
+BlocoInterativo <|-- BlocoLixo
+class BotMedio [[java:inimigo.BotMedio]] {
+	~random: Random
+	+BotMedio(gp: GamePanel)
+	+getImagem(): void
+	+setAction(): void
+}
+class BotPersonagem {
+}
+BotPersonagem <|-- BotMedio
+class OBJ_Vida [[java:objeto.OBJ_Vida]] {
+	+OBJ_Vida(gp: GamePanel)
+}
+class GamePanel {
+}
+OBJ_Vida --> "1" GamePanel : gp
+class SuperObjeto {
+}
+SuperObjeto <|-- OBJ_Vida
+class BotFactory [[java:inimigo.BotFactory]] {
+	+{static} criarBot(dificuldade: String, gp: GamePanel): BotPersonagem
+}
+abstract class Personagem [[java:entidade.Personagem]] {
+	#mundoX: int
+	#mundoY: int
+	#cima1: BufferedImage
+	#cima2: BufferedImage
+	#baixo1: BufferedImage
+	#baixo2: BufferedImage
+	#esq1: BufferedImage
+	#esq2: BufferedImage
+	#dir1: BufferedImage
+	#dir2: BufferedImage
+	#direcao: String
+	#spriteCount: int
+	#spriteNum: int
+	#areaSolida: Rectangle
+	+areaSolidaDefaultX: int
+	+areaSolidaDefaultY: int
+	#colisaoLig: boolean
+	#vidaMax: int
+	#vida: int
+	#velocidade: int
+	+tipo: int
+	+actionLockCounter: int
+	+Personagem(gp: GamePanel)
+	+setAction(): void
+	+update(): void
+	+desenhar(g2: Graphics2D): void
+	+setup(imagemNome: String): BufferedImage
+	+setVida(vida: int): void
+	+setMundoX(mundoX: int): void
+	+setMundoY(mundoY: int): void
+	+setVelocidade(velocidade: int): void
+	+setCima1(cima1: BufferedImage): void
+	+setCima2(cima2: BufferedImage): void
+	+setBaixo1(baixo1: BufferedImage): void
+	+setBaixo2(baixo2: BufferedImage): void
+	+setEsq1(esq1: BufferedImage): void
+	+setEsq2(esq2: BufferedImage): void
+	+setDir1(dir1: BufferedImage): void
+	+setDir2(dir2: BufferedImage): void
+	+setDirecao(direcao: String): void
+	+setSpriteCount(spriteCount: int): void
+	+setSpriteNum(spriteNum: int): void
+	+setAreaSolida(areaSolida: Rectangle): void
+	+setColisaoLig(colisaoLig: boolean): void
+	+getVidaMax(): int
+	+getVida(): int
+	+getMundoX(): int
+	+getMundoY(): int
+	+getVelocidade(): int
+	+getCima1(): BufferedImage
+	+getCima2(): BufferedImage
+	+getBaixo1(): BufferedImage
+	+getBaixo2(): BufferedImage
+	+getEsq1(): BufferedImage
+	+getEsq2(): BufferedImage
+	+getDir1(): BufferedImage
+	+getDir2(): BufferedImage
+	+getDirecao(): String
+	+getSpriteCount(): int
+	+getSpriteNum(): int
+	+getAreaSolida(): Rectangle
+	+getColisaoLig(): boolean
+}
+class GamePanel {
+}
+Personagem --> "1" GamePanel : gp
+class ColisaoChecador [[java:principal.ColisaoChecador]] {
+	+ColisaoChecador(gp: GamePanel)
+	+checaTile(personagem: Personagem): void
+	+checaObjeto(personagem: Personagem, jogador: boolean): int
+	+checaEntidade(personagem: Personagem, target: Personagem[]): int
+	+checaJogador(personagem: Personagem): boolean
+	+setGp(gp: GamePanel): void
+	+checaBlocoInterativo(personagem: Personagem, target: BlocoInterativo[]): int
+}
+class GamePanel {
+}
+ColisaoChecador --> "1" GamePanel : gp
+class GamePanel {
+}
+ColisaoChecador --> "1" GamePanel : getGp()
+class Tile [[java:tile.Tile]] {
+	-imagem: BufferedImage
+	-colisao: boolean
+	+setImagem(imagem: BufferedImage): void
+	+setColisao(colisao: boolean): void
+	+getImagem(): BufferedImage
+	+getColisao(): boolean
+}
+class Fase2Setter [[java:fase.Fase2Setter]] {
+	~QTD_BOTS: int
+	+Fase2Setter(gp: GamePanel, gMapa: GeradorMapa)
+	+setInimigos(gp: GamePanel): void
+	+setObject(gp: GamePanel): void
+	+getQTD_BOTS(): int
+}
+class GamePanel {
+}
+Fase2Setter --> "1" GamePanel : gp
+class GeradorMapa {
+}
+Fase2Setter --> "1" GeradorMapa : gMapa
+class GeradorMapa {
+}
+Fase2Setter --> "1" GeradorMapa : getgMapa()
+interface FaseSetter {
+}
+FaseSetter <|.. Fase2Setter
+class BotFacil [[java:inimigo.BotFacil]] {
+	+BotFacil(gp: GamePanel)
+	+getImagem(): void
+	+setAction(): void
+}
+class BotPersonagem {
+}
+BotPersonagem <|-- BotFacil
+class UtilityTool [[java:principal.UtilityTool]] {
+	+scaleImage(original: BufferedImage, width: int, height: int): BufferedImage
+}
+class TileManager [[java:tile.TileManager]] {
+	-mapTileNum: int[][]
+	+TileManager(gp: GamePanel)
+	+getImagemTile(): void
+	+setup(index: int, imagePath: String, colisao: boolean): void
+	+carregarMapa(): void
+	+desenhar(g2: Graphics2D): void
+	+setGp(gp: GamePanel): void
+	+setTile(tile: Tile[]): void
+	+setMapTileNum(mapTileNum: int[][]): void
+	+setMapa(mapa: GeradorMapa): void
+	+getMapTileNum(): int[][]
+}
+class GamePanel {
+}
+TileManager --> "1" GamePanel : gp
+class Tile {
+}
+TileManager --> "*" Tile : tile
+class GeradorMapa {
+}
+TileManager --> "1" GeradorMapa : gMapa
+class GamePanel {
+}
+TileManager --> "1" GamePanel : getGp()
+class Tile {
+}
+TileManager --> "*" Tile : getTile()
+class GeradorMapa {
+}
+TileManager --> "1" GeradorMapa : getGMapa()
+class Main [[java:principal.Main]] {
+	+{static} main(args: String[]): void
+}
+class OBJ_Porta [[java:objeto.OBJ_Porta]] {
+	+OBJ_Porta(gp: GamePanel)
+}
+class GamePanel {
+}
+OBJ_Porta --> "1" GamePanel : gp
+class SuperObjeto {
+}
+SuperObjeto <|-- OBJ_Porta
+class OBJ_Bomba [[java:objeto.OBJ_Bomba]] {
+	-spriteCount: int
+	-spriteNum: int
+	-jogadorAindaDentro: boolean
+	-explodiu: boolean
+	-explosaoAtiva: boolean
+	-contadorFramesDesdeColocada: int
+	-framesParaExplodir: int
+	-contadorFramesExplosao: int
+	-framesDuracaoExplosao: int
+	-imagemChama: BufferedImage
+	-zonasExplosao: Rectangle[]
+	-alcance: int
+	+OBJ_Bomba(gp: GamePanel, dono: BotPersonagem)
+	+update(): void
+	-explodir(): void
+	-causarDanoAoJogador(): void
+	-removerDoJogo(): void
+	+desenhar(g2: Graphics2D, gp: GamePanel): void
+	+getImagemAtual(): BufferedImage
+	+checaPresencaPersonagem(p: Personagem): void
+	+getZonasExplosaoPrevisao(): Rectangle[]
+	+getZonasExplosao(): Rectangle[]
+	+isExplosaoAtiva(): boolean
+	+getFramesRestantes(): int
+}
+class GamePanel {
+}
+OBJ_Bomba --> "1" GamePanel : gp
+class BotPersonagem {
+}
+OBJ_Bomba --> "1" BotPersonagem : dono
+class Personagem {
+}
+OBJ_Bomba --> "*" Personagem : personagensDentroDaBomba
+class SuperObjeto {
+}
+SuperObjeto <|-- OBJ_Bomba
+enum GameState [[java:principal.GameState]] {
+	TITULO
+	FASE1
+	FASE2
+	FASE3
+	PLAY
+	RANKING
+	CADASTRAR_RANKING
+	GAME_OVER
+	PAUSE
+	musicaIndex
+	-GameState(musicaIndex: int)
+	+getMusicaIndex(): int
+}
+
+@enduml
