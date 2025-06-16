@@ -3,20 +3,42 @@ package fase;
 import objeto.OBJ_Porta;
 import principal.GamePanel;
 import recursos.GeradorMapa;
-import inimigo.BotDificil;
 import inimigo.BotFacil;
 import inimigo.BotMedio;
 
+/**
+ * Representa o modo como a fase 2 será inicializada.
+ * A fase contém 3 inimigos com dificuldade fácil
+ * e 3 inimigos com dificuldade média.
+ * 
+ * Implementação da interface {@link fase.FaseSetter}.
+ * 
+ * @author Mateus
+ */
 public class Fase2Setter implements FaseSetter {
+	/**GamePanel que representa o contexto do jogo. */
 	GamePanel gp;
+	/**GeradorMapa que representa as configurações do mapa. */
 	GeradorMapa gMapa;
+	/**A quantidade de inimigos presentes na fase.  */
 	final int QTD_BOTS = 6;
 
+	/**
+	 * Construtor completo da classe Fase2Setter
+	 * 
+	 * @param gp GamePanel que representa o contexto do jogo.
+	 * @param gMapa GeradorMapa que representa as configurações do mapa.
+	 */
 	public Fase2Setter(GamePanel gp, GeradorMapa gMapa) {
 		this.gp = gp;
 		this.gMapa = gMapa;
 	}
 	
+	/**
+	* adiciona os inimigos dentro do mapa da fase.
+	* 
+	* @param gp GamePanel que representa o contexto do jogo.
+	*/
 	@Override
 	public void setInimigos(GamePanel gp) {
 		for (int i = 0; i < 3; i++) {
@@ -31,6 +53,11 @@ public class Fase2Setter implements FaseSetter {
 		}
 	}
 	
+	/**
+	* adiciona o objeto dentro do mapa quando necessário.
+	* 
+	* @param gp GamePanel que representa o contexto do jogo.
+	*/
 	@Override
     public void setObject(GamePanel gp) {
     	gp.obj[0] = new OBJ_Porta(gp);
@@ -38,10 +65,16 @@ public class Fase2Setter implements FaseSetter {
     	gp.obj[0].mundoY = gp.getTileSize() * this.gMapa.posicaoPorta[0][0];
     }
 
+	/**
+	 * Retorna o GamePanel presente dentro da classe.
+	 */
 	public GeradorMapa getgMapa() {
 		return gMapa;
 	}
 
+	/**
+	 * @return A quantidade de inimigos presentes na fase.
+	 */
 	public int getQTD_BOTS() {
 		return QTD_BOTS;
 	}
