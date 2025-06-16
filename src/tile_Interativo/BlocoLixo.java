@@ -12,8 +12,8 @@ import principal.GamePanel;
  * Subclasse de {@link tile_Interativo.BlocoInterativo}
  * 
  * @author Mateus
- * @version
- * @since
+ * @version 3.0
+ * @since 2025-06-10
  */
 public class BlocoLixo extends BlocoInterativo{
 	

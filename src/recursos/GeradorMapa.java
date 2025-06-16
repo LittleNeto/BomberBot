@@ -6,8 +6,8 @@ package recursos;
 *Gera as posições dos bots e da porta, com base na análise do formato do mapa
 *
 * @author Neto
-* @version
-* @since
+* @version 4.0
+* @since 2025-05-14
 */
 public class GeradorMapa {
 	

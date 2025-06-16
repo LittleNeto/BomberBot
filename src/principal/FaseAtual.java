@@ -9,8 +9,8 @@ package principal;
  * e controle de progresso no jogo.
  * 
  * @author Mateus
- * @version
- * @since 
+ * @version 1.0
+ * @since 2025-06-13
  */
 public enum FaseAtual {
 	FASE1,

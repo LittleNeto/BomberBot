@@ -8,7 +8,7 @@ import java.awt.AlphaComposite;
  * 
  * @author Mateus
  * @version 14.0
- * @since 16 maio 2025
+ * @since 2025-05-16
  */
 
 import java.awt.Graphics2D;

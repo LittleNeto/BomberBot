@@ -19,8 +19,8 @@ import principal.UtilityTool;
  * de destruição, obstáculos ou blocos com lógica especial.
  * 
  * @author Mateus
- * @version
- * @since
+ * @version 3.0
+ * @since 2025-06-10
  */
 public class BlocoInterativo{
 	

@@ -10,6 +10,8 @@ import tile_Interativo.BlocoLixo;
  * 3 fases diferentes.
  * 
  * @author Mateus
+ * @version 1.0
+ * @since 2025-06-13
  */
 public interface FaseSetter {
 	

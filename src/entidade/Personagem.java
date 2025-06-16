@@ -17,8 +17,8 @@ import principal.UtilityTool;
  * controle de colisão e renderização na tela.
  * 
  * @author Mateus
- * @version 
- * @since
+ * @version 16.0
+ * @since 2025-05-10
  */
 public abstract class Personagem {
 

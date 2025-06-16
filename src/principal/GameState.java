@@ -23,8 +23,8 @@ package principal;
  * </p>
  * 
  * @author Mateus
- * @version
- * @since 
+ * @version 2.0
+ * @since 2025-06-07
  */
 public enum GameState {
     TITULO(0),

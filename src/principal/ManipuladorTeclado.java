@@ -11,8 +11,8 @@ import java.awt.event.KeyListener;
  * Implementa a interface {@link KeyListener}.
  * 
  * @author Mateus
- * @version 
- * @since 
+ * @version 5.0
+ * @since 2025-05-04
  */
 public class ManipuladorTeclado implements KeyListener { 
     

@@ -13,8 +13,8 @@ import principal.GamePanel;
  * Subclasse de {@link objeto.SuperObjeto}
  * 
  * @author Mateus
- * @version
- * @since
+ * @version 7.0
+ * @since 2025-05-30
  */
 public class OBJ_Porta extends SuperObjeto{
 	

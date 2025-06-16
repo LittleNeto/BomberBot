@@ -12,6 +12,9 @@ import recursos.GeradorMapa;
 /**
  * Classe responsável por administrar o gerenciamento dos blocos ao redor
  * do mapa, gerando assim a configuração visual da fase.
+ * @author Mateus
+ * @version 7.0
+ * @since 2025-05-10
  */
 public class TileManager {
 	/**GamePanel que representa o contexto do jogo. */

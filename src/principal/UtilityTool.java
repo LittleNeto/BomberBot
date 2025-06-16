@@ -12,8 +12,8 @@ import java.awt.image.BufferedImage;
 * </p>
 * 
 * @author Mateus
-* @version 
-* @since 
+* @version 5.0
+* @since 2025-06-01
 */
 public class UtilityTool {
 	

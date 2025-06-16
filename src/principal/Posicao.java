@@ -8,8 +8,8 @@ package principal;
  * É uma classe utilitária simples.
  * 
  * @author Mateus
- * @version 
- * @since
+ * @version 1.0 
+ * @since 2025-05-13
  */
 public class Posicao {
 	

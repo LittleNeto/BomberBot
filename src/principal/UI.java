@@ -25,8 +25,8 @@ import recursos.RankingManager;
  * Utiliza recursos como fontes personalizadas, imagens para barras de vida e dados de ranking.
  *
  * @author Mateus
- * @version
- * @since 
+ * @version 5.0
+ * @since 2025-06-01
  */
 public class UI {
 	

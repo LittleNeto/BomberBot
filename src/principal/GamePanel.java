@@ -23,8 +23,8 @@ import java.awt.Graphics2D;
  * Estende {@link JPanel} e implementa {@link Runnable} para permitir a execução do loop de jogo.
  *
  * @author Mateus
- * @version 
- * @since 
+ * @version 20.0
+ * @since 2025-05-04
  */
 
 public class GamePanel extends JPanel implements Runnable {

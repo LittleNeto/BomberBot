@@ -14,6 +14,7 @@ import inimigo.BotMedio;
  * Implementação da interface {@link fase.FaseSetter}.
  * 
  * @author Mateus
+ * @version 2025-06-13
  */
 public class Fase2Setter implements FaseSetter {
 	/**GamePanel que representa o contexto do jogo. */

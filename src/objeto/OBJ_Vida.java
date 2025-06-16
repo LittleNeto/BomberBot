@@ -14,8 +14,8 @@ import principal.GamePanel;
  * Subclasse de {@link objeto.SuperObjeto}
  * 
  * @author Mateus
- * @version
- * @since
+ * @version 4.0
+ * @since 2025-06-01
  */
 public class OBJ_Vida extends SuperObjeto{
 	

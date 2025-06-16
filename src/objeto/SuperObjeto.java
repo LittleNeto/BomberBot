@@ -11,8 +11,8 @@ import principal.UtilityTool;
  * que serão utilizados durante o funcionamento do jogo.
  * 
  * @author Mateus
- * @version
- * @since
+ * @version 4.0
+ * @since 2025-05-30
  */
 public class SuperObjeto {
 	/**As imagens que representam o objeto, que será constantemente atualizado */

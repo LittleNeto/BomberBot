@@ -19,9 +19,9 @@ import java.util.Set;
  * 
  * Subclasse de {@link objeto.SuperObjeto}
  * 
- * @author Mateus
- * @version
- * @since
+ * @author Neto
+ * @version 10.0
+ * @since 2025-05-18
  */
 public class OBJ_Bomba extends SuperObjeto {
 

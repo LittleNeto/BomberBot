@@ -16,8 +16,8 @@ import principal.GamePanel;
  * Usado como inimigo intermediário no jogo.
  * 
  * @author júlio
- * @version
- * @since
+ * @version 1.0
+ * @since 2025-05-27
  */
 public class BotMedio extends BotPersonagem{
 

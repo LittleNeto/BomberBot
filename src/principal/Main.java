@@ -10,7 +10,7 @@ import javax.swing.JFrame;
  * 
  * @author Mateus
  * @version
- * @since
+ * @since 2025-04-30
  */
 public class Main {
 	

@@ -13,8 +13,8 @@ package inimigo;
  * Usado na classe {@link entidade.BotPersonagem} e suas subclasses.
  * 
  * @author júlio
- * @version
- * @since
+ * @version 1.0
+ * @since 2025-06-13
  */
 public enum EstadoBot {
     

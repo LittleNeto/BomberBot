@@ -15,8 +15,8 @@ import javax.sound.sampled.Clip;
  * e localizados nos caminhos definidos no array {@code soundURL}.
  * 
  * @author Mateus
- * @version
- * @since 
+ * @version 6.0
+ * @since 2025-06-08
  */
 public class Sound {
 	
