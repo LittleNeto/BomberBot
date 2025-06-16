@@ -6,21 +6,23 @@ package recursos;
 *Gera as posições dos bots e da porta, com base na análise do formato do mapa
 *
 * @author Neto
+* @version
+* @since
 */
 public class GeradorMapa {
 	
-	/**matriz numérica que servirá como base para posicionar os blocos ao redor do mapa*/
+	/**matriz numérica que servirá como base para posicionar os blocos ao redor do mapa.*/
 	public int[][] grade = new int[10][31];
 	
-	/**matriz que representa a posição de cada bot, sendo 6 inimigos com duas coordenadas (X e Y)*/
+	/**matriz que representa a posição de cada bot, sendo 6 inimigos com duas coordenadas (X e Y).*/
 	public int[][] posicaoInimigos = new int[6][2];
 	
-	/**Matriz de linha única que identifica a posição da porta, tendo duas coordenadas (X e Y)*/
+	/**Matriz de linha única que identifica a posição da porta, tendo duas coordenadas (X e Y).*/
 	public int[][] posicaoPorta = new int[1][2];
 	
 	
 	/**
-	 * Construtor
+	 * Construtor do GeradorMapa
 	 */
 	public GeradorMapa() {
 		this.grade = gerarMapa(this.grade);
@@ -29,9 +31,10 @@ public class GeradorMapa {
 	}
 	
 	/**
+	 * Função para gerar aleatoriamente a posição dos blocos usando a matriz numérica.
 	 * 
-	 * @param grade, referende ao atributo grade pertencente à própria classe
-	 * @return Matriz numérica que representa o posicionamento de cada bloco do mapa
+	 * @param grade, referende ao atributo grade pertencente à própria classe.
+	 * @return Matriz numérica que representa o posicionamento de cada bloco do mapa.
 	 */
 	public int[][] gerarMapa(int[][] grade) {
 		for (int i = 0; i < 10; i++) {
@@ -53,10 +56,12 @@ public class GeradorMapa {
 	}
 	
 	/**
-	 * Irá adicionar as coordenadas tanto dos bots como da prta 
-	 * @param posicao, representado a matriz numérica (seja dos bots ou da porta) que conterá as coordenadas X e Y de cada um de seus elementos
-	 * @param bloco, como a porta e os bots se posicionam em blocos diferentes, é importante ter uma referência de que bloco cada um deve aparecer
-	 * @return Matriz referente às coordenadas X e Y (servindo tanto para os bots como para a porta)
+	 * Irá adicionar as coordenadas tanto dos bots como da porta 
+	 * @param posicao, representado a matriz numérica (seja dos bots ou da porta) que conterá as coordenadas X e Y
+	 * de cada um de seus elementos.
+	 * @param bloco, como a porta e os bots se posicionam em blocos diferentes, é importante ter uma referência de
+	 * que bloco cada um deve aparecer.
+	 * @return Matriz referente às coordenadas X e Y (servindo tanto para os bots como para a porta).
 	 */
 	public int[][] adicionarPosicao(int[][] posicao, int bloco) {
 		int X = 0, Y = 0;
@@ -83,52 +88,34 @@ public class GeradorMapa {
 
 	//setters
 	
-	/**
-	 * 
-	 * @param grade, para modificar as posições dos blocos no mapa
-	 */
+	/** @param grade, para modificar as posições dos blocos no mapa. */
 	public void setGrade(int[][] grade) {
 		this.grade = grade;
 	}
 	
-	/**
-	 * 
-	 * @param posicaoInimigos, para adicionar uma nova lista com as coordenadas dos inimigos
-	 */
+	/** @param posicaoInimigos, para adicionar uma nova lista com as coordenadas dos inimigos.*/
 	public void setPosicaoInimigos(int[][] posicaoInimigos) {
 		this.posicaoInimigos = posicaoInimigos;
 	}
 	
-	/**
-	 * 
-	 * @param posicaoPorta, para colocar novas coordenadas para a porta
-	 */
+	/** @param posicaoPorta, para colocar novas coordenadas para a porta. */
 	public void setPosicaoPorta(int[][] posicaoPorta) {
 		this.posicaoPorta = posicaoPorta;
 	}
 	
 	//getters
 	
-	/**
-	 * 
-	 * @return a configuração atual da grade com os blocos
-	 */
+	/** @return a configuração atual da grade com os blocos. */
 	public int[][] getGrade() {
 		return grade;
 	}
 	
-	/**
-	 * 
-	 * @return as coordenadas de cada bot presente no jogo
-	 */
+	/** @return as coordenadas de cada bot presente no jogo. */
 	public int[][] getPosicaoInimigos() {
 		return this.posicaoInimigos;
 	}
 	
-	/**
-	 * 
-	 * @return as coordenadas em que a porta se localiza no momento
-	 */
+	/** @return as coordenadas em que a porta se localiza no momento. */
 	public int[][] getPosicaoPorta() {
 		return this.posicaoPorta;
 	}

@@ -66,16 +66,12 @@ public class Fase3Setter implements FaseSetter {
     	gp.obj[0].mundoY = gp.getTileSize() * this.gMapa.posicaoPorta[0][0];
     }
 
-	/**
-	 * Retorna o GamePanel presente dentro da classe.
-	 */
+	/** @return o GamePanel presente dentro da classe. */
 	public GeradorMapa getgMapa() {
 		return gMapa;
 	}
 
-	/**
-	 * @return A quantidade de inimigos presentes na fase.
-	 */
+	/** @return A quantidade de inimigos presentes na fase. */
 	public int getQTD_BOTS() {
 		return QTD_BOTS;
 	}

@@ -6,10 +6,27 @@ import javax.imageio.ImageIO;
 
 import principal.GamePanel;
 
+/**
+ * Representa o contador da vida do personagem, que é
+ * constantemente atualizada a medida que o jogador recebe
+ * dano tanto do bot quanto da bomba.
+ * 
+ * Subclasse de {@link objeto.SuperObjeto}
+ * 
+ * @author Mateus
+ * @version
+ * @since
+ */
 public class OBJ_Vida extends SuperObjeto{
 	
+	/**GamePanel que representa o contexto do jogo.  */
 	GamePanel gp;
 	
+	/**
+	 * Construtor do OBJ_Vida.
+	 * 
+	 * @param gpGamePanel que representa o contexto do jogo. 
+	 */
 	public OBJ_Vida(GamePanel gp) {
 		
 		this.gp = gp;

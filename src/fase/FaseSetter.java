@@ -45,5 +45,6 @@ public interface FaseSetter {
 	        }
 	    }
 
+		/** Função para quantidade de inimigos presentes na fase. */
 		GeradorMapa getgMapa();
 }
