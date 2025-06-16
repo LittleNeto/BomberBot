@@ -3,15 +3,37 @@ package principal;
 import entidade.Personagem;
 import tile_Interativo.BlocoInterativo;
 
+
+/**
+ * Classe responsável por verificar colisões entre personagens,
+ * objetos, blocos interativos e tiles do mapa.
+ * Utilizada no sistema de movimentação e interação do jogo BomberBot.
+ * 
+ * @author Mateus
+ * @version 5.0
+ * @since 2025-05-20
+ */
 public class ColisaoChecador {
 	
+	/** Referência ao painel principal do jogo. */
 	private GamePanel gp;
 	
+	 /**
+     * Construtor que recebe o painel principal do jogo.
+     * 
+     * @param gp GamePanel onde a colisão será verificada
+     */
 	public ColisaoChecador(GamePanel gp) {
 		this.gp = gp;
 	}
 	
 	
+	/**
+     * Verifica colisões do personagem com os tiles do mapa.
+     * Se detectar colisão com tiles sólidos, ativa a flag de colisão do personagem.
+     * 
+     * @param personagem O personagem a ser verificado
+     */
 	public void checaTile(Personagem personagem) {
 
 	    int personagemEsqMundoX = personagem.getMundoX() + personagem.getAreaSolida().x;
@@ -57,6 +79,14 @@ public class ColisaoChecador {
 	    }
 	}
 	
+	/**
+     * Verifica colisões do personagem com os objetos do jogo.
+     * Pode também retornar o índice do objeto colidido (caso seja o jogador).
+     * 
+     * @param personagem O personagem em movimento
+     * @param jogador true se for o jogador; false para NPCs
+     * @return índice do objeto colidido ou 999 se nenhum
+     */
 	public int checaObjeto(Personagem personagem, boolean jogador) {
 	    int index = 999;
 
@@ -147,7 +177,13 @@ public class ColisaoChecador {
 	    return index;
 	}
 
-	
+	/**
+     * Verifica colisões do personagem com uma lista de outras entidades (bots, inimigos, etc).
+     * 
+     * @param personagem O personagem que está se movendo
+     * @param target Lista de entidades para checar colisão
+     * @return índice da entidade colidida ou 999 se nenhuma
+     */
 	public int checaEntidade(Personagem personagem, Personagem[] target) {
 		
 		int index = 999;
@@ -202,6 +238,12 @@ public class ColisaoChecador {
 		return index;
 	}
 	
+	 /**
+     * Verifica se o personagem colidiu com o jogador.
+     * 
+     * @param personagem A entidade a ser checada
+     * @return true se colidiu com o jogador, false caso contrário
+     */
 	public boolean checaJogador(Personagem personagem) {
 		
 		boolean interagiuJogador = false;
@@ -242,17 +284,34 @@ public class ColisaoChecador {
 	}
 	
 
-	//setters
+	/**
+     * Define o GamePanel a ser utilizado pela classe.
+     * 
+     * @param gp GamePanel a ser atribuído
+     */
 	public void setGp(GamePanel gp) {
 		this.gp = gp;
 	}
 	
-	//getters
+	// === Getters e Setters ===
+
+    /**
+     * Retorna a instância do GamePanel utilizada pela classe.
+     * 
+     * @return referência ao GamePanel
+     */
 	public GamePanel getGp() {
 		return gp;
 	}
 
-
+	/**
+     * Verifica colisões com blocos interativos.
+     * Se houver colisão, ativa a flag de colisão no personagem.
+     * 
+     * @param personagem Personagem sendo verificado
+     * @param target Lista de blocos interativos
+     * @return índice do bloco colidido ou 999 se nenhum
+     */
 	public int checaBlocoInterativo(Personagem personagem, BlocoInterativo[] target) {
 		
 		int index = 999;
