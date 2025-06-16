@@ -1,29 +1,37 @@
 # Bomberbot
 Uma versão nova do jogo Bomberman, utilizando a linguagem de programação java
 ## Classes desenvolvidas
-- [ ] AssetSetter
-- [ ] Bomba
-- [ ] BotAvancado
-- [ ] BotFacil
-- [ ] Bot_if (interface)
-- [ ] BotMedio
-- [ ] ColisaoChecador
-- [ ] GamePanel
-- [ ] GameState (Enum)
-- [ ] Jogador
-- [ ] ManipuladorTeclado
-- [ ] Mapa
-- [ ] OBJ_Porta
-- [ ] OBJ_ Vida
-- [ ] Personagem (classe abstrata)
-- [ ] Ranking
-- [ ] RankingManager
-- [ ] Sound
-- [ ] SuperObjeto
-- [ ] Tile
-- [ ] TileManager
-- [ ] UI
-- [ ] UtilityTool
+- [X] BlocoInterativo
+- [X] BlocoLixo
+- [X] BotDificil
+- [X] BotFacil
+- [X] BotMedio
+- [X] BotPersonagem (Classe Abstrata)
+- [X] ColisaoChecador
+- [X] EstadoBot (Enum)
+- [X] Fase1Setter
+- [X] Fase2Setter
+- [X] Fase3Setter
+- [X] FaseAtual (enum)
+- [X] FaseSetter (Interface)
+- [X] GamePanel
+- [X] GameState (Enum)
+- [X] GeradorMapa
+- [X] Jogador
+- [X] ManipuladorTeclado
+- [X] OBJ_Bomba
+- [X] OBJ_Porta
+- [X] OBJ_ Vida
+- [X] Personagem (Classe Abstrata)
+- [X] Posicao
+- [X] Ranking
+- [X] RankingManager
+- [X] Sound
+- [X] SuperObjeto
+- [X] Tile
+- [X] TileManager
+- [X] UI
+- [X] UtilityTool
 ## Colaboradores
 1. [José Araújo Agra Neto](https://github.com/LittleNeto)
 1. [Júlio Pedro da Silva](https://github.com/julioP-dev)
