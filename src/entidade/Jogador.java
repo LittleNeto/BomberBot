@@ -3,11 +3,13 @@ package entidade;
 import java.awt.AlphaComposite;
 
 /**
-*
-* @author Mateus
-* @version 14.0
-* @since 16 maio 2025
-*/
+ * Representa o jogador principal do jogo, controlado via teclado.
+ * Possui lógica de movimentação, interação com inimigos, objetos, explosões e transições de fase.
+ * 
+ * @author Mateus
+ * @version 14.0
+ * @since 16 maio 2025
+ */
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -23,15 +25,30 @@ import principal.UtilityTool;
 
 
 public class Jogador extends Personagem {
+	
+	/** Manipulador de teclado para detectar comandos do jogador */
     private ManipuladorTeclado keyH;
-
+    
+    
+    /** Posição fixa na tela onde o jogador será desenhado (X e Y centralizados) */
     private final int telaX;
     private final int telaY;
+    
+    /** Define se o jogador está temporariamente invencível */
     public boolean invencivel = false;
+    
+    /** Contador usado para limitar o tempo de invencibilidade */
     public int invencivelCont = 0;
     
-    private int botsMortos = 0; //SERÁ USADO PARA PASSAR DE CADA FASE
-
+    /** Quantidade de bots destruídos pelo jogador na fase atual */
+    private int botsMortos = 0; 
+    
+    /**
+     * Construtor que inicializa o jogador.
+     * 
+     * @param gp Referência ao painel principal do jogo
+     * @param keyH Manipulador de teclado usado para controlar o jogador
+     */
     public Jogador(GamePanel gp, ManipuladorTeclado keyH) {
         super(gp);
 
@@ -49,10 +66,10 @@ public class Jogador extends Personagem {
     }
 
     /**
-     * @param
+     * Define os valores padrão iniciais para o jogador.
      */
     public void setDefaultValues() {
-        setMundoX(gp.getTileSize()); //define as coordenadas x e y que o jogador aparece na tela, a velocidade e a direção padrão
+        setMundoX(gp.getTileSize()); 
         setMundoY(gp.getTileSize() * 2);
         setVelocidade(3);
         setDirecao("baixo");
@@ -64,18 +81,27 @@ public class Jogador extends Personagem {
         
     }
     
+    /**
+     * Redefine a posição do jogador para a posição inicial da fase.
+     */
     public void setDefaultPositions() {
-        setMundoX(gp.getTileSize()); //define as coordenadas x e y que o jogador aparece na tela, a velocidade e a direção padrão
+        setMundoX(gp.getTileSize()); 
         setMundoY(gp.getTileSize() * 2);
         setVelocidade(3);
         setDirecao("baixo");
     }
     
+    /**
+     * Restaura a vida do jogador para o máximo e remove invencibilidade.
+     */
     public void resetarVida() {
     	vida = vidaMax;
     	invencivel = false;
     }
-
+    
+    /**
+     * Carrega as imagens de sprites do jogador para animação.
+     */
     public void carregarImagens() {
         
         setCima1(setup("player_cima_1"));
@@ -89,6 +115,12 @@ public class Jogador extends Personagem {
         
     }
     
+    /**
+     * Realiza a leitura e o redimensionamento de uma imagem.
+     *
+     * @param imagemNome Nome do arquivo de imagem na pasta de sprites do jogador
+     * @return A imagem carregada e redimensionada
+     */
     public BufferedImage setup(String imagemNome) {
     	UtilityTool uTool = new UtilityTool();
     	BufferedImage imagem = null;
@@ -103,7 +135,11 @@ public class Jogador extends Personagem {
     	
     	return imagem;
     }
-
+    
+    /**
+     * Atualiza a lógica do jogador a cada frame:
+     * movimentação, colisões, invencibilidade e danos.
+     */
     public void update() {
         if (keyH.getBaixoPress() || keyH.getCimaPress() || keyH.getDirPress() || keyH.getEsqPress()) {
             if (keyH.getCimaPress()) {
@@ -172,10 +208,14 @@ public class Jogador extends Personagem {
 
     }
     
-    //pegarObjeto poderia ser deixado apenas para Bombas e poderes, e criaríamos outro método parecido específico para a Porta
-    public void pegarObjeto(int i) { //a lógica pode ser usada para os powerups, já que após pegar ele some da tela
+    /**
+     * Verifica se o jogador colidiu com um objeto e executa a lógica de interação.
+     *
+     * @param i Índice do objeto no array
+     */
+    public void pegarObjeto(int i) { 
     	
-    	if(i != 999) { //pode ser qualquer número, desde que não apareça no array de objetos
+    	if(i != 999) { 
     		
     		String nomeObjeto = gp.obj[i].nome;
     		 
@@ -203,6 +243,11 @@ public class Jogador extends Personagem {
     	
     }
     
+    /**
+     * Verifica se o jogador colidiu com um inimigo e aplica dano se necessário.
+     *
+     * @param i Índice do bot no array de monstros
+     */
     public void interageBot(int i) {
     	if (i != 999 && gp.monstros[i]!= null) {
     		if (gp.monstros[i].tipo == 1) {
@@ -216,6 +261,11 @@ public class Jogador extends Personagem {
     	}
     }
     
+    /**
+     * Aplica dano e elimina o bot caso sua vida chegue a zero.
+     *
+     * @param i Índice do bot
+     */
     public void explodirBot(int i) {
         if (i != 999 && gp.monstros[i] != null) {
             gp.monstros[i].vida -= 1;
@@ -227,6 +277,7 @@ public class Jogador extends Personagem {
         }
     }
     
+    /** Verifica se o jogador está em uma zona de explosão e aplica dano. */
     public void verificaDanoPorExplosao() {
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] instanceof objeto.OBJ_Bomba bomba) {
@@ -251,7 +302,8 @@ public class Jogador extends Personagem {
             }
         }
     }
-
+    
+    /** Verifica se algum bot está em uma zona de explosão e aplica dano. */
     public void verificaDanoBotPorExplosao() {
         for (int b = 0; b < gp.monstros.length; b++) {
             if (gp.monstros[b] == null) continue;
@@ -283,7 +335,8 @@ public class Jogador extends Personagem {
             }
         }
     }
-
+    
+    /** Verifica e remove blocos interativos atingidos por explosões. */
     public void verificaExplosaoBlocosInterativos() {
         for (int b = 0; b < gp.iTiles.length; b++) {
             if (gp.iTiles[b] == null) continue;
@@ -313,7 +366,11 @@ public class Jogador extends Personagem {
         }
     }
 
-
+    /**
+     * Desenha o jogador na tela considerando o deslocamento de câmera.
+     *
+     * @param g2 Objeto gráfico onde o jogador será desenhado
+     */
     public void desenhar(Graphics2D g2) {
         BufferedImage imagem = null;
 
@@ -340,7 +397,7 @@ public class Jogador extends Personagem {
             drawY = getMundoY() - (gp.getTileSize() * gp.getMaxMundoLin() - gp.getScreenHeight());
         }
         
-        //PODERÁ SER REMOVIDO DEPOIS
+        
         //aplica o efeito de transparência logo após o personagem sofrer dano
         if (invencivel == true) {
         	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
@@ -353,36 +410,44 @@ public class Jogador extends Personagem {
     }
 
     // Setters e getters
-
+    
+    
+    /** Define o GamePanel atual. */
     public void setGp(GamePanel gp) {
         this.gp = gp;
     }
-
+    
+    /** Define o manipulador de teclado. */
     public void setKeyH(ManipuladorTeclado keyH) {
         this.keyH = keyH;
     }
     
+    /** Define a quantidade de bots mortos. */
     public void setBotsMortos(int botsMortos) {
         this.botsMortos = botsMortos;
     }
     
-
+    /** @return o GamePanel associado. */
     public GamePanel getGp() {
         return gp;
     }
-
+    
+    /** @return o manipulador de teclado. */
     public ManipuladorTeclado getKeyH() {
         return keyH;
     }
-
+    
+    /** @return posição X do jogador na tela. */
     public int getTelaX() {
         return telaX;
     }
-
+    
+    /** @return posição Y do jogador na tela. */
     public int getTelaY() {
         return telaY;
     }
-
+    
+    /** @return quantidade de bots mortos. */
     public int getBotsMortos() {
     	return this.botsMortos;
     }

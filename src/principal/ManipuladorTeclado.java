@@ -1,27 +1,49 @@
 package principal;
 
-/**
- *
- * @author Mateus
- */
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+ * Classe responsável por capturar e interpretar eventos de teclado durante o jogo.
+ * Controla os movimentos do jogador, ações como colocar bombas, navegação nos menus,
+ * e interações com o sistema de ranking.
+ * 
+ * Implementa a interface {@link KeyListener}.
+ * 
+ * @author Mateus
+ * @version 
+ * @since 
+ */
 public class ManipuladorTeclado implements KeyListener { 
-//implementa uma interface para "ler" as teclas pressionadas
     
 	GamePanel gp;
+	
+	/** Atributos para verficar se as teclas de movimento foram pressionadas. */
     private boolean cimaPress, baixoPress, esqPress, dirPress;
     //DEBUG
+    
+    /** Ativa a exibição do tempo de renderização para debug. */
     boolean checkDrawTime = false;
+    
+    /**verficar se a tecla de plantar bomba foi pressionadas. */
     private boolean teclaBombaPressionada;
     private UI ui;
     
+    /**
+     * Construtor que recebe o painel principal do jogo.
+     *
+     * @param gp Instância do GamePanel para manipulação do estado do jogo.
+     */
     public ManipuladorTeclado(GamePanel gp) {
     	this.gp = gp;
     }
     
+    /**
+     * Evento chamado quando uma tecla que gera caractere é digitada.
+     * Usado para digitação do nome no ranking.
+     *
+     * @param e Evento de teclado.
+     */
     @Override
     public void keyTyped(KeyEvent e) {
         if (gp.ui.aguardandoNome) {
@@ -34,7 +56,12 @@ public class ManipuladorTeclado implements KeyListener {
         }
     }
 
-
+    /**
+     * Evento chamado quando uma tecla é pressionada.
+     * Controla movimentação, comandos no menu, bombas e pausas.
+     *
+     * @param e Evento de teclado.
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode(); //retorna o int associado ao código da tecla
@@ -110,7 +137,13 @@ public class ManipuladorTeclado implements KeyListener {
         	gp.setGameState(GameState.TITULO);
         }
     }
-
+    
+    /**
+     * Evento chamado quando uma tecla é solta.
+     * Reseta os estados de movimentação e ações do jogador.
+     *
+     * @param e Evento de teclado.
+     */
     @Override
     public void keyReleased(KeyEvent e) { 
         int code = e.getKeyCode(); //retorna o int associado ao código da tecla
@@ -133,42 +166,75 @@ public class ManipuladorTeclado implements KeyListener {
     }
 
     //setters
+    
+    /**
+     * Define se a tecla W (cima) está pressionada.
+     */
 	public void setCimaPress(boolean cimaPress) {
 		this.cimaPress = cimaPress;
 	}
-
+	
+	/**
+     * Define se a tecla S (baixo) está pressionada.
+     */
 	public void setBaixoPress(boolean baixoPress) {
 		this.baixoPress = baixoPress;
 	}
-
+	
+	/**
+     * Define se a tecla A (esquerda) está pressionada.
+     */
 	public void setEsqPress(boolean esqPress) {
 		this.esqPress = esqPress;
 	}
-
+	
+	/**
+     * Define se a tecla D (direita) está pressionada.
+     */
 	public void setDirPress(boolean dirPress) {
 		this.dirPress = dirPress;
 	}
+	
+	/**
+     * Define se a tecla de bomba (X) está pressionada.
+     */
 	public void setTeclaBombaPressionada(boolean teclaBombaPressionada) {
 		this.teclaBombaPressionada = teclaBombaPressionada;
 	}
 	
 	//getters
+	
+	/**
+     * @return true se a tecla W está pressionada.
+     */
 	public boolean getCimaPress() {
 		return cimaPress;
 	}
 	
+	/**
+     * @return true se a tecla S está pressionada.
+     */
 	public boolean getBaixoPress() {
 		return baixoPress;
 	}
 	
+	/**
+     * @return true se a tecla A está pressionada.
+     */
 	public boolean getEsqPress() {
 		return esqPress;
 	}
 	
+	/**
+     * @return true se a tecla D está pressionada.
+     */
 	public boolean getDirPress() {
 		return dirPress;
 	}
-
+	
+	/**
+     * @return true se a tecla de bomba (X) está pressionada.
+     */
 	public boolean getTeclaBombaPressionada() {
 		return teclaBombaPressionada;
 	}

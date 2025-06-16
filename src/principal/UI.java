@@ -16,6 +16,18 @@ import objeto.SuperObjeto;
 import recursos.Ranking;
 import recursos.RankingManager;
 
+
+/**
+ * Classe responsável pela renderização da interface gráfica do usuário (UI) do jogo.
+ * Exibe informações como vida do jogador, tempo restante, telas de pausa, game over, ranking,
+ * transições de fase e tela inicial. Também gerencia entrada de nome para cadastro no ranking.
+ *
+ * Utiliza recursos como fontes personalizadas, imagens para barras de vida e dados de ranking.
+ *
+ * @author Mateus
+ * @version
+ * @since 
+ */
 public class UI {
 	
 	GamePanel gp;
@@ -38,7 +50,11 @@ public class UI {
 	boolean aguardandoNome = false;
 
 
-	
+	/**
+	 * Construtor que inicializa a UI com as fontes e imagens necessárias.
+	 *
+	 * @param gp Referência ao painel principal do jogo
+	 */
 	public UI(GamePanel gp) {
 		this.gp = gp;
 		
@@ -60,11 +76,21 @@ public class UI {
 		
 	}
 	
+	/**
+	 * Exibe uma mensagem temporária na tela.
+	 *
+	 * @param texto Mensagem a ser exibida
+	 */
 	public void mostrarMensagem(String texto) {
 		mensagem = texto;
 		mensagemLig = true;
 	}
 	
+	/**
+	 * Controla a renderização da UI conforme o estado atual do jogo.
+	 *
+	 * @param g2 Objeto gráfico usado para desenhar os elementos
+	 */
 	public void desenhar(Graphics2D g2) {
 		
 		this.g2 = g2;
@@ -116,6 +142,7 @@ public class UI {
 		}
 	}
 	
+	/** Desenha a tela de ranking com os 5 melhores tempos. */
 	private void desenharTelaRanking() {
 	    g2.setColor(new Color(30, 30, 102));
 	    g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
@@ -141,7 +168,8 @@ public class UI {
 	    g2.drawString("Pressione Z para voltar", getXparaTextoCentralizado("Pressione Z para voltar"), y + gp.getTileSize() * 2);
 		
 	}
-
+	
+	/** Desenha a tela para digitação do nome no ranking. */
 	private void desenharTelaCadastrarRanking() {
 	    g2.setColor(new Color(30, 30, 102));
 	    g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
@@ -160,7 +188,7 @@ public class UI {
 	    g2.drawString(nome, x, y);
 	}
 
-
+	/** Desenha o tempo restante de jogo na tela. */
 	public void desenharTempoJogo() {
 	    g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32F));
 	    g2.setColor(Color.white);
@@ -171,7 +199,11 @@ public class UI {
 
 	    g2.drawString(textoTempo, x, y);
 	}
-
+	
+	/** Atualiza o tempo restante de jogo 
+	 * 
+	 * @param delta do loop. 
+	 */
 	public void atualizarTempoJogo(double delta) {
 	    if (gp.gameState == GameState.PLAY && tempoJogo > 0) {
 	        tempoJogo -= delta;
@@ -182,7 +214,7 @@ public class UI {
 	}
 
 
-	
+	/** Renderiza as barras de vida do jogador. */
 	public void desenharVidaJogador() {
 	    int x = gp.getTileSize() / 2;
 	    int y = 0;
@@ -233,7 +265,7 @@ public class UI {
 	    g2.drawImage(imgBarra2, x + gp.getTileSize() + 5, y, null);
 	}
 
-
+	/** Desenha a tela de título com as opções do menu. */
 	public void desenharTelaTitle() {
 		
 		//Background
@@ -285,6 +317,12 @@ public class UI {
 		
 	}
 	
+	/**
+	 * Carrega uma imagem de recurso com base no nome.
+	 *
+	 * @param imagemNome Nome do arquivo de imagem (sem extensão)
+	 * @return BufferedImage carregada
+	 */
     public BufferedImage setup(String imagemNome) {
     	BufferedImage imagem = null;
     	
@@ -298,6 +336,7 @@ public class UI {
     	return imagem;
     }
 	
+    /** Desenha a tela de pausa. */
 	public void desenharTelaPausa() {
 		g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 100F));
 		String texto = "PAUSADO";
@@ -307,6 +346,7 @@ public class UI {
 		g2.drawString(texto, x, y);
 	}
 	
+	/** Desenha a tela de Game Over. */
 	public void desenharTelaGameOver() {
 		g2.setColor(new Color(0, 0, 0, 150));
 		g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
@@ -330,6 +370,9 @@ public class UI {
 		
 	}
 	
+	/** Desenha a tela de transição entre fases
+	 * @param nome da fase.
+	 */
 	public void desenharTelaFase(String texto) {
 		g2.setColor(new Color(30, 30, 102));
 		g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
@@ -352,34 +395,48 @@ public class UI {
 
 	}
 	
+	/** Salva um nome e tempo no sistema de ranking. 
+	 * @param nome do jogadpr
+	 * @param tempo em que terminou o jogo
+	 */
 	public void salvarNoRanking(String nome, int tempo) {
 	    RankingManager.salvarDados(nome, tempo);
 	}
 
-	
+	/**
+	 * Calcula a posição X para centralizar um texto na tela.
+	 *
+	 * @param texto Texto a ser centralizado
+	 * @return posição X em pixels
+	 */
 	public int getXparaTextoCentralizado(String texto) {
 		int length = (int)g2.getFontMetrics().getStringBounds(texto, g2).getWidth();
 		int x =  gp.getScreenWidth()/2 - length/2;
 		
 		return x;
 	}
-
+	
+	/** @return tempo restante de jogo. */
 	public double getTempoJogo() {
 		return tempoJogo;
 	}
-
+	
+	/** Define o tempo restante do jogo. */
 	public void setTempoJogo(double tempoJogo) {
 		this.tempoJogo = tempoJogo;
 	}
 	
+	/** @return objeto gráfico atual. */
 	public Graphics2D getG2() {
 		return this.g2;
 	}
 	
+	/** Define o objeto gráfico da UI. */
 	public void setG2(Graphics2D g2) {
 		this.g2 = g2;
 	}
-
+	
+	/** @return número máximo de caracteres permitidos no nome do ranking. */
 	public int getLIMITE_CARACTERES() {
 		return LIMITE_CARACTERES;
 	}

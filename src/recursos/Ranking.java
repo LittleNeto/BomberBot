@@ -18,6 +18,8 @@ import java.time.format.DateTimeFormatter;
  * </pre>
  * 
  * @author Júlio
+ * @version
+ * @since
  */
 
 public class Ranking implements Comparable<Ranking>{

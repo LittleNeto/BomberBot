@@ -17,6 +17,8 @@ import java.time.format.DateTimeFormatter;
  * Essa classe utiliza a classe {@link Ranking} para representar cada entrada.
  * 
  * @author Júlio
+ * @version
+ * @since
  */
 public class RankingManager {
 	

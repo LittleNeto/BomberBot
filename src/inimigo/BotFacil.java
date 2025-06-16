@@ -16,6 +16,8 @@ import principal.GamePanel;
  * Usado como inimigo de nível fácil no jogo.
  * 
  * @author júlio
+ * @version
+ * @since
  */
 public class BotFacil extends BotPersonagem {
 	

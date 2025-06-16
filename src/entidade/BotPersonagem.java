@@ -16,6 +16,8 @@ import principal.GamePanel;
  * Subclasses devem implementar a lógica específica de decisão em setAction().
  *
  * @author júlio
+ * @version
+ * @since
  */
 
 public abstract class BotPersonagem extends Personagem {

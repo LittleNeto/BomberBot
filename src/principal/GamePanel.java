@@ -1,10 +1,5 @@
 package principal;
 
-/**
- *
- * @author Mateus
- */
-
 import entidade.Jogador;
 import entidade.Personagem;
 import fase.Fase1Setter;
@@ -22,55 +17,115 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+/**
+ * Classe principal do painel do jogo. Gerencia a lógica, renderização, controle de fases,
+ * input do jogador e entidades do jogo.
+ * Estende {@link JPanel} e implementa {@link Runnable} para permitir a execução do loop de jogo.
+ *
+ * @author Mateus
+ * @version 
+ * @since 
+ */
+
 public class GamePanel extends JPanel implements Runnable {
     //configurações da tela
-    private final int tileSizeOriginal = 32; //tamanho padrão de cada "bloco" da tela
-    private final int escala = 3; //reescala a tela para que 32X32 não fique tão pequeno
+	
+	 /** Tamanho base do tile (em pixels) antes da escala. */
+    private final int tileSizeOriginal = 32;
     
+    /** Fator de escala aplicado ao tile. (reescala a tela para que 32X32 não fique tão pequeno)*/
+    private final int escala = 3; 
+    
+    /** Tamanho real do tile após aplicação da escala. */
     private final int tileSize = this.getTileSizeOriginal() * this.getEscala(); //tile de 96X96
     
+    /** Número máximo de colunas visíveis na tela. */
     private final int maxScreenCol = 17;
-    private final int maxScreenLin = 10;
-    private final int screenWidth = this.getTileSize() * this.getMaxScreenCol(); //1632 pixels de largura
-    private final int screenHeight = this.getTileSize() * this.getMaxScreenLin(); //960 pixels de altura
     
-    private final int maxMundoCol = 31; // exemplo: mapa de 50 colunas
+    /** Número máximo de linhas visíveis na tela. */
+    private final int maxScreenLin = 10;
+    
+    /** Largura total da tela em pixels. (1632 pixels de largura) */
+    private final int screenWidth = this.getTileSize() * this.getMaxScreenCol();
+    
+    /** Altura total da tela em pixels. (960 pixels de altura) */
+    private final int screenHeight = this.getTileSize() * this.getMaxScreenLin(); 
+    
+    /** Número máximo de colunas do mundo. */
+    private final int maxMundoCol = 31; 
+    
+    /** Número máximo de linhas do mundo. */
     private final int maxMundoLin = 10;
     
 
-    //FPS
+    /** Taxa de frames por segundo. (FPS) */
     private int fps = 60;
     
     //SISTEMA
+    
+    /** Gerenciador de tiles. */
     private TileManager tileM = new TileManager(this);
+    
+    /** Teclado - manipula as teclas pressionadas. */
     private ManipuladorTeclado keyH = new ManipuladorTeclado(this);
+    
+    /** Reprodutor de sons e músicas. */
     Sound sound = new Sound();
-    private Thread gameThread; //implementado para ajudar a atualizar a tela durante o decorrer do jogo
+    
+    /** Thread principal do jogo, implementado para ajudar a atualizar a tela durante o decorrer do jogo*/
+    private Thread gameThread;
+    
+    /** Checador de colisões. */
     private ColisaoChecador cCheca = new ColisaoChecador(this);
+    
+    /** Interface do jogo. */
     public UI ui = new UI(this);
     
     //FASES
+    
+    /** Setters para cada fase. */
     public Fase1Setter f1Setter = new Fase1Setter(this, this.getTileM().getGMapa());
     public Fase2Setter f2Setter = new Fase2Setter(this, this.getTileM().getGMapa());
     public Fase3Setter f3Setter = new Fase3Setter(this, this.getTileM().getGMapa());
+    
+    /** Fase atual do jogo. */
     public FaseAtual faseAtual;
     
     //ENTIDADES E OBJETOS
-    private Jogador jogador = new Jogador(this, this.getKeyH()); //cria uma instância jogador dentro da Tela do jogo
-    public SuperObjeto[] obj = new SuperObjeto[10]; //não significa que só podem existir 10 objetos no jogo, mas que pode ter 10 objetos ao mesmo tempo
+    
+    /** Jogador principal do jogo. */
+    private Jogador jogador = new Jogador(this, this.getKeyH());
+    
+    /** Objetos disponíveis no jogo. (não significa que só podem existir 10 objetos no jogo, mas que pode ter 10 objetos ao mesmo tempo) */
+    public SuperObjeto[] obj = new SuperObjeto[10]; 
+    
+    /** Lista de bots. */
     public Personagem[] monstros = new Personagem[10];
+    
+    /** Blocos interativos no jogo. */
     public BlocoInterativo iTiles[] = new BlocoInterativo[100];
 
     //GAME STATE
-    public GameState gameState;
-	private long tempoGameOver = 0;
-	private long tempoTelaFase = 0;
     
+    /** Estado atual do jogo. */
+    public GameState gameState;
+    
+    /** Timer para controle do game over. */
+	private long tempoGameOver = 0;
+	
+	/** Timer para controle da transição de fases. */
+	private long tempoTelaFase = 0;
+	
+	/** Flag que controla se uma bomba já está ativa. */
     private boolean bombaAtiva = false;
     
+    /** Tempo total acumulado nas fases. */
     private int tempoTotalFase = 0;
     private int tempoTotalJogo = 0;
     
+    /**
+     * Construtor do GamePanel, inicializa e configura o painel.
+     */
     public GamePanel() {
         this.setPreferredSize(new Dimension(this.getScreenWidth(), this.getScreenHeight())); //define a dimensão da tela
         this.setBackground(Color.black);
@@ -87,14 +142,20 @@ public class GamePanel extends JPanel implements Runnable {
         setGameState(GameState.TITULO);
 
     }
-
+    
+    /**
+     * Inicializa a thread do jogo e inicia o loop principal.
+     */
     public void StartGameThread() {
         this.setGameThread(new Thread(this));
         this.getGameThread().start(); //chama o método run
     }
-
+    
+    /**
+     * Loop principal do jogo, responsável por chamar {@code update()} e {@code repaint()}.
+     */
     @Override
-    public void run() { //game loop
+    public void run() { 
         
         double intervaloDesenho = 1000000000 / this.getFps();
         double delta = 0;
@@ -128,6 +189,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
     
+    /**
+     * Atualiza o estado do jogo com base no estado atual (fase, play, game over, etc).
+     */
     public void update() {
     	if (gameState == GameState.FASE1) {
     		sound.parar();
@@ -249,9 +313,11 @@ public class GamePanel extends JPanel implements Runnable {
 
     	
     }
-    
-    
-    
+
+    /**
+     * Desenha todos os elementos visuais do jogo no painel.
+     * @param g objeto Graphics usado para renderização.
+     */
     public void paintComponent(Graphics g) { //está sobrescrevendo um método que já existe em java
         
         super.paintComponent(g);
@@ -317,6 +383,11 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose(); //libera memória do que não está sendo mais usado
     }
     
+    /**
+     * Coloca uma bomba no local do jogador, se nenhuma já estiver ativa.
+     * @param x coordenada X
+     * @param y coordenada Y
+     */
     public void colocarBomba(int x, int y) {
         if (bombaAtiva) return; // já existe uma bomba no mapa
 
@@ -334,7 +405,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 	
-    
+    /**
+     * Reinicia o jogo após o fim da partida.
+     */
     public void restart() {
         // 1. Parar música do jogo
         sound.parar(); //para o som que estava tocando
@@ -369,6 +442,9 @@ public class GamePanel extends JPanel implements Runnable {
         tocarMusica(GameState.TITULO.getMusicaIndex()); //toca a música de título
     }
     
+    /**
+     * Carrega uma nova fase, redefinindo os dados do jogador e do mapa.
+     */
     public void carregaFase() {
         // 1. Parar música do jogo
         sound.parar(); //para o som que estava tocando
@@ -394,8 +470,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 
-
-    
+    /**
+     * Coloca uma bomba de bot no mapa.
+     * @param x coordenada X
+     * @param y coordenada Y
+     * @param alcance alcance da bomba
+     * @param dono referência ao bot que plantou a bomba (permite que o bot plante mais de uma bomba)
+     */
     public void colocarBombaBot(int x, int y, int alcance, entidade.BotPersonagem dono) {
         int posicaoBombaX = (x) / getTileSize() * getTileSize();
         int posicaoBombaY = (y) / getTileSize() * getTileSize();
@@ -410,11 +491,18 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-
+    /**
+     * Retorna se há uma bomba ativa no momento.
+     * @return true se houver bomba ativa
+     */
     public boolean isBombaAtiva() {
         return bombaAtiva;
     }
-
+    
+    /**
+     * Define se uma bomba está ativa no jogo.
+     * @param ativa true se a bomba estiver ativa
+     */
     public void setBombaAtiva(boolean ativa) {
         this.bombaAtiva = ativa;
     }
@@ -438,6 +526,10 @@ public class GamePanel extends JPanel implements Runnable {
     	sound.play();
     }
     
+    /**
+     * Define o estado atual do jogo.
+     * @param novoEstado novo estado a ser aplicado
+     */
     public void setGameState(GameState novoEstado) {
         //se estiver indo do play para o pause, pausa
         if (this.gameState == GameState.PLAY && novoEstado == GameState.PAUSE) {
@@ -455,7 +547,10 @@ public class GamePanel extends JPanel implements Runnable {
 
         this.gameState = novoEstado;
     }
-
+    
+    /**
+     * Avança para a próxima fase e acumula o tempo total de jogo.
+     */
     public void passarFase() {
     	 if(this.faseAtual == FaseAtual.FASE1) {
     		 int tempoAtual = (int) ui.getTempoJogo();
@@ -482,11 +577,18 @@ public class GamePanel extends JPanel implements Runnable {
 
 
   
-    //setters
+    //GETTERS E SETTERS
+    
+    /**
+     * Define os frames por segundo (FPS).
+     */
 	public void setFps(int fps) {
 		this.fps = fps;
 	}
-
+	
+	/**
+     * Define o gerenciador de tiles.
+     */
 	public void setTileM(TileManager tileM) {
 		this.tileM = tileM;
 	}
@@ -507,21 +609,30 @@ public class GamePanel extends JPanel implements Runnable {
 		this.jogador = jogador;
 	}
 	
-
+	/**
+     * Define o tempo total acumulado nas fases.
+     */
 	public void setTempoTotalJogo(int tempoTotalJogo) {
 		this.tempoTotalJogo = tempoTotalJogo;
 	}
 	
-
-	//getters
+	/**
+     * Retorna o FPS atual.
+     */
 	public int getFps() {
 		return fps;
 	}
 	
+	/**
+     * Retorna o gerenciador de tiles.
+     */
 	public TileManager getTileM() {
 		return tileM;
 	}
 	
+	/**
+     * Retorna o manipulador de teclado.
+     */
 	public ManipuladorTeclado getKeyH() {
 		return keyH;
 	}
@@ -574,8 +685,9 @@ public class GamePanel extends JPanel implements Runnable {
 		return maxMundoLin;
 	}
 
-
-
+	/**
+     * Retorna o tempo total acumulado nas fases.
+     */
 	public int getTempoTotalJogo() {
 		return tempoTotalJogo;
 	}
