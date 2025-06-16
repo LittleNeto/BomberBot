@@ -136,6 +136,7 @@ public class GamePanel extends JPanel implements Runnable {
     	    } else {
     	        long tempoAtual = System.currentTimeMillis();
     	        if (tempoAtual - tempoTelaFase >= 5000) { // 5 segundos
+    	        	this.tempoTotalJogo = 0;  
     	        	carregaFase();
 
     	            FaseSetter fase = new Fase1Setter(this, tileM.getGMapa());//recria tudo

@@ -16,6 +16,7 @@ public class ManipuladorTeclado implements KeyListener {
     //DEBUG
     boolean checkDrawTime = false;
     private boolean teclaBombaPressionada;
+    private UI ui;
     
     public ManipuladorTeclado(GamePanel gp) {
     	this.gp = gp;
@@ -23,7 +24,16 @@ public class ManipuladorTeclado implements KeyListener {
     
     @Override
     public void keyTyped(KeyEvent e) {
-    } //não será utilizado
+        if (gp.ui.aguardandoNome) {
+            char c = e.getKeyChar();
+            if (Character.isLetterOrDigit(c) && gp.ui.nomeDigitado.length() < gp.ui.getLIMITE_CARACTERES()) {
+                gp.ui.nomeDigitado += c;
+            } else if (c == '\b' && gp.ui.nomeDigitado.length() > 0) {
+                gp.ui.nomeDigitado = gp.ui.nomeDigitado.substring(0, gp.ui.nomeDigitado.length() - 1);
+            }
+        }
+    }
+
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -48,7 +58,7 @@ public class ManipuladorTeclado implements KeyListener {
         			gp.setGameState(GameState.FASE1);
         		}
         		if (gp.ui.numComando == 1) {
-        			//IMPLEMENTAR O RANKING
+        			gp.setGameState(GameState.RANKING);
         		}
         		if (gp.ui.numComando == 2) {
         			System.exit(0);
@@ -86,13 +96,18 @@ public class ManipuladorTeclado implements KeyListener {
         	}
         }
         
-        //DEBUG - transformar em JUNIT
-        if (code == KeyEvent.VK_T) { //caso a tecla T seja pressionada
-        	if (checkDrawTime == false) {
-        		checkDrawTime = true;
-        	} else if (checkDrawTime == true) {
-        		checkDrawTime = false;
-        	}
+        
+        if (gp.ui.aguardandoNome && code == KeyEvent.VK_ENTER) {
+            if (!gp.ui.nomeDigitado.isBlank()) {
+                gp.ui.salvarNoRanking(gp.ui.nomeDigitado.trim(), (int)(gp.getTempoTotalJogo()));
+                gp.ui.aguardandoNome = false;
+                gp.ui.nomeDigitado = "";
+                gp.setGameState(GameState.RANKING);
+            }
+        }
+        
+        if(gp.gameState == GameState.RANKING && code == KeyEvent.VK_Z) {
+        	gp.setGameState(GameState.TITULO);
         }
     }
 

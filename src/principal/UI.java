@@ -32,8 +32,12 @@ public class UI {
 	
 	DecimalFormat dFormt = new DecimalFormat("#0"); //para configurar como o tempo é mostrado na tela
 	
-	private Ranking rank;
 	private RankingManager rankM;
+	public String nomeDigitado = "";
+	private final int LIMITE_CARACTERES = 12;
+	boolean aguardandoNome = false;
+
+
 	
 	public UI(GamePanel gp) {
 		this.gp = gp;
@@ -74,7 +78,7 @@ public class UI {
 		
 		//Ranking State
 		if(gp.gameState == GameState.RANKING) {
-//			desenharTelaRanking();
+			desenharTelaRanking();
 		}
 		
 		//Cadastrar Ranking state
@@ -112,28 +116,50 @@ public class UI {
 		}
 	}
 	
-	private void desenharTelaCadastrarRanking() {
-		//Background
-		g2.setColor(new Color(30, 30, 102));
-		g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
-		
-		int x;
-		int y;
-		
-		String texto = "VITÓRIA!!!";
-		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 80f));
-		
-		//sombra
-		g2.setColor(Color.black);
-		x = getXparaTextoCentralizado(texto);
-		y = gp.getTileSize() * 2;
-		g2.drawString(texto, x, y);
-		
-		//main
-		g2.setColor(Color.white);
-		g2.drawString(texto, x - 4, y - 4);
+	private void desenharTelaRanking() {
+	    g2.setColor(new Color(30, 30, 102));
+	    g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
+
+	    g2.setColor(Color.white);
+	    g2.setFont(g2.getFont().deriveFont(Font.BOLD, 36f));
+	    String titulo = "Top 5 Ranking";
+	    int y = gp.getTileSize() * 2;
+	    g2.drawString(titulo, getXparaTextoCentralizado(titulo), y);
+
+	    g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 30f));
+	    java.util.List<Ranking> top5 = RankingManager.getTop5();
+
+	    for (int i = 0; i < top5.size(); i++) {
+
+	    	Ranking r = top5.get(i);
+	        String linha = (i + 1) + " - " + r.getJogador() + " - " + r.getTempo() + "s" + " - " +  r.getDataFormatada();
+	        y += gp.getTileSize();
+	        g2.drawString(linha, getXparaTextoCentralizado(linha), y);
+	    }
+
+	    g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 26f));
+	    g2.drawString("Pressione Z para voltar", getXparaTextoCentralizado("Pressione Z para voltar"), y + gp.getTileSize() * 2);
 		
 	}
+
+	private void desenharTelaCadastrarRanking() {
+	    g2.setColor(new Color(30, 30, 102));
+	    g2.fillRect(0, 0, gp.getScreenWidth(), gp.getScreenHeight());
+
+	    g2.setColor(Color.white);
+	    g2.setFont(g2.getFont().deriveFont(Font.BOLD, 36f));
+	    String texto = "Digite seu nome:";
+	    int x = getXparaTextoCentralizado(texto);
+	    int y = gp.getScreenHeight() / 2 - gp.getTileSize();
+	    g2.drawString(texto, x, y);
+
+	    g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32f));
+	    String nome = nomeDigitado + "_";
+	    x = getXparaTextoCentralizado(nome);
+	    y += gp.getTileSize();
+	    g2.drawString(nome, x, y);
+	}
+
 
 	public void desenharTempoJogo() {
 	    g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32F));
@@ -326,6 +352,11 @@ public class UI {
 
 	}
 	
+	public void salvarNoRanking(String nome, int tempo) {
+	    RankingManager.salvarDados(nome, tempo);
+	}
+
+	
 	public int getXparaTextoCentralizado(String texto) {
 		int length = (int)g2.getFontMetrics().getStringBounds(texto, g2).getWidth();
 		int x =  gp.getScreenWidth()/2 - length/2;
@@ -347,6 +378,10 @@ public class UI {
 	
 	public void setG2(Graphics2D g2) {
 		this.g2 = g2;
+	}
+
+	public int getLIMITE_CARACTERES() {
+		return LIMITE_CARACTERES;
 	}
 	
 	
