@@ -192,7 +192,7 @@ public class Jogador extends Personagem {
     				}
     			}
     			if (gp.faseAtual == FaseAtual.FASE3) {
-    				if (botsMortos >= gp.f2Setter.getQTD_BOTS()) {
+    				if (botsMortos >= gp.f3Setter.getQTD_BOTS()) {
     					gp.passarFase();
     				}
     			}
